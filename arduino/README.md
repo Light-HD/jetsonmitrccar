@@ -10,3 +10,4 @@ with correct port number. Code requires the output of RC controller to be on a i
 
 To add Custom Messages to Arduino,please refer to http://wiki.ros.org/rosserial_arduino/Tutorials/Adding%20Custom%20Messages
 
+rc_msgs package is a ROS package. Please make sure to copy to catkin workspace and catkin_make.
