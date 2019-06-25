@@ -1,27 +1,10 @@
-/*volatile int counter = 0;
+/*********
+An Arduino Program to publish the Remote Control Commands as ROS topics
 
+*******/
+#include <ros.h>
+#include<std_msgs/Int32.h>
 
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(LED_BUILTIN,OUTPUT);
-  digitalWrite(LED_BUILTIN,HIGH);
-  pinMode(A4,INPUT_PULLUP);
-  Serial.begin(9600);
-  //attachInterrupt(digitalPinToInterrupt(3),count,CHANGE);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.println(analogRead(A4));
-  delay(500);
-}
-
-
-
-void count(){
-  counter++;
-}
-*/
 #define THROTTLE_INT_PIN 3
 #define STEERING_INT_PIN 2
 
@@ -32,24 +15,41 @@ volatile int prev_time_throttle = 0;
 volatile int pwm_value_steering = 0;
 volatile int prev_time_steering = 0;
 
-String throttle_string = "Throttle Duty Cycle:";
-String steering_string = "Steering Duty Cycle:";
 
-void setup() {
-  Serial.begin(115200);
-  // when pin D2 goes high, call the rising function
+
+ros::NodeHandle nh;
+std_msgs::Int32 throttle_value;
+std_msgs::Int32 steering_value;
+
+ros::Publisher throttle_publisher("/throttle_publisher",&throttle_value);
+ros::Publisher steering_publisher("/steering_publisher",&steering_value);
+
+
+
+
+void setup()
+{ 
+  pinMode(13, OUTPUT);
+  nh.initNode();
+  nh.advertise(throttle_publisher);
+  nh.advertise(steering_publisher);
   attachInterrupt(digitalPinToInterrupt(THROTTLE_INT_PIN), rising_throttle, RISING);
   attachInterrupt(digitalPinToInterrupt(STEERING_INT_PIN),rising_steering, RISING);
 }
- 
-void loop() { 
-  //Serial.println(throttle_string + pwm_value_throttle + '\n' + steering_string + pwm_value_steering);
-  Serial.print(pwm_value_throttle);
-  Serial.print(' ');
-  Serial.println(pwm_value_steering);
-  delay(200);
+
+void loop()
+{  
+  throttle_value.data = pwm_value_throttle;
+  throttle_publisher.publish(&throttle_value);
+
+  steering_value.data = pwm_value_steering;
+  steering_publisher.publish(&steering_value);
+  
+  nh.spinOnce();
+  delay(10);
 }
- 
+
+
 void rising_throttle() {
   attachInterrupt(digitalPinToInterrupt(THROTTLE_INT_PIN), falling_throttle, FALLING);
   prev_time_throttle = micros();
@@ -58,7 +58,6 @@ void rising_throttle() {
 void falling_throttle() {
   attachInterrupt(digitalPinToInterrupt(THROTTLE_INT_PIN), rising_throttle, RISING);
   pwm_value_throttle = micros()- prev_time_throttle;
-  //Serial.println(pwm_value);
 }
 
 
