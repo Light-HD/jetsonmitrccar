@@ -1,4 +1,4 @@
-//* 
+/* 
  * Publishes RC Commands as A custom package.
  * Requires rc_msgs package to be installed with rosserial_client
  * Please Refer to README for installation.
