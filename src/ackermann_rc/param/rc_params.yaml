@@ -1,0 +1,19 @@
+max_throttle_output: 1936.0
+min_throttle_output: 996.0
+middle_throttle_output: 1426.0
+
+max_steering_output: 1636.0
+min_steering_output: 1600.0
+middle_steering_output: 1616.0
+
+max_car_linear_speed: 0.4
+min_car_linear_speed: 0.0
+
+max_car_angle: 0.9
+min_car_angle: 0.0
+
+unique_command: true
+stamped_output: true
+
+drive_topic: '/drive'
+rc_topic: '/rc_command'
