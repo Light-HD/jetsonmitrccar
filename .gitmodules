@@ -1,0 +1,3 @@
+[submodule "src/conde"]
+	path = src/conde
+	url = git@github.com:ee09115/conde_simulator.git
