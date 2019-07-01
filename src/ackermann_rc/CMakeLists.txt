@@ -152,7 +152,7 @@ add_dependencies(${PROJECT_NAME}_vesc ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}_vesc
+target_link_libraries(${PROJECT_NAME}_rc_node
   ${catkin_LIBRARIES}
 )
 
