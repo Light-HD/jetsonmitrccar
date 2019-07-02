@@ -4,3 +4,6 @@
 [submodule "src/C++LaneTracker"]
 	path = src/C++LaneTracker
 	url = git@github.com:MichiMaestre/Lane-Detection-for-Autonomous-Cars.git
+[submodule "src/vesc"]
+	path = src/vesc
+	url = git@github.com:erwincoumans/vesc.git
