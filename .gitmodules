@@ -7,3 +7,6 @@
 [submodule "src/vesc"]
 	path = src/vesc
 	url = git@github.com:erwincoumans/vesc.git
+[submodule "src/rplidar_ros"]
+	path = src/rplidar_ros
+	url = git@github.com:Slamtec/rplidar_ros.git
