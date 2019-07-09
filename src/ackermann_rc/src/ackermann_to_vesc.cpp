@@ -29,48 +29,17 @@ public:
 
     RC_Driver_vesc(){
         n = ros::NodeHandle("~");
-        /*max_throttle_output = n.param("max_throttle_output",1800);
-        min_throttle_output = n.param("min_throttle_output",1200);
-
-        max_steering_output = n.param("max_steering_output",1600);
-        min_steering_output = n.param("min_steering_output",1500);
-
-        max_car_linear_speed = n.param("max_car_linear_speed",10.0);
-        max_car_angle = n.param("max_car_angle",0.9);*/
-
-        max_throttle_output = 1936.0f;
-        min_throttle_output = 996.0f;
-        middle_throttle_output = 1436.0f;
-
-        max_steering_output = 1740.0f;
-        min_steering_output = 1408.0f;
-        middle_steering_output = 1620.0f;
-
-        max_car_linear_speed = 0.8f;
-        min_car_linear_speed = 0.0f;
-
-        max_car_angle = 0.8f;
-        min_car_angle = 0.0f;
-
 
         if(n.getParam("max_throttle_output",max_throttle_output) && n.getParam("max_steering_output",max_steering_output) 
         && n.getParam("min_throttle_output",min_throttle_output) && n.getParam("min_steering_output",min_steering_output) 
         && n.getParam("middle_throttle_output",middle_throttle_output) && n.getParam("middle_steering_output",middle_steering_output) 
         && n.getParam("max_car_linear_speed",max_car_linear_speed) && n.getParam("max_car_angle",max_car_angle)
         && n.getParam("min_car_linear_speed",min_car_linear_speed) && n.getParam("min_car_angle",min_car_angle)){
-            
+            ROS_ERROR("THERE ARE MISSING PARAMETERS PLEASE SUPPLY REQUIRED PARAMETERS. EXITING...");
+            return;
         }else{
             ROS_WARN("Parameters Are missing. Default Values may not be suitable. Please provide a yaml file");
         }
-
-        ROS_INFO("%f",max_throttle_output);
-
-        //Min car speed may be necessary to set the minimum speed that car starts to move and turn.
-        //Starting from these values may make more sense
-        
-
-        //drive_topic = std::string("/drive");
-        //rc_command_topic = std::string("/rc_command");
 
         motor_topic = std::string("/drive");
         servo_topic = std::string("/servo_command");
@@ -98,9 +67,6 @@ public:
         //MIT Racecar Lightweight 2-D Simulator Updates poses on regular intervals.
         //If same command is being published from RC, then there is no need to publish this since
         //Pose still get updated.
-
-        //Check if the old command is the same with new command
-        //ROS_INFO("RC command Unique callback is received");
 
         
 
@@ -142,17 +108,6 @@ public:
 
         vesc_motor_pub.publish(speed_output);
         vesc_servo_pub.publish(steer_output);
-
-            //ROS_INFO("Speed Outputs: %f %f",speed_output,steer_output);
-
-            /*if(near(steer_output * sign(steer_output),0.01,0.05)){
-                steer_output = 0;
-            }
-
-            if(near(speed_output * sign(speed_output),0.01,0.05)){
-                speed_output = 0;
-            }*/
-        
     }
 
 private:

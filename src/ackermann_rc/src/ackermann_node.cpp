@@ -27,46 +27,17 @@ public:
 
     RC_Driver(){
         n = ros::NodeHandle("~");
-        /*max_throttle_output = n.param("max_throttle_output",1800);
-        min_throttle_output = n.param("min_throttle_output",1200);
-
-        max_steering_output = n.param("max_steering_output",1600);
-        min_steering_output = n.param("min_steering_output",1500);
-
-        max_car_linear_speed = n.param("max_car_linear_speed",10.0);
-        max_car_angle = n.param("max_car_angle",0.9);*/
-
-        max_throttle_output = 1936.0f;
-        min_throttle_output = 996.0f;
-        middle_throttle_output = 1436.0f;
-
-        max_steering_output = 1740.0f;
-        min_steering_output = 1408.0f;
-        middle_steering_output = 1620.0f;
-
-        max_car_linear_speed = 0.8f;
-        min_car_linear_speed = 0.0f;
-
-        max_car_angle = 0.8f;
-        min_car_angle = 0.0f;
-
 
         if(n.getParam("max_throttle_output",max_throttle_output) && n.getParam("max_steering_output",max_steering_output) 
         && n.getParam("min_throttle_output",min_throttle_output) && n.getParam("min_steering_output",min_steering_output) 
         && n.getParam("middle_throttle_output",middle_throttle_output) && n.getParam("middle_steering_output",middle_steering_output) 
         && n.getParam("max_car_linear_speed",max_car_linear_speed) && n.getParam("max_car_angle",max_car_angle)
         && n.getParam("min_car_linear_speed",min_car_linear_speed) && n.getParam("min_car_angle",min_car_angle)){
-            
+            ROS_ERROR("THERE ARE MISSING PARAMETERS PLEASE SUPPLY REQUIRED PARAMETERS. EXITING...");
+            return;
         }else{
             ROS_WARN("Parameters Are missing. Default Values may not be suitable. Please provide a yaml file");
         }
-
-        ROS_INFO("%f",max_throttle_output);
-
-        //Min car speed may be necessary to set the minimum speed that car starts to move and turn.
-        //Starting from these values may make more sense
-        min_car_linear_speed = n.param("min_car_linear_speed",0.0);
-        min_car_angle = n.param("min_car_angle",0.0);
 
         drive_topic = std::string("/drive");
         rc_command_topic = std::string("/rc_command");
@@ -82,15 +53,15 @@ public:
         if(unique_command){
             rc_command_sub = n.subscribe(rc_command_topic,10,&RC_Driver::rc_command_callback_unique_command,this);
         }
+        
         //TODO Implement non unique_command
-        
-        
-        
         if(stamped_output){
             ackermann_pub = n.advertise<ackermann_msgs::AckermannDriveStamped>(drive_topic,10);
         }else{
             ackermann_pub = n.advertise<ackermann_msgs::AckermannDrive>(drive_topic,10);
         }
+
+        ROS_INFO("INITIALIZATION COMPLETE. STARTING MESSAGE TRANSFORMING");
     }
 
 

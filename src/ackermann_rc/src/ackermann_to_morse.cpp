@@ -22,49 +22,17 @@ public:
 
     RC_Driver_morse(){
         n = ros::NodeHandle("~");
-        /*max_throttle_output = n.param("max_throttle_output",1800);
-        min_throttle_output = n.param("min_throttle_output",1200);
-
-        max_steering_output = n.param("max_steering_output",1600);
-        min_steering_output = n.param("min_steering_output",1500);
-
-        max_car_linear_speed = n.param("max_car_linear_speed",10.0);
-        max_car_angle = n.param("max_car_angle",0.9);*/
-
-        max_throttle_output = 1936.0f;
-        min_throttle_output = 996.0f;
-        middle_throttle_output = 1436.0f;
-
-        max_steering_output = 1740.0f;
-        min_steering_output = 1408.0f;
-        middle_steering_output = 1620.0f;
-
-        max_car_linear_speed = 0.8f;
-        min_car_linear_speed = 0.0f;
-
-        max_car_angle = 0.8f;
-        min_car_angle = 0.0f;
-
 
         if(n.getParam("max_throttle_output",max_throttle_output) && n.getParam("max_steering_output",max_steering_output) 
         && n.getParam("min_throttle_output",min_throttle_output) && n.getParam("min_steering_output",min_steering_output) 
         && n.getParam("middle_throttle_output",middle_throttle_output) && n.getParam("middle_steering_output",middle_steering_output) 
         && n.getParam("max_car_linear_speed",max_car_linear_speed) && n.getParam("max_car_angle",max_car_angle)
         && n.getParam("min_car_linear_speed",min_car_linear_speed) && n.getParam("min_car_angle",min_car_angle)){
-            
+            ROS_ERROR("THERE ARE MISSING PARAMETERS PLEASE SUPPLY REQUIRED PARAMETERS. EXITING...");
+            return;
         }else{
             ROS_WARN("Parameters Are missing. Default Values may not be suitable. Please provide a yaml file");
         }
-
-        ROS_INFO("%f",max_throttle_output);
-
-        //Min car speed may be necessary to set the minimum speed that car starts to move and turn.
-        //Starting from these values may make more sense
-        
-
-        //drive_topic = std::string("/drive");
-        //rc_command_topic = std::string("/rc_command");
-
         
         twist_topic = std::string("/rc_command");
         rc_command_topic = std::string("/rc_command");
@@ -76,7 +44,8 @@ public:
         rc_command_sub = n.subscribe(rc_command_topic,10,&RC_Driver_morse::rc_command_callback_unique_command,this);
 
         twist_command_pub = n.advertise<geometry_msgs::Twist>(twist_topic,10);
-        //TODO Implement non unique_command
+        ROS_INFO("INITIALIZATION COMPLETE. STARTING MESSAGE TRANSFORMING");
+        
     }
 
 
@@ -88,7 +57,7 @@ public:
             return;
         }
 
-        geometry_msgs::Twist twist_msg;
+        
         //MIT Racecar Lightweight 2-D Simulator Updates poses on regular intervals.
         //If same command is being published from RC, then there is no need to publish this since
         //Pose still get updated.
@@ -146,6 +115,7 @@ private:
 
     //Store old Command Value
     rc_msgs::RCControlMsg command_value;
+    geometry_msgs::Twist twist_msg;
     //ackermann_msgs::AckermannDriveStamped drive_output;
     //ackermann_msgs::AckermannDrive drive_output_unstamped;
 
