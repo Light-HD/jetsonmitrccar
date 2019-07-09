@@ -5,7 +5,7 @@ max_throttle_output: 1936.0
 min_throttle_output: 1124.0
 middle_throttle_output: 1624.0
 
-max_steering_output: 1708.0
+max_steering_output: 1740.0
 min_steering_output: 1408.0
 middle_steering_output: 1616.0
 

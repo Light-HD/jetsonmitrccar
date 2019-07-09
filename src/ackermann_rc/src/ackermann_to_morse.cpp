@@ -123,11 +123,11 @@ public:
         float steer_output = sgn(steer_percentage) * (min_car_angle + (sgn(steer_percentage) * steering_interval) * steer_percentage);
             
             
-        if(sgn(steer_percentage) * steer_percentage < 0.05){
+        if(sgn(steer_percentage) * steer_percentage < 0.07){
             steer_output = 0;
         }
 
-        if(sgn(throttle_percentage) * throttle_percentage< 0.05){
+        if(sgn(throttle_percentage) * throttle_percentage < 0.07){
             speed_output = 0;
         }
             
