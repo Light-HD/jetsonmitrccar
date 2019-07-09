@@ -28,10 +28,10 @@ public:
         && n.getParam("middle_throttle_output",middle_throttle_output) && n.getParam("middle_steering_output",middle_steering_output) 
         && n.getParam("max_car_linear_speed",max_car_linear_speed) && n.getParam("max_car_angle",max_car_angle)
         && n.getParam("min_car_linear_speed",min_car_linear_speed) && n.getParam("min_car_angle",min_car_angle)){
+
+        }else{
             ROS_ERROR("THERE ARE MISSING PARAMETERS PLEASE SUPPLY REQUIRED PARAMETERS. EXITING...");
             return;
-        }else{
-            ROS_WARN("Parameters Are missing. Default Values may not be suitable. Please provide a yaml file");
         }
         
         twist_topic = std::string("/rc_command");
