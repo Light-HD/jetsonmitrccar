@@ -3,19 +3,23 @@
 #include <std_msgs/Float64.h>
 
 
-ros::Subscriber rc_cmd_sub;
-ros::Publisher vesc_motor_pub;
-ros::Publisher vesc_servo_pub;
+/* ROS Package to publish ackerrman msgs according to vesc controllers ROS topic structure.
+   Vesc receives data from to seperate topics published as std_msgs::Float64
+ */
 
 // 0.5 is the center for servo
 //
 
-float sgn(float a){
+inline float sgn(float a){
     if(a > 0.0f){
         return 1.0f;
     }
 
     return -1.0f;
+}
+
+inline bool near(float a, float b,float distance){
+    return (abs(a - b) < distance);
 }
 
 
@@ -63,14 +67,13 @@ public:
 
         //Min car speed may be necessary to set the minimum speed that car starts to move and turn.
         //Starting from these values may make more sense
-        min_car_linear_speed = n.param("min_car_linear_speed",0.0);
-        min_car_angle = n.param("min_car_angle",0.0);
+        
 
         //drive_topic = std::string("/drive");
         //rc_command_topic = std::string("/rc_command");
 
         motor_topic = std::string("/drive");
-        servo_topic = std::string("/rc_command");
+        servo_topic = std::string("/servo_command");
 
 
         n.getParam("motor_topic",motor_topic);
@@ -86,6 +89,12 @@ public:
 
 
     void rc_command_callback_unique_command(const rc_msgs::RCControlMsg::ConstPtr &msg){
+        //Messages are only zero if RC is closed. Discard Values;
+        if(msg->steering_cmd == 0 || msg->throttle_cmd == 0){
+            ROS_WARN("RC IS CLOSED. OPEN RC TO CONTROL");
+            return;
+        }
+
         //MIT Racecar Lightweight 2-D Simulator Updates poses on regular intervals.
         //If same command is being published from RC, then there is no need to publish this since
         //Pose still get updated.
@@ -93,38 +102,46 @@ public:
         //Check if the old command is the same with new command
         //ROS_INFO("RC command Unique callback is received");
 
-        //if(!near(command_value.steering_cmd,msg->steering_cmd,20) || !near(command_value.throttle_cmd,msg->throttle_cmd,20)){
+        
 
-            float throttle_percentage = 0.0f;
-            float steer_percentage = 0.0f;
+        float throttle_percentage = 0.0f;
+        float steer_percentage = 0.0f;
 
-            if(msg->steering_cmd > middle_steering_output){
-                steer_percentage = (msg->steering_cmd - middle_steering_output)/(max_steering_output - middle_steering_output);
-            }else{
-                steer_percentage = -(middle_steering_output - msg->steering_cmd)/(middle_steering_output - min_steering_output);
-            }
+        if(msg->steering_cmd > middle_steering_output){
+            steer_percentage = (msg->steering_cmd - middle_steering_output)/(max_steering_output - middle_steering_output);
+        }else{
+            steer_percentage = -(middle_steering_output - msg->steering_cmd)/(middle_steering_output - min_steering_output);
+        }
 
-            if(msg->throttle_cmd > middle_throttle_output){
-                throttle_percentage = (msg->throttle_cmd - middle_throttle_output)/(max_throttle_output - middle_throttle_output);
-            }else{
-                throttle_percentage = -(middle_throttle_output - msg->throttle_cmd)/(middle_throttle_output - min_throttle_output);
-            }
+        if(msg->throttle_cmd > middle_throttle_output){
+            throttle_percentage = (msg->throttle_cmd - middle_throttle_output)/(max_throttle_output - middle_throttle_output);
+        }else{
+            throttle_percentage = -(middle_throttle_output - msg->throttle_cmd)/(middle_throttle_output - min_throttle_output);
+        }
 
             
 
             //ROS_INFO("Calculating Output Throttle Percentage:%f Steering Percentage:%f",throttle_percentage,steer_percentage);
             
 
-            float throttle_interval = max_car_linear_speed - min_car_linear_speed;
-            float steering_interval = max_car_angle - min_car_angle;
+        float throttle_interval = max_car_linear_speed - min_car_linear_speed;
+        float steering_interval = max_car_angle - min_car_angle;
 
-            float speed_output = sgn(throttle_percentage) * (min_car_linear_speed + (sgn(throttle_percentage) * throttle_interval * throttle_percentage));
+        float speed_output = sgn(throttle_percentage) * (min_car_linear_speed + (sgn(throttle_percentage) * throttle_interval * throttle_percentage));
             //float steer_output = sgn(steer_percentage) * (min_car_angle + (sgn(steer_percentage) * steering_interval) * steer_percentage);
 
-            float steer_output = (steer_percentage < 0) ? (0.5f * -steer_percentage) : (0.5f * (1 + steer_percentage));
+        float steer_output = (steer_percentage < 0) ? (0.5f * -steer_percentage) : (0.5f * (1 + steer_percentage));
 
-            vesc_motor_pub.publish(speed_output);
-            vesc_servo_pub.publish(steer_output);
+        if(sgn(steer_percentage) * steer_percentage < 0.05){
+            steer_output = 0;
+        }
+
+        if(sgn(throttle_percentage) * throttle_percentage< 0.05){
+            speed_output = 0;
+        }
+
+        vesc_motor_pub.publish(speed_output);
+        vesc_servo_pub.publish(steer_output);
 
             //ROS_INFO("Speed Outputs: %f %f",speed_output,steer_output);
 
@@ -135,6 +152,7 @@ public:
             if(near(speed_output * sign(speed_output),0.01,0.05)){
                 speed_output = 0;
             }*/
+        
     }
 
 private:

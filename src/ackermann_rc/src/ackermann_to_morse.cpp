@@ -1,18 +1,9 @@
-/****
-* ROS Node to receive rc_msgs from Arduino and then transform it to AckermannDriveStamped for publishing
-*
-****/
-
 #include<ros/ros.h>
-#include<rc_msgs/RCControlMsg.h>
 #include<ackermann_msgs/AckermannDriveStamped.h>
-#include<ackermann_msgs/AckermannDrive.h>
+#include<geometry_msgs/Twist.h>
+#include<rc_msgs/RCControlMsg.h>
 #include<string>
 
-
-inline bool near(float a, float b,float distance){
-    return (abs(a - b) < distance);
-}
 
 inline float sgn(float a){
     if(a > 0.0f){
@@ -22,10 +13,14 @@ inline float sgn(float a){
     return -1.0f;
 }
 
-class RC_Driver{
+inline bool near(float a, float b,float distance){
+    return (abs(a - b) < distance);
+}
+
+class RC_Driver_morse{
 public:
 
-    RC_Driver(){
+    RC_Driver_morse(){
         n = ros::NodeHandle("~");
         /*max_throttle_output = n.param("max_throttle_output",1800);
         min_throttle_output = n.param("min_throttle_output",1200);
@@ -65,50 +60,41 @@ public:
 
         //Min car speed may be necessary to set the minimum speed that car starts to move and turn.
         //Starting from these values may make more sense
-        min_car_linear_speed = n.param("min_car_linear_speed",0.0);
-        min_car_angle = n.param("min_car_angle",0.0);
+        
 
-        drive_topic = std::string("/drive");
+        //drive_topic = std::string("/drive");
+        //rc_command_topic = std::string("/rc_command");
+
+        
+        twist_topic = std::string("/rc_command");
         rc_command_topic = std::string("/rc_command");
 
-        unique_command = n.param("unique_command",true);
-        stamped_output = n.param("stamped_output",true);
-
-        n.getParam("drive_topic",drive_topic);
+        
+        n.getParam("twist_topic",twist_topic);
         n.getParam("rc_topic",rc_command_topic);
+        
+        rc_command_sub = n.subscribe(rc_command_topic,10,&RC_Driver_morse::rc_command_callback_unique_command,this);
 
-        seq_count = 0;
-
-        if(unique_command){
-            rc_command_sub = n.subscribe(rc_command_topic,10,&RC_Driver::rc_command_callback_unique_command,this);
-        }
+        twist_command_pub = n.advertise<geometry_msgs::Twist>(twist_topic,10);
         //TODO Implement non unique_command
-        
-        
-        
-        if(stamped_output){
-            ackermann_pub = n.advertise<ackermann_msgs::AckermannDriveStamped>(drive_topic,10);
-        }else{
-            ackermann_pub = n.advertise<ackermann_msgs::AckermannDrive>(drive_topic,10);
-        }
     }
 
 
     void rc_command_callback_unique_command(const rc_msgs::RCControlMsg::ConstPtr &msg){
+
         //Messages are only zero if RC is closed. Discard Values;
         if(msg->steering_cmd == 0 || msg->throttle_cmd == 0){
             ROS_WARN("RC IS CLOSED. OPEN RC TO CONTROL");
             return;
         }
 
+        geometry_msgs::Twist twist_msg;
         //MIT Racecar Lightweight 2-D Simulator Updates poses on regular intervals.
         //If same command is being published from RC, then there is no need to publish this since
         //Pose still get updated.
 
         //Check if the old command is the same with new command
         //ROS_INFO("RC command Unique callback is received");
-
-        
 
         float throttle_percentage = 0.0f;
         float steer_percentage = 0.0f;
@@ -135,17 +121,8 @@ public:
 
         float speed_output = sgn(throttle_percentage) * (min_car_linear_speed + (sgn(throttle_percentage) * throttle_interval * throttle_percentage));
         float steer_output = sgn(steer_percentage) * (min_car_angle + (sgn(steer_percentage) * steering_interval) * steer_percentage);
-
-            //ROS_INFO("Speed Outputs: %f %f",speed_output,steer_output);
-
-            /*if(near(steer_output * sign(steer_output),0.01,0.05)){
-                steer_output = 0;
-            }
-
-            if(near(speed_output * sign(speed_output),0.01,0.05)){
-                speed_output = 0;
-            }*/
-
+            
+            
         if(sgn(steer_percentage) * steer_percentage < 0.05){
             steer_output = 0;
         }
@@ -153,36 +130,24 @@ public:
         if(sgn(throttle_percentage) * throttle_percentage< 0.05){
             speed_output = 0;
         }
-
-
-        if(stamped_output){
-            drive_output.drive.speed = speed_output;
-            drive_output.drive.steering_angle = steer_output;
-            drive_output.header.seq = seq_count++;
-            drive_output.header.stamp = ros::Time::now();
-            ackermann_pub.publish(drive_output);
-        }else{
-            drive_output_unstamped.speed = speed_output;
-            drive_output_unstamped.steering_angle = steer_output;
-            ackermann_pub.publish(drive_output_unstamped);
-        }
-
-        command_value.throttle_cmd = msg->throttle_cmd;
-        command_value.steering_cmd = msg->steering_cmd;
-        
+            
+            
+        twist_msg.linear.x = speed_output;
+        twist_msg.angular.z = steer_output;
+        twist_command_pub.publish(twist_msg);
     }
 
 private:
     ros::Subscriber rc_command_sub;
-    ros::Publisher ackermann_pub;
+    ros::Publisher twist_command_pub;
     ros::NodeHandle n;
     //seq_count for drive message stamp
-    uint32_t seq_count;
+    
 
     //Store old Command Value
     rc_msgs::RCControlMsg command_value;
-    ackermann_msgs::AckermannDriveStamped drive_output;
-    ackermann_msgs::AckermannDrive drive_output_unstamped;
+    //ackermann_msgs::AckermannDriveStamped drive_output;
+    //ackermann_msgs::AckermannDrive drive_output_unstamped;
 
     //Store Max and Min RC Values and the middle point
     float max_throttle_output;
@@ -204,34 +169,26 @@ private:
     float min_car_linear_speed;
     float min_car_angle;
 
-    std::string drive_topic;
+    //std::string drive_topic;
     std::string rc_command_topic;
+
+    
+    std::string twist_topic;
 
     //If the simulation or other systems update their values on message callback
     //And not with regular intervals, then publish a message every time a new command arrives
     //If update has regular intervals, then only output message when there is a unique message
-    bool unique_command;
-
-
-    //Choose between Stamped or Unstamped Message
-    bool stamped_output;
+    
 
 
 };
 
 
 
-
-
-
-
-
-
-
 int main(int argc,char **argv){
-    ros::init(argc,argv,"/rc_drive");
-    RC_Driver driver;
-
+    ros::init(argc,argv,"morse_converter");
+    RC_Driver_morse driver;
     ros::spin();
+
     return 0;
 }
