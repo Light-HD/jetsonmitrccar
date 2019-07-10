@@ -106,8 +106,14 @@ public:
             speed_output = 0;
         }
 
-        vesc_motor_pub.publish(speed_output);
-        vesc_servo_pub.publish(steer_output);
+        std_msgs::Float64 motor_msg;
+        motor_msg.data = speed_output;
+
+        std_msgs::Float64 servo_msg;
+        servo_msg.data = steer_output;
+
+        vesc_motor_pub.publish(motor_msg);
+        vesc_servo_pub.publish(servo_msg);
     }
 
 private:
