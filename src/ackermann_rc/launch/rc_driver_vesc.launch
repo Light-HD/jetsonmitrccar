@@ -12,7 +12,7 @@
     <param name="baud" value="115200"/>
   </node>
 
-  <node name="driver" pkg="ackermann_rc" type="ackermann_to_vesc" output="screen" required="true">
+  <node name="ackermann_to_vesc_cmd" pkg="ackermann_rc" type="ackermann_to_vesc" output="screen" required="true">
     <rosparam file="$(find ackermann_rc)/param/rc_params_vesc.yaml" command="load"/>
   </node>  
   

@@ -29,6 +29,7 @@ public:
 
     RC_Driver_vesc(){
         n = ros::NodeHandle("~");
+        ROS_INFO("INITIALIZING");
 
         if(n.getParam("max_throttle_output",max_throttle_output) && n.getParam("max_steering_output",max_steering_output) 
         && n.getParam("min_throttle_output",min_throttle_output) && n.getParam("min_steering_output",min_steering_output) 
@@ -41,9 +42,10 @@ public:
             return;
         }
 
-        motor_topic = std::string("/drive");
-        servo_topic = std::string("/servo_command");
+        motor_topic = std::string("/commands/motor/speed");
+        servo_topic = std::string("/commands/servo/position");
 
+        
 
         n.getParam("motor_topic",motor_topic);
         n.getParam("servo_topic",servo_topic);
@@ -52,8 +54,14 @@ public:
 
         vesc_motor_pub = n.advertise<std_msgs::Float64>(motor_topic,10);
         vesc_servo_pub = n.advertise<std_msgs::Float64>(servo_topic,10);
-
+        _timer = n.createTimer(ros::Duration(1.0/50.0), &RC_Driver_vesc::timerCallback, this);
         //TODO Implement non unique_command
+    }
+
+
+    void timerCallback(const ros::TimerEvent& event){
+        vesc_motor_pub.publish(motor_msg);
+        vesc_servo_pub.publish(servo_msg);
     }
 
 
@@ -68,7 +76,7 @@ public:
         //If same command is being published from RC, then there is no need to publish this since
         //Pose still get updated.
 
-        
+        //ROS_INFO("AT CALLBACK");
 
         float throttle_percentage = 0.0f;
         float steer_percentage = 0.0f;
@@ -85,7 +93,23 @@ public:
             throttle_percentage = -(middle_throttle_output - msg->throttle_cmd)/(middle_throttle_output - min_throttle_output);
         }
 
-            
+        
+        if(steer_percentage > 1.0f){
+            steer_percentage = 1.0f;
+        }
+
+        if(steer_percentage < -1.0f){
+            steer_percentage = -1.0f;
+        }
+
+        if(throttle_percentage > 1.0f){
+            throttle_percentage = 1.0f;
+        }
+
+        if(throttle_percentage < -1.0f){
+            throttle_percentage = -1.0f;
+        }
+
 
             //ROS_INFO("Calculating Output Throttle Percentage:%f Steering Percentage:%f",throttle_percentage,steer_percentage);
             
@@ -96,20 +120,20 @@ public:
         float speed_output = sgn(throttle_percentage) * (min_car_linear_speed + (sgn(throttle_percentage) * throttle_interval * throttle_percentage));
             //float steer_output = sgn(steer_percentage) * (min_car_angle + (sgn(steer_percentage) * steering_interval) * steer_percentage);
 
-        float steer_output = (steer_percentage < 0) ? (0.5f * -steer_percentage) : (0.5f * (1 + steer_percentage));
+        float steer_output = (steer_percentage < 0) ? (0.5f  + (steer_percentage * 2)) : (0.5f * (1 + steer_percentage));
 
         if(sgn(steer_percentage) * steer_percentage < 0.05){
-            steer_output = 0;
+            steer_output = 0.5;
         }
 
-        if(sgn(throttle_percentage) * throttle_percentage< 0.05){
-            speed_output = 0;
+        if(sgn(throttle_percentage) * throttle_percentage < 0.05){
+            speed_output = min_car_linear_speed;
         }
 
-        std_msgs::Float64 motor_msg;
+        
         motor_msg.data = speed_output;
 
-        std_msgs::Float64 servo_msg;
+        
         servo_msg.data = steer_output;
 
         vesc_motor_pub.publish(motor_msg);
@@ -120,10 +144,12 @@ private:
     ros::Subscriber rc_command_sub;
     ros::Publisher vesc_motor_pub;
     ros::Publisher vesc_servo_pub;
+    ros::Timer _timer;
     ros::NodeHandle n;
     //seq_count for drive message stamp
     
-
+    std_msgs::Float64 motor_msg;
+    std_msgs::Float64 servo_msg;
     //Store old Command Value
     rc_msgs::RCControlMsg command_value;
     //ackermann_msgs::AckermannDriveStamped drive_output;
@@ -168,7 +194,7 @@ private:
 
 int main(int argc,char **argv){
     ros::init(argc,argv,"ackermann_to_vesc_cmd");
-    RC_Driver_vesc vesc();
+    RC_Driver_vesc vesc;
     ros::spin();
     
     return 0;
