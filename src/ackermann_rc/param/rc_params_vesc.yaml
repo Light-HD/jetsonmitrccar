@@ -11,15 +11,26 @@ middle_steering_output: 1616.0
 
 # Max and min linear speed of the car.
 # Min value is the minimum throttle value that car starts to move
-max_car_linear_speed: 3000.0
-min_car_linear_speed: 500.0
+# Above 1500 erpm car starts to move.
+max_car_linear_speed: 6000.0
+min_car_linear_speed: 2000.0
 
 # Angle limits for the car.
 max_car_angle: 1.0
 min_car_angle: 0.0
 
+# Acceleration Limits in terms of ERPM And angle
+max_linear_acc: 800.0
+max_angular_acc: 0.05
+
+# Alpha for the exponential filter
+motor_alpha: 0.9
+servo_alpha: 0.9
+
 # These are the topics to publish motor and servo motor.
 motor_topic: '/commands/motor/speed'
 servo_topic: '/commands/servo/position'
+# Sensor output topic of VESC
+sensor_topic: '/sensors/core'
 # This is the topic which Arduino publishes the RC command measurements
 rc_topic: '/rc_command'

@@ -186,8 +186,6 @@ private:
 
     //Choose between Stamped or Unstamped Message
     bool stamped_output;
-
-
 };
 
 

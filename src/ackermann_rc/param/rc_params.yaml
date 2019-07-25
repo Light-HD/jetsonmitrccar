@@ -11,11 +11,11 @@ middle_steering_output: 1616.0
 
 # Max and min linear speed of the car.
 # Min value is the minimum throttle value that car starts to move
-max_car_linear_speed: 0.4
+max_car_linear_speed: 10.0
 min_car_linear_speed: 0.0
 
 # Angle limits for the car.
-max_car_angle: 0.9
+max_car_angle: 1.0
 min_car_angle: 0.0
 
 #There are different modes of RACECAR Simulator.
@@ -24,7 +24,7 @@ unique_command: true
 stamped_output: true
 
 # This is the topic RACECAR Simulator expects the ackermann_msgs
-drive_topic: '/drive'
+drive_topic: '/ackermann_cmd'
 
 # This is the topic which Arduino publishes the RC command measurements
 rc_topic: '/rc_command'

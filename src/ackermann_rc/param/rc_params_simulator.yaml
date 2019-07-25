@@ -11,7 +11,7 @@ middle_steering_output: 1616.0
 
 # Max and min linear speed of the car.
 # Min value is the minimum throttle value that car starts to move
-max_car_linear_speed: 10.0
+max_car_linear_speed: 30.0
 min_car_linear_speed: 0.0
 
 # Angle limits for the car.
