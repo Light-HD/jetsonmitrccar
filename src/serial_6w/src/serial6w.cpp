@@ -205,8 +205,6 @@ ROS_INFO("Motor Command Call Back");
 				  State = 0;
           break;
 				}
-        // Reset stopwatch
-        //setStopwatch1(0);			 ReceivedByte
 				}					
 		// State 2: Check message size and calculate Information size
 		  if(State==2) 
@@ -277,7 +275,7 @@ ROS_INFO("Motor Command Call Back");
 					// InformationByteCounter +
 					// Received + 1
 					Bytes_Number=Bytes_Number+InformationByteCounter;
-					// If this byte was te last information byte
+					// If this byte was the last information byte
 					if(InformationByteCounter == InformationSize)
 					  {
 				  		// Go to the next state
@@ -286,12 +284,7 @@ ROS_INFO("Motor Command Call Back");
           else
             {
               break;
-            }
-					
-					// Reset stopwatch
-					//setStopwatch1(0);
-
-				
+            }				
 				}
 				  
 		// State 5: 
@@ -321,7 +314,6 @@ ROS_INFO("Motor Command Call Back");
   ros::NodeHandle n;   
   ros::Subscriber motor_cmd_sub;
   ros::Publisher motor_info_pub;
-  //ros::Timer motor_info_timer;
   ros::Timer motor_cmd_timer;
   int serial_port;
   u_int8_t *bytes_to_send;
