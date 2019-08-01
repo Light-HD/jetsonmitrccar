@@ -19,13 +19,12 @@ class Translator{
   { 
     ROS_INFO("Initializing");
     n = ros::NodeHandle("~");
-    motor_cmd_sub = n.subscribe("motor_commans", 1000,&Translator::motorcmdCallback,this);
+    motor_cmd_sub = n.subscribe("motor_commands", 1000,&Translator::motorcmdCallback,this);
     motor_info_pub = n.advertise<serial_6w::SixWheelInfo>("motor_controler_info", 1000);   
     //motor_info_timer = n.createTimer(ros::Duration(0.1),&Translator::motorinfoCallback,this); //every 100ms for now
-    motor_cmd_timer = n.createTimer(ros::Duration(0.2),&Translator::motorcmdCallback,this); //every 100ms for now
+    motor_cmd_timer = n.createTimer(ros::Duration(1.0/50.0),&Translator::motorcmdCallback,this); //every 100ms for now
     bytes_to_send = new unsigned char[10];
-    serial_buffer= new unsigned char[20];
-
+    serial_buffer= new unsigned char[1];
     //////////////////
     //Initilise USB//
     /////////////////
@@ -68,14 +67,27 @@ class Translator{
   tty.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
   tty.c_cc[VMIN] = 0;
   // Set in/out baud rate to be 9600
-  cfsetispeed(&tty, B9600);   //B0,  B50,  B75,  B110,  B134,  B150,  B200, B300, B600, B1200, B1800, B2400, B4800, B9600, B19200, B38400, B57600, B115200, B230400, B460800
-  cfsetospeed(&tty, B9600);
+  cfsetispeed(&tty, B57600);   //B0,  B50,  B75,  B110,  B134,  B150,  B200, B300, B600, B1200, B1800, B2400, B4800, B9600, B19200, B38400, B57600, B115200, B230400, B460800
+  cfsetospeed(&tty, B57600);
   // Save tty settings, also checking for error
   if (tcsetattr(serial_port, TCSANOW, &tty) != 0) { 
   ROS_ERROR("Error %i from tcsetattr: %s\n", errno, strerror(errno));
   }
    ROS_INFO("Initialised");
+
+  //Create a Dummy Message To trigger Comminication Between MCU and Serial Port //
+     bytes_to_send[0] = 1;
+     bytes_to_send[1] = 255;
+     bytes_to_send[2] = 8;
+     bytes_to_send[3] = 51; 
+     bytes_to_send[4] = 0;
+     bytes_to_send[5] = 0;
+     bytes_to_send[6] = 0;
+     bytes_to_send[7] = 4;
+     bytes_to_send[8] = '\0';
  }
+
+
 
 void motorcmdCallback(const serial_6w::SixWheelCommand::ConstPtr& msg)  
 {
@@ -106,11 +118,11 @@ ROS_INFO("Motor Command Call Back");
     {
       if((msg->angle)>0)
       {
-        bytes_to_send[4]=4; //we will see :)//TODO: Bacward direction error
+        bytes_to_send[4]=4; //we will see //TODO: Bacward direction error
       }
       else
       {
-        bytes_to_send[4]=3; //we will see :)//TODO: Bacward direction error
+        bytes_to_send[4]=3; //we will see //TODO: Bacward direction error
       } 
     }
 
@@ -144,170 +156,182 @@ ROS_INFO("Motor Command Call Back");
     bytes_to_send[7] = '\0';
 
   }
-
-  write(serial_port, (char*)bytes_to_send , sizeof(char)*bytes_to_send[2]);
   }
 
   void motorcmdCallback(const ros::TimerEvent&)
   {
-    ROS_INFO("OKUYOM");
-    write(serial_port, (char*)bytes_to_send , sizeof(char)*bytes_to_send[2]);
-    int num_bytes = read(serial_port, serial_buffer, sizeof(char)*30);
-    if (num_bytes < 0) {
-    ROS_INFO("Error reading: %s", strerror(errno));
-  }
 
-  u_int8_t State = 0;
-  // This variable counts the received bytes
-  u_int8_t Bytes_Number = 0;
-  // This variable contains the expected message size  
-  u_int8_t BytesToReceive = 0;
-  // This variable contains the information size  
-  u_int8_t InformationSize = 0;
-  // This vabiable contains the ControlByte
-  u_int8_t RecievedControlByte = 0;
-  // This variable keep the current number of information byte
-  u_int8_t InformationByteCounter = 0;
+  u_int8_t State = 0; // This variable determines the message checking stages
+  u_int8_t Bytes_Number = 0; // This varible contains how many bytes recieved
+  u_int8_t BytesToReceive = 0; // This varible contains the expected bytes to recive
+  u_int8_t InformationSize = 0; // This variable contains the information size  
+  u_int8_t RecievedControlByte = 0; // This vabiable contains the ControlByte
+  u_int8_t InformationByteCounter = 0; //This variable keep the current number of information byte
+  
 
-  while(State<5)
-  {		
-    // State 0 : IDLE
-		if(State==0)  
-    { // If the StartByte received
-      ROS_INFO("STATE1");
-	  	if (serial_buffer[Bytes_Number] == 1 ) //Protocol Start Byte
+  ROS_INFO("Reading From MCU");
+  ROS_INFO ("%d - %d - %d - %d - %d - %d - %d - %d",bytes_to_send[0],bytes_to_send[1],bytes_to_send[2],bytes_to_send[3],bytes_to_send[4],bytes_to_send[5],bytes_to_send[6],bytes_to_send[7]);
+
+  write(serial_port, (char*)bytes_to_send , sizeof(char) * bytes_to_send[2]); // Writes the message and Triggers MCU response
+
+  int byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read One Byte 
+  Bytes_Number = Bytes_Number + byte_checker; // Received = 0 + 1 = 1
+  
+
+  if (byte_checker < 0) { ROS_INFO("Error reading: %s", strerror(errno)); } //Check if Serial port woeks fine 
+
+	if(State==0) //STATE 0: Start byte check 
+  { 
+    ROS_INFO("STATE0"); 
+	  	
+      if (serial_buffer[0] == 1) //Protocol Start Byte is 1 
 			{
         State++; //Pass the Stage 1
-				Bytes_Number++; // Received = 0 + 1 = 1
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read next byte
+        Bytes_Number = Bytes_Number + byte_checker; // Received = 1 + 1 = 2
+
 			}
 			else
 			{
         ROS_ERROR("Start Byte is not true!");
 				State = 0;
-        break;
 			}			
 		}	
 
-		// State 1 : Check Adress
-		  if(State==1)
+		
+		  if(State==1)// State 1 : Check Adress
       {
-        ROS_INFO("STATE2");
-        // If the ReceivedByte is My_Adress
-				if (serial_buffer[Bytes_Number] == 255) //My Adress
+        ROS_INFO("STATE1");
+
+				if (serial_buffer[0] == 255) //My Adress is 255
 				{
-				  Bytes_Number++; // Received 1 + 1 = 2
 				  State++; // Go to the next state
+          byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read Next One
+          Bytes_Number = Bytes_Number + byte_checker; // Received = 2 + 1 = 3
+
 				}
 				else
 				{
           ROS_ERROR("Adress is not ture!!");
-          // Otherwise go to the first statement 
 				  State = 0;
-          break;
 				}
-				}					
-		// State 2: Check message size and calculate Information size
-		  if(State==2) 
+			}					
+		  if(State==2) // State 2: Check message size and calculate Information size
       {
-        ROS_INFO("STATE3");
+        ROS_INFO("STATE2");
 				// The RecievedByte in this state contains the size of the message
-				BytesToReceive = serial_buffer[Bytes_Number];
+				BytesToReceive = serial_buffer[0];
 				// Calcule the size of information bytes : That is BytesToReceive minus startbyte, adressbyte, lenghtbyte, controlbyte and stopbyte = 5
 				InformationSize = (BytesToReceive - 5);
 				// Received 2+ 1=3
-				Bytes_Number++;
 				// Go to the next state
 				State++;
 					// Reset stopwatch
-					//setStopwatch1(0);
+					//setStopwatch1(0)
+          byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read Next One
+          Bytes_Number = Bytes_Number + byte_checker; // Received = 3 + 1 = 4
+
 			}					
 	
 		// State 3: Check control byte
 		if(State==3) 
       {
-        ROS_INFO("STATE4");
+        ROS_INFO("STATE3");
 					// Put the ReceivedByte in RecievedControlByte
-					RecievedControlByte = serial_buffer[Bytes_Number];
-					// Received 3+ 1=4
-					Bytes_Number++;
-					// Go to the next state
-					State++;
+					RecievedControlByte = serial_buffer[0];
+					State++; // Pass The Stage
+
 			}					
 
 		// State 4: 
 		if(State==4)   
       {
-        ROS_INFO("STATE5");
+        ROS_INFO("STATE4");
 
-        info_message.linearspeed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor1_speed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor2_speed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor3_speed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor4_speed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor5_speed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor6_speed = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor1_current = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor2_current = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor3_current = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor4_current = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor5_current = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.motor6_current = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.voltage = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
-        info_message.temprature = serial_buffer[InformationByteCounter+4];
-        InformationByteCounter++;
+        // Assign Information to Related Message
+        
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.linearspeed = serial_buffer[0];                      //Linear Speed
+        InformationByteCounter= InformationByteCounter + byte_checker;   // Info = 0 + 1 = 1
 
-					// Fill information array with received byte(s)
-					//RecievedInformationBytes[InformationByteCounter] = ReceivedByte;
-					// InformationByteCounter +
-					// Received + 1
-					Bytes_Number=Bytes_Number+InformationByteCounter;
-					// If this byte was the last information byte
-					if(InformationByteCounter == InformationSize)
-					  {
-				  		// Go to the next state
-				  		State++;
-					  }
-          else
-            {
-              break;
-            }				
-				}
-				  
-		// State 5: 
-				if(State==5)  {
-          ROS_INFO("STATE6");
-					// Received + 1
-					Bytes_Number++;
-					// If the stop byte is received and the number of receiverd bytes = expexed bytes, then the hole packet is reveived
-					if((serial_buffer[Bytes_Number-1]==4) & (Bytes_Number==BytesToReceive))//stop Byte
-					  {
-						// Process received data
-						ROS_INFO("Message is in integrity!!!");
-            State++;
-            motor_info_pub.publish(info_message);
-					  }
-            else
-            {
-            ROS_ERROR("FAILED");
-            break;
-            }
-				  }			  				
-  
-    } 
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor1_speed = serial_buffer[0];                     // First Motor's Speed 
+        InformationByteCounter= InformationByteCounter + byte_checker;   // Info = 1 + 1 = 2
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor2_speed = serial_buffer[0];                      // Second Motor's Speed
+        InformationByteCounter= InformationByteCounter + byte_checker;     // Info = 2 + 1 = 3
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor3_speed = serial_buffer[0];                      // Third Motor's Speed
+        InformationByteCounter= InformationByteCounter + byte_checker;    // Info = 3 + 1 = 4
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor4_speed = serial_buffer[0];                      // Fourth Motor's Speed
+        InformationByteCounter= InformationByteCounter + byte_checker;     // Info = 4 + 1 = 5
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor5_speed = serial_buffer[0];                      // Fifth Motor's Speed
+        InformationByteCounter= InformationByteCounter + byte_checker;    // Info = 5 + 1 = 6
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor6_speed = serial_buffer[0];                      // Sixth Motor's Speed
+        InformationByteCounter= InformationByteCounter + byte_checker;     // Info = 6 + 1 = 7
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor1_current = serial_buffer[0];                    // First Motor's Current
+        InformationByteCounter= InformationByteCounter + byte_checker;     // Info = 7 + 1 = 8
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor2_current = serial_buffer[0];                    // Second Motor's Current
+        InformationByteCounter= InformationByteCounter + byte_checker;     // Info = 8 + 1 = 9
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor3_current = serial_buffer[0];                     // Third Motor's Current
+        InformationByteCounter= InformationByteCounter + byte_checker;     // Info = 9 + 1 = 10
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor4_current = serial_buffer[0];                    // Fourth Motor's Current
+        InformationByteCounter= InformationByteCounter + byte_checker;      // Info = 10 + 1 = 11
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor5_current = serial_buffer[0];                    // Fifth Motor's Current
+        InformationByteCounter= InformationByteCounter + byte_checker;      // Info = 11 + 1 = 12
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.motor6_current = serial_buffer[0];                    // Sixth Motor's Current
+        InformationByteCounter= InformationByteCounter + byte_checker;    // Info = 12 + 1 = 13 
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.voltage = serial_buffer[0];                            // Voltage
+        InformationByteCounter= InformationByteCounter + byte_checker;      // Info = 13 + 1 = 14
+
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
+        info_message.temprature = serial_buffer[0];                         // Temprature
+        InformationByteCounter= InformationByteCounter + byte_checker;      // Info = 14 + 1 = 15
+
+
+
+        Bytes_Number = Bytes_Number+InformationByteCounter;   // 4 + 15 = 19
+
+        
+        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read the End Byte 
+        Bytes_Number=Bytes_Number+byte_checker;   //19 + 1 = 20
+
+        // Check Message Integrity, End Byte and Publish It 
+				if((InformationByteCounter == InformationSize) && (serial_buffer[0] == 4) && (Bytes_Number == 20) )
+				{
+
+        ROS_INFO("Message is in integrity!!!");
+        State++;
+        motor_info_pub.publish(info_message);
+
+        }
+        else
+        {
+          ROS_ERROR("FAILED AFTER STATE 4");
+        }			
+			}		  				 
  }
     
   private:
@@ -325,6 +349,7 @@ ROS_INFO("Motor Command Call Back");
 
 int main(int argc, char **argv)
 {
+  
   ros::init(argc, argv, "serial_communicator"); 
   Translator serial;
   
