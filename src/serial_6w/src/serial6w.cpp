@@ -25,10 +25,12 @@ class Translator{
     motor_cmd_timer = n.createTimer(ros::Duration(1.0/50.0),&Translator::motorcmdCallback,this); //every 100ms for now
     bytes_to_send = new unsigned char[10];
     serial_buffer= new unsigned char[1];
-    //////////////////
-    //Initilise USB//
-    /////////////////
 
+
+
+  //////////////////
+  //Initilise USB//
+  /////////////////
   serial_port = open("/dev/ttyUSB0", O_RDWR);
   // Check for errors
   if (serial_port < 0) {
@@ -73,6 +75,12 @@ class Translator{
   if (tcsetattr(serial_port, TCSANOW, &tty) != 0) { 
   ROS_ERROR("Error %i from tcsetattr: %s\n", errno, strerror(errno));
   }
+
+  ////////////////////////////
+  //End of USB Initilisation//
+  ///////////////////////////
+
+
    ROS_INFO("Initialised");
 
   //Create a Dummy Message To trigger Comminication Between MCU and Serial Port //
@@ -170,7 +178,6 @@ ROS_INFO("Motor Command Call Back");
   
 
   ROS_INFO("Reading From MCU");
-  ROS_INFO ("%d - %d - %d - %d - %d - %d - %d - %d",bytes_to_send[0],bytes_to_send[1],bytes_to_send[2],bytes_to_send[3],bytes_to_send[4],bytes_to_send[5],bytes_to_send[6],bytes_to_send[7]);
 
   write(serial_port, (char*)bytes_to_send , sizeof(char) * bytes_to_send[2]); // Writes the message and Triggers MCU response
 
@@ -184,58 +191,49 @@ ROS_INFO("Motor Command Call Back");
   { 
     ROS_INFO("STATE0"); 
 	  	
-      if (serial_buffer[0] == 1) //Protocol Start Byte is 1 
-			{
-        State++; //Pass the Stage 1
-        byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read next byte
-        Bytes_Number = Bytes_Number + byte_checker; // Received = 1 + 1 = 2
-
-			}
-			else
-			{
-        ROS_ERROR("Start Byte is not true!");
-				State = 0;
-			}			
-		}	
+    if (serial_buffer[0] == 1) //Protocol Start Byte is 1 
+		{
+      State++; //Pass the Stage 1
+      byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read next byte
+      Bytes_Number = Bytes_Number + byte_checker; // Received = 1 + 1 = 2
+    }
+		else
+		{
+      ROS_ERROR("Start Byte is not true!");
+			State = 0;
+		}			
+	}	
 
 		
-		  if(State==1)// State 1 : Check Adress
-      {
-        ROS_INFO("STATE1");
+	if(State==1)// State 1 : Check Adress
+  {
+    ROS_INFO("STATE1");
 
-				if (serial_buffer[0] == 255) //My Adress is 255
-				{
-				  State++; // Go to the next state
-          byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read Next One
-          Bytes_Number = Bytes_Number + byte_checker; // Received = 2 + 1 = 3
-
-				}
-				else
-				{
-          ROS_ERROR("Adress is not ture!!");
-				  State = 0;
-				}
-			}					
-		  if(State==2) // State 2: Check message size and calculate Information size
-      {
-        ROS_INFO("STATE2");
-				// The RecievedByte in this state contains the size of the message
-				BytesToReceive = serial_buffer[0];
-				// Calcule the size of information bytes : That is BytesToReceive minus startbyte, adressbyte, lenghtbyte, controlbyte and stopbyte = 5
-				InformationSize = (BytesToReceive - 5);
-				// Received 2+ 1=3
-				// Go to the next state
-				State++;
-					// Reset stopwatch
-					//setStopwatch1(0)
-          byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read Next One
-          Bytes_Number = Bytes_Number + byte_checker; // Received = 3 + 1 = 4
-
-			}					
-	
-		// State 3: Check control byte
-		if(State==3) 
-      {
+	  if (serial_buffer[0] == 255) //My Adress is 255
+	  {
+		  State++; // Go to the next state
+      byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read Next One
+      Bytes_Number = Bytes_Number + byte_checker; // Received = 2 + 1 = 3
+  	}
+		else
+		{
+      ROS_ERROR("Adress is not ture!!");
+			State = 0;
+		}
+	}					
+	if(State==2) // State 2: Check message size and calculate Information size
+  {
+    ROS_INFO("STATE2");
+		// The RecievedByte in this state contains the size of the message
+		BytesToReceive = serial_buffer[0];
+		// Calcule the size of information bytes : That is BytesToReceive minus startbyte, adressbyte, lenghtbyte, controlbyte and stopbyte = 5
+		InformationSize = (BytesToReceive - 5);
+		State++;// Go to the next state
+    byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1);//Read Next One
+    Bytes_Number = Bytes_Number + byte_checker; // Received = 3 + 1 = 4
+  }					
+	if(State==3) // State 3: Check control byte
+  {
         ROS_INFO("STATE3");
 					// Put the ReceivedByte in RecievedControlByte
 					RecievedControlByte = serial_buffer[0];
@@ -352,7 +350,6 @@ int main(int argc, char **argv)
   
   ros::init(argc, argv, "serial_communicator"); 
   Translator serial;
-  
   ros::spin();
   return 0;
 }
