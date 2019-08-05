@@ -53,13 +53,13 @@ depth_camera.name = "RealSenseCamera"
 depth_camera.translate(0.175,0.0,0.2)
 depth_camera.rotate(0.0, 0.0, 1.57)
 
-rgba_camera = VideoCamera()
-rgba_camera.translate(0.175,0.0,0.2)
-rgba_camera.rotate(0.0, 0.0, 1.57)
-
 rgbd_camera = VideoCamera()
-rgbd_camera.translate(-0.175,0.0,0.2)
-rgbd_camera.rotate(0.0, 3.14, 1.57)
+rgbd_camera.translate(0.175,0.0,0.2)
+rgbd_camera.rotate(0.0, 0.0, 1.57)
+
+rgba_camera = VideoCamera()
+rgba_camera.translate(-0.175,0.0,0.2)
+rgba_camera.rotate(0.0, 3.14, 1.57)
 
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
