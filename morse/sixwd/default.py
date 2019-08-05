@@ -6,6 +6,7 @@ Feel free to edit this template as you like!
 """
 
 from morse.builder import *
+from morse.sensors import *
 from sixwd.builder.robots import Sixwd
 from sixwd.builder.actuators import Basicspeed
 
@@ -16,11 +17,54 @@ from sixwd.builder.actuators import Basicspeed
 # 'morse add robot <name> sixwd' can help you to build custom robots.
 robot = Sixwd()
 
+robot.properties(scale = 1.5)
+robot.scale = [1.5, 1.5, 1.5]
+
+odom = Odometry()
+odom.translate(0.0, 0.0, 0.0)
+odom.rotate(0.0, 0.0, 0.0)
+# odom.level("differential")
+
+imu = IMU()
+imu.name = "imu"
+imu.translate(0.0, 0.0, 0.0)
+imu.rotate(0.0, -1.57, 0.0)
+
+
+# place your component at the correct location
+
+
+laser_scanner = Hokuyo()
+laser_scanner.name = "laser_scan"
+laser_scanner.properties(resolution = 0.5)
+laser_scanner.translate(0.0, 0.0, 0.135)
+laser_scanner.properties(laser_range = 5.0)
+laser_scanner.properties(scan_window = 360)
+laser_scanner.properties(Visible_arc = False)
+laser_scanner.rotate(0.0, 0.0, 1.57)
+laser_scanner.create_laser_arc()
+
+
+depth_camera = DepthCamera() 
+depth_camera.name = "RealSenseCamera"
+# depth_camera.properties(cam_width = 640)
+# depth_camera.properties(cam_height = 480)
+
+depth_camera.translate(0.175,0.0,0.2)
+depth_camera.rotate(0.0, 0.0, 1.57)
+
+rgba_camera = VideoCamera()
+rgba_camera.translate(0.175,0.0,0.2)
+rgba_camera.rotate(0.0, 0.0, 1.57)
+
+rgbd_camera = VideoCamera()
+rgbd_camera.translate(-0.175,0.0,0.2)
+rgbd_camera.rotate(0.0, 3.14, 1.57)
+
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
 robot.translate(1.0, 0.0, 0.5)
-robot.rotate(0.0, 0.0, 3.5)
-robot.scale = [2.0,2.0,2.0]
+robot.rotate(0.0, 0.0, 1.57)
 robot.set_mass(2.0)
 
 # Add a motion controller
@@ -36,11 +80,18 @@ basic_actuate.properties(AngularAcc = 0.006)
 basic_actuate.properties(MaxAngularSpeed = 0.1)
 basic_actuate.properties(MaxSpeed = 0.2)
 basic_actuate.properties(Mode = "Acceleration")
+basic_actuate.properties(decay = 0.9)
 # basic_actuate.properties(frequency = 10.0)
 
 basic_actuate.add_stream('ros','sixwd.middleware.ros.basicspeed_ros.BasicSpeedROS')
 
 
+robot.append(imu)
+robot.append(laser_scanner)
+robot.append(depth_camera)
+robot.append(odom)
+robot.append(rgba_camera)
+robot.append(rgbd_camera)
 
 robot.append(basic_actuate)
 
@@ -69,7 +120,20 @@ robot.append(pose)
 robot.add_default_interface('ros')
 
 # set 'fastmode' to True to switch to wireframe mode
-env = Environment('sandbox', fastmode = False)
+env = Environment('sixwd/environments/last.blend', fastmode = False)
 env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
-env.simulator_frequency(20,5,5)
+env.properties(latitude=1.53, longitude=45.1, altitude=0)
+env.set_viewport(viewport_shade='TEXTURED', clip_end=1000)
+#env.simulator_frequency(20,5,5)
+
+env.show_framerate(True)
+
+robot.add_default_interface('ros') 
+pose.add_stream('ros')
+imu.add_stream('ros')
+depth_camera.add_stream('ros')
+laser_scanner.add_stream('ros',topic="/base_scan")
+odom.add_stream('ros',child_frame_id="/base_link",topic="/odom")
+rgba_camera.add_stream('ros')
+rgbd_camera.add_stream('ros')

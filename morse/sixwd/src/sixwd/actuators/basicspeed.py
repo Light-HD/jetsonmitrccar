@@ -25,8 +25,9 @@ class Basicspeed(morse.core.actuator.Actuator):
     add_property("MaxAngularSpeed",0,"MaxAngularSpeed","double","Max Angular Speed car can achieve")
     add_property("Acceleration",0,"Acceleration","double","Acceleration When in Acceleration Mode")
     add_property("AngularAcc",0,"AngularAcc","double","Angular Acceleration When in Acceleration Mode")
-    add_property("Mode","Velocity","Mode","str","Control Mode:Velocity or Acceleration")
-    
+    add_property("Mode","Velocity","Mode","str","Control Mode:Velocity or Acceleration")  
+    add_property("decay", 0, "decay", "double", "Decay") 
+
     #add_data("X",0,"double","X position of the car")
     #add_data("Y",0,"double","Y position of the car")
     #add_data("Theta",0,"double","Yaw angle of the car")
@@ -40,7 +41,6 @@ class Basicspeed(morse.core.actuator.Actuator):
         logger.info("%s initialization" % obj.name)
         # Call the constructor of the parent class
         morse.core.actuator.Actuator.__init__(self, obj, parent)
-        self.decay = 0.9
         self.local_data["frequency"] = self._frequency
         # Do here actuator specific initializations
         logger.info('Component initialized at %d' % self._frequency)

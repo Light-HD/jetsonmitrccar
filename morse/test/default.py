@@ -6,21 +6,22 @@ Feel free to edit this template as you like!
 """
 
 from morse.builder import *
+from test.builder.robots import Hummerscaled
 
-
-robot = Hummer()
+robot = Hummerscaled()
+robot.properties(scale = 0.3)
 robot.name = "Hummer"
-# robot.scale = [0.3, 0.3, 0.3]
+robot.scale = [0.3, 0.3, 0.3]
 
 odom = Odometry()
 odom.translate(0.0, 0.0, 0.0)
-odom.rotate(0.0, 0.0, 0.0)
+odom.rotate(0.0, 0.0, 1.57)
 # odom.level("differential")
 
 imu = IMU()
 imu.name = "imu"
 imu.translate(0.0, 0.0, 0.0)
-imu.rotate(1.57, 1.57, 0.0)
+imu.rotate(0.0, -1.57, 0.0)
 
 
 # place your component at the correct location
@@ -95,10 +96,10 @@ robot.append(pose)
 
 # set 'fastmode' to True to switch to wireframe mode
 # env = Environment('environments/indoor.blend', fastmode = False)
-env = Environment('sandbox',fastmode = False)
+env = Environment('test/environments/last.blend',fastmode = False)
 env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
-env.properties(latitude=1.53, longitude=45.1, altitude=0)
+env.properties(latitude=1.53, longitude=45.1, altitude=0.0)
 
 env.set_viewport(viewport_shade='TEXTURED', clip_end=1000)
 
