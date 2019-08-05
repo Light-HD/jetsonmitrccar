@@ -50,6 +50,10 @@ rgba_camera = VideoCamera()
 rgba_camera.translate(0.4,0.0,0.5)
 rgba_camera.rotate(1.57,0.0,0.0)
 
+rgbd_camera = VideoCamera()
+rgbd_camera.translate(0.4,0.0,0.5)
+rgbd_camera.rotate(1.57,0.0,0.0)
+
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
 robot.translate(0.0, 0.0, 0.5)
@@ -73,7 +77,7 @@ robot.append(steerforce)
 robot.append(depth_camera)
 robot.append(odom)
 robot.append(rgba_camera)
-
+robot.append(rgbd_camera)
 
 # Add a pose sensor that exports the current location and orientation
 # of the robot in the world frame
@@ -115,3 +119,4 @@ depth_camera.add_stream('ros')
 laser_scanner.add_stream('ros',topic="/base_scan")
 odom.add_stream('ros',child_frame_id="/base_link",topic="/odom")
 rgba_camera.add_stream('ros')
+rgbd_camera.add_stream('ros')
