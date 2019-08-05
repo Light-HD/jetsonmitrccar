@@ -96,8 +96,6 @@ robot.append(pose)
 
 
 
-
-
 # set 'fastmode' to True to switch to wireframe mode
 # env = Environment('environments/indoor.blend', fastmode = False)
 env = Environment('test/environments/last.blend',fastmode = False)

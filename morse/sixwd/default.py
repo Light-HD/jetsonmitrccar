@@ -85,7 +85,6 @@ basic_actuate.properties(decay = 0.9)
 
 basic_actuate.add_stream('ros','sixwd.middleware.ros.basicspeed_ros.BasicSpeedROS')
 
-
 robot.append(imu)
 robot.append(laser_scanner)
 robot.append(depth_camera)
