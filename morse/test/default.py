@@ -6,16 +6,17 @@ Feel free to edit this template as you like!
 """
 
 from morse.builder import *
+from morse.sensors import *
 from test.builder.robots import Hummerscaled
 
 robot = Hummerscaled()
-robot.properties(scale = 0.3)
+robot.properties(scale = 0.2)
 robot.name = "Hummer"
-robot.scale = [0.3, 0.3, 0.3]
+robot.scale = [0.2, 0.2, 0.2]
 
 odom = Odometry()
 odom.translate(0.0, 0.0, 0.0)
-odom.rotate(0.0, 0.0, 1.57)
+odom.rotate(-1.57, 0.0, 1.57)
 # odom.level("differential")
 
 imu = IMU()
@@ -43,20 +44,20 @@ depth_camera.name = "RealSenseCamera"
 # depth_camera.properties(cam_width = 640)
 # depth_camera.properties(cam_height = 480)
 
-depth_camera.translate(0.4,0.0,0.5)
-depth_camera.rotate(0.0, 0.0 ,0.0)
+depth_camera.translate(0.1, 0.3, 1.5)
+depth_camera.rotate(1.57, 0.0, 1.57)
 
 rgbd_camera = VideoCamera()
-rgbd_camera.translate(0.4,0.0,0.5)
-rgbd_camera.rotate(0.0,0.0,0.0)
+rgbd_camera.translate(-0.1, 0.3, 1.5)
+rgbd_camera.rotate(1.57, 0.0, 1.57)
 
 rgba_camera = VideoCamera()
-rgba_camera.translate(-0.4,0.0,0.5)
-rgba_camera.rotate(0.0,3.14,0.0)
+rgba_camera.translate(-0.1, 0.0, 0.5)
+rgba_camera.rotate(1.57, 3.14, 1.57)
 
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
-robot.translate(0.0, 0.0, 0.5)
+robot.translate(1.0, 0.0, 0.5)
 robot.rotate(0.0, 0.0, 0.0)
 
 # Add a motion controller
