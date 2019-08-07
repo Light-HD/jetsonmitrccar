@@ -31,7 +31,7 @@ class Translator{
   //////////////////
   //Initilise USB//
   /////////////////
-  serial_port = open("/dev/ttyUSB0", O_RDWR);
+  serial_port = open("/dev/ttyUSB1", O_RDWR);
   // Check for errors
   if (serial_port < 0) {
   ROS_INFO("Error %i from open: %s\n", errno, strerror(errno));
