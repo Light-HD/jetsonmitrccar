@@ -38,7 +38,6 @@ laser_scanner.properties(Visible_arc = False)
 laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
-
 depth_camera = DepthCamera() 
 depth_camera.name = "RealSenseCamera"
 # depth_camera.properties(cam_width = 640)
