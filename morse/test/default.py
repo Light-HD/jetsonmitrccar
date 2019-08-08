@@ -59,6 +59,7 @@ rgba_camera.rotate(1.57, 3.14, 1.57)
 # is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
 robot.translate(1.0, 0.0, 0.5)
 robot.rotate(0.0, 0.0, 0.0)
+robot.set_mass(0.1)
 
 # Add a motion controller
 # Check here the other available actuators:
