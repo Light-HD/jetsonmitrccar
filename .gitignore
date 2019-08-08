@@ -1,3 +1,5 @@
 /build
 /devel
+/FourWheelCarConfigurations(VESC)
+/SixWheelCar_Firmware
 /src/CMakeLists.txt
