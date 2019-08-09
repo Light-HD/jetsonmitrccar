@@ -1,0 +1,11 @@
+<launch>
+  <node name="extract" pkg="image_view" type="extract_images" respawn="false" output="screen" cwd="node">
+    <remap from="image" to="/camera/infra1/image_rect_raw"/>
+    <param name="filename_format" value="/home/dsrctest/jpgs/left/infra1/left%06i.jpg"/>
+  </node>
+  <node name="extract2" pkg="image_view" type="extract_images" respawn="false" output="screen" cwd="node">
+    <remap from="image" to="/camera/infra2/image_rect_raw"/>
+    <param name="filename_format" value="/home/dsrctest/jpgs/right/infra2/right%06i.jpg"/>
+  </node>
+
+</launch>
