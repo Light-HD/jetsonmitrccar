@@ -44,18 +44,10 @@ laser_scanner.properties(Visible_arc = False)
 laser_scanner.rotate(0.0, 0.0, 1.57)
 laser_scanner.create_laser_arc()
 
+kinect = Kinect()
 
-depth_camera = DepthCamera() 
-depth_camera.name = "RealSenseCamera"
-# depth_camera.properties(cam_width = 640)
-# depth_camera.properties(cam_height = 480)
-
-depth_camera.translate(0.175,0.0,0.2)
-depth_camera.rotate(0.0, 0.0, 1.57)
-
-rgbd_camera = VideoCamera()
-rgbd_camera.translate(0.175,0.0,0.2)
-rgbd_camera.rotate(0.0, 0.0, 1.57)
+kinect.translate(0.175,0.0,0.1)
+kinect.rotate(0.0, 0.0, 0.0)
 
 rgba_camera = VideoCamera()
 rgba_camera.translate(-0.175,0.0,0.2)
@@ -87,11 +79,9 @@ basic_actuate.add_stream('ros','sixwd.middleware.ros.basicspeed_ros.BasicSpeedRO
 
 robot.append(imu)
 robot.append(laser_scanner)
-robot.append(depth_camera)
 robot.append(odom)
 robot.append(rgba_camera)
-robot.append(rgbd_camera)
-
+robot.append(kinect)
 robot.append(basic_actuate)
 
 # Add a keyboard controller to move the robot with arrow keys.
@@ -131,8 +121,7 @@ env.show_framerate(True)
 robot.add_default_interface('ros') 
 pose.add_stream('ros')
 imu.add_stream('ros')
-depth_camera.add_stream('ros')
 laser_scanner.add_stream('ros',topic="/base_scan")
 odom.add_stream('ros',child_frame_id="/base_link",topic="/odom")
 rgba_camera.add_stream('ros')
-rgbd_camera.add_stream('ros')
+kinect.add_stream('ros')

@@ -38,18 +38,10 @@ laser_scanner.properties(Visible_arc = False)
 laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
+kinect = Kinect()
 
-depth_camera = DepthCamera() 
-depth_camera.name = "RealSenseCamera"
-# depth_camera.properties(cam_width = 640)
-# depth_camera.properties(cam_height = 480)
-
-depth_camera.translate(0.1, 0.3, 1.5)
-depth_camera.rotate(1.57, 0.0, 1.57)
-
-rgbd_camera = VideoCamera()
-rgbd_camera.translate(-0.1, 0.3, 1.5)
-rgbd_camera.rotate(1.57, 0.0, 1.57)
+kinect.translate(0.1, 0.3, 1.5)
+kinect.rotate(0.0, 0.0, 1.57)
 
 rgba_camera = VideoCamera()
 rgba_camera.translate(-0.1, 0.0, 0.5)
@@ -76,10 +68,9 @@ steerforce.rotate(0, 0, 0)
 robot.append(imu)
 robot.append(laser_scanner)
 robot.append(steerforce)
-robot.append(depth_camera)
 robot.append(odom)
 robot.append(rgba_camera)
-robot.append(rgbd_camera)
+robot.append(kinect)
 
 # Add a pose sensor that exports the current location and orientation
 # of the robot in the world frame
@@ -115,8 +106,7 @@ robot.add_default_interface('ros')
 steerforce.add_stream('ros')
 pose.add_stream('ros')
 imu.add_stream('ros')
-depth_camera.add_stream('ros')
 laser_scanner.add_stream('ros',topic="/base_scan")
 odom.add_stream('ros',child_frame_id="/base_link",topic="/odom")
 rgba_camera.add_stream('ros')
-rgbd_camera.add_stream('ros')
+kinect.add_stream('ros')
