@@ -1,2 +1,0 @@
-int32 throttle_cmd
-int32 steering_cmd
