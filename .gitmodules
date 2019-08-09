@@ -1,6 +1,6 @@
 [submodule "src/conde"]
 	path = src/conde
-	url = git@github.com:ee09115/conde_simulator.git
+	url = https://github.com/ee09115/conde_simulator.git
 [submodule "src/C++LaneTracker"]
 	path = src/C++LaneTracker
 	url = git@github.com:MichiMaestre/Lane-Detection-for-Autonomous-Cars.git
