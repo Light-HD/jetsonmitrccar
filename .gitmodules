@@ -1,12 +1,15 @@
+[submodule "src/vesc"]
+	path = src/vesc
+	url = https://github.com/erwincoumans/vesc.git
+[submodule "src/racecar_simulator"]
+	path = src/racecar_simulator
+	url = https://github.com/mit-racecar/racecar_simulator.git
+[submodule "src/racecar"]
+	path = src/racecar
+	url = https://github.com/mit-racecar/racecar.git
+[submodule "src/racecar_gazebo"]
+	path = src/racecar_gazebo
+	url = https://github.com/mit-racecar/racecar_gazebo.git
 [submodule "src/conde"]
 	path = src/conde
 	url = https://github.com/ee09115/conde_simulator.git
-[submodule "src/C++LaneTracker"]
-	path = src/C++LaneTracker
-	url = git@github.com:MichiMaestre/Lane-Detection-for-Autonomous-Cars.git
-[submodule "src/vesc"]
-	path = src/vesc
-	url = git@github.com:erwincoumans/vesc.git
-[submodule "src/rplidar_ros"]
-	path = src/rplidar_ros
-	url = git@github.com:Slamtec/rplidar_ros.git
