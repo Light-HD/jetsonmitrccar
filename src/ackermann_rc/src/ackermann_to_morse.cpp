@@ -101,8 +101,8 @@ public:
         }
             
             
-        twist_msg.linear.x = -speed_output;
-        twist_msg.angular.z = -steer_output;
+        twist_msg.linear.x = speed_output;
+        twist_msg.angular.z = steer_output;
         twist_command_pub.publish(twist_msg);
     }
 

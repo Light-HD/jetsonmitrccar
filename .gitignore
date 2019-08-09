@@ -1,4 +1,8 @@
 /build
 /devel
 /src/CMakeLists.txt
+<<<<<<< HEAD
 /.vscode
+=======
+/.vscode
+>>>>>>> Six_Wheel

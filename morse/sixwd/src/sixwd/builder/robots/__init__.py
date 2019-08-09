@@ -1,1 +1,0 @@
-from .Sixwd import Sixwd
