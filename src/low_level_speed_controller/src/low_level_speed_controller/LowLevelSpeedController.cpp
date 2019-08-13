@@ -2,12 +2,20 @@
 #include "low_level_speed_controller/VescSpeedGenerator.h"
 #include "low_level_speed_controller/VescSpeedInterface.h"
 
-LowLevelSpeedController ::LowLevelSpeedController() : node_handle("~"), current_speed(0), message_rate(0.1)
+LowLevelSpeedController ::LowLevelSpeedController() : node_handle("~"), current_speed(0), message_rate(0.1), goal_point_control_rate(0.1)
 {
     ROS_INFO("Low Level Speed Controller Initialized");
     control_topic_name = "/cmd_vel";
+    odom_topic_name = "/odom";
+    point_topic_name = "/current_position";
     control_msg_type = ControlMsgType::Twist;
     control_type = ControlType::Speed;
+
+    use_odom_for_position = true;
+
+    motor_cmd.req_type = SpeedCommandInterfaceBase::CommandRequest::RequestType::SPEED;
+    motor_cmd.value = 0.1;
+    goal_still_active = false;
 }
 
 LowLevelSpeedController ::LowLevelSpeedController(ros::NodeHandle &n) : LowLevelSpeedController()
@@ -18,6 +26,18 @@ LowLevelSpeedController ::LowLevelSpeedController(ros::NodeHandle &n) : LowLevel
     {
         ROS_WARN("COULDNT FIND PARAM control_topic_name. USING /cmd_vel");
     }
+
+     if (!node_handle.getParam("odom_topic_name", odom_topic_name))
+    {
+        ROS_WARN("COULDNT FIND PARAM control_topic_name. USING /odom");
+    }
+
+     if (!node_handle.getParam("point_topic_name", point_topic_name))
+    {
+        ROS_WARN("COULDNT FIND PARAM control_topic_name. USING /current_position");
+    }
+
+    odom_sub = node_handle.subscribe(odom_topic_name, 10, &LowLevelSpeedController::odom_callback, this);
 }
 
 LowLevelSpeedController ::
@@ -81,12 +101,19 @@ LowLevelSpeedController &LowLevelSpeedController ::set_control_type(ControlType 
 void LowLevelSpeedController::twist_callback(const geometry_msgs::Twist::ConstPtr &msg)
 {
     last_msg_twist = *msg;
+
+    if(goal_still_active){
+        ROS_ERROR("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
+        return;
+    }
+
     motor_cmd = commandGenerator->createSpeedCommand(last_msg_twist.linear.x);
 
     if (!keepSendingCommands)
     {
         motor_cmd.req_time = ros::Time::now();
         speedInterface->queue_command(motor_cmd);
+        speedInterface->issue_write_command();
     }
 }
 
@@ -94,22 +121,29 @@ void LowLevelSpeedController::send_msg(const ros::TimerEvent &e)
 {
     motor_cmd.req_time = ros::Time::now();
     speedInterface->queue_command(motor_cmd);
+    speedInterface->issue_write_command();
 }
 
 LowLevelSpeedController &LowLevelSpeedController::set_speed_generator(SpeedCommandGeneratorBase *gen)
 {
     commandGenerator = gen;
+
+    return *this;
 }
 
 LowLevelSpeedController &LowLevelSpeedController::set_message_send_rate(ros::Duration dur)
 {
     message_rate = dur;
     message_timer.setPeriod(dur);
+
+    return *this;
 }
 
 LowLevelSpeedController &LowLevelSpeedController::set_speed_interface(SpeedCommandInterfaceBase *base)
 {
     speedInterface = base;
+
+    return *this;
 }
 
 LowLevelSpeedController &LowLevelSpeedController ::set_continously_send_msg(bool send)
@@ -127,6 +161,8 @@ LowLevelSpeedController &LowLevelSpeedController ::set_continously_send_msg(bool
         message_timer.stop();
         break;
     }
+
+    return *this;
 }
 
 void LowLevelSpeedController::ackermann_callback(const ackermann_msgs::AckermannDrive::ConstPtr &msg){
@@ -143,5 +179,71 @@ LowLevelSpeedController &LowLevelSpeedController::set_max_limits(double acc, dou
     commandGenerator->set_limits(acc, max_sp,min_sp);
 }
 
+LowLevelSpeedController &LowLevelSpeedController::set_use_odom_for_position(bool use){
+    use_odom_for_position = use;
+
+    switch(use){
+        case true:
+            point_sub.shutdown();
+        break;
+
+        case false:
+            point_sub = node_handle.subscribe(point_topic_name,10, &LowLevelSpeedController::point_cb, this);
+        break;
+    }
+
+    return *this;
+}
+
+void LowLevelSpeedController::point_cb(const geometry_msgs::Point::ConstPtr &msg){
+    current_position = *msg;
+    commandGenerator->set_last_point(current_position);
+}
+
+void LowLevelSpeedController::goal_point_callback(const ros::TimerEvent &e){
+    if(distance_between_points(current_position,goal_point) < 0.05){
+        goal_point_callback_timer.stop();
+        commandGenerator->on_goal_reached();
+        goal_still_active = false;
+    }
+
+    motor_cmd = commandGenerator->createSpeedCommand(goal_point);
+    
+
+    if(!keepSendingCommands){
+        motor_cmd.req_time = ros::Time::now();
+        speedInterface->queue_command(motor_cmd);
+        speedInterface->issue_write_command();
+    }
+}
+
+LowLevelSpeedController &LowLevelSpeedController::set_goal_point(geometry_msgs::Point &goal){
+    
+    commandGenerator->on_goal_initialize();
+
+    goal_point = goal;
+    goal_still_active = true;
+    
+    goal_point_callback_timer = node_handle.createTimer(goal_point_control_rate, 
+        &LowLevelSpeedController::goal_point_callback, this);
+
+    
+
+    return *this;
+}
+
+LowLevelSpeedController &LowLevelSpeedController::set_goal_point_control_rate(ros::Duration new_rate){
+    goal_point_control_rate = new_rate;
+    goal_point_callback_timer.setPeriod(new_rate);
+
+    return *this;
+}
+
+LowLevelSpeedController &LowLevelSpeedController::set_current_position(geometry_msgs::Point &pos){
+    current_position = pos;
+    commandGenerator->set_last_point(pos);
+
+    return *this;
+}
 
 //template class LowLevelSpeedController<VescSpeedGenerator,VescSpeedInterface>;

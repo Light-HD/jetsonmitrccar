@@ -1,6 +1,8 @@
 #ifndef MATH_UTILS_LOW_LEVEL_CONTROLLER_H
 #define MATH_UTILS_LOW_LEVEL_CONTROLLER_H
 
+#include "geometry_msgs/Point.h"
+#include "math.h"
 
 inline double clamp_value(double a, double max, double min){
     if(a < min){
@@ -13,4 +15,10 @@ inline double clamp_value(double a, double max, double min){
     
     return a;
 }
+
+
+inline double distance_between_points(geometry_msgs::Point a, geometry_msgs::Point b){
+    return std::sqrt(std::pow(a.x - b.x, 2) + std::pow(a.y - b.y, 2));
+}
+
 #endif
