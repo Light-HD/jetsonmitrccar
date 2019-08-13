@@ -13,3 +13,6 @@
 [submodule "src/conde"]
 	path = src/conde
 	url = https://github.com/ee09115/conde_simulator.git
+[submodule "src/pid"]
+	path = src/pid
+	url = https://bitbucket.org/enwaytech/pid.git
