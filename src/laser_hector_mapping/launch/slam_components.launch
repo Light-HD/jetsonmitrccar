@@ -1,0 +1,32 @@
+<!--
+launches urg_node (which reads the data from the real laserscanner) and hector slam to build the map in realtime,
+while walking around with the sensor in one hand.
+
+Optionally, the scan msgs can be recorded into a bagfile.
+-->
+
+
+<launch>
+
+    <!-- <node name="rviz" pkg="rviz" type="rviz"/> -->
+
+    <!-- Start the node for your lidar here:
+    <node pkg="urg_node" name="urg_node" type="urg_node" output="screen">
+          <param name="ip_address" value="192.168.0.10"/>
+    </node>
+    -->
+
+    <include file="$(find rplidar_ros)/launch/view_rplidar_a3.launch"/>
+
+    <include file="$(find laser_hector_mapping)/launch/real_world_tf.launch"/>
+
+    <include file="$(find laser_hector_mapping)/launch/hector_configuration.launch">
+        <arg name="scan_topic_name" value="scan"/>
+    </include>
+
+    <!--
+    <node pkg="rosbag" type="record" name="scan_recorder" output="screen" args="/scan"/>
+    -->
+
+</launch>
+

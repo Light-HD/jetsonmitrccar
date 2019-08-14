@@ -25,42 +25,76 @@ class LowLevelSpeedController{
         //static_assert(std::is_base_of<SpeedCommandInterfaceBase, TSpeedInterface>::value,"Class should inherit SpeedCommandInterface");
         //static_assert(std::is_base_of<SpeedCommandGeneratorBase, TCommandGen>::value,"Class Should inherit SpeedCommandInterface");
         
+        //Type of the control message to the system. Only one control message type is active at a time.
         enum ControlMsgType { Twist, Ackermann, AckermannStamped };
+
+        // Type of control that should be applied when in FeedForward speed control.
+        // Acceleration interprets incoming control message as speed change.
+        // Speed Control is simple basic speed control. 
         enum ControlType { Speed, Acceleration };
         //enum OperationMode { Manual, Automatic };
 
            
-        LowLevelSpeedController();
+        
+
+        // Constructor with a node handle. Node handle will be used for every timer, subscriber or publisher.
         LowLevelSpeedController(ros::NodeHandle &n);
+
+        // Constructor which sets the internal class handles.
         LowLevelSpeedController(SpeedCommandGeneratorBase *com_gen, SpeedCommandInterfaceBase *speed_interface);
+        
+        // Switch between different Control Message Types
         LowLevelSpeedController &set_control_msg_type(ControlMsgType ctrl_type);
+
+        // Set Speed Generator Handler
         LowLevelSpeedController &set_speed_generator(SpeedCommandGeneratorBase *gen);
+        
+        // Set Speed Interface Handler
         LowLevelSpeedController &set_speed_interface(SpeedCommandInterfaceBase *interface);
+        
+        // Set acceleration max and min limits of speed generator and speed interface at the same time.
         LowLevelSpeedController &set_max_limits(double acc, double max_speed, double min_speed);
+
+        // Switch between Speed or Acceleration Control.
         LowLevelSpeedController &set_control_type(ControlType type);
+
+        // If this is true, last generated speed command continously gets sent to speed  Interface.
         LowLevelSpeedController &set_continously_send_msg(bool send);
+
+        // Period of the message sending rate to the speed interface.
         LowLevelSpeedController &set_message_send_rate(ros::Duration duration);
+
+        // Issue direct speed command value to the system.
         LowLevelSpeedController &send_direct_speed(double speed_value);
+
+        // This is the rate of control command generation when going towards a goal point.
         LowLevelSpeedController &set_goal_point_control_rate(ros::Duration new_rate);
+
+        // Set the point to go. 
         LowLevelSpeedController &set_goal_point(geometry_msgs::Point &goal_point);
 
+        // If this is set, current position data will be fetched from incoming odom messages.
         LowLevelSpeedController &set_use_odom_for_position(bool use);
 
+        // Set Current Position directly. Has no effect if set_use_odom_for_position(true) is called.
         LowLevelSpeedController &set_current_position(geometry_msgs::Point &pos);
         
+        // Set if odom message will be used for speed measurement
         LowLevelSpeedController &set_use_odom_for_speed(bool use){
             use_odom_for_current_speed = use;
 
             return *this;
         }
         
+        // Set the current linear speed directly. No effect if set_use_odom_for_speed(true) is called.
         LowLevelSpeedController &set_current_speed(double speed){
-            if(!use_odom_for_current_speed)
+            if(use_odom_for_current_speed)
                 return *this;
 
             current_speed = speed;
             speedInterface->set_current_speed(speed);
             commandGenerator->set_current_speed(speed);
+
             return *this;
         }
 
@@ -130,6 +164,7 @@ class LowLevelSpeedController{
         bool goal_still_active;
 
     private:
+        LowLevelSpeedController();
         void twist_callback(const geometry_msgs::Twist::ConstPtr &msg);
         void ackermann_callback(const ackermann_msgs::AckermannDrive::ConstPtr &msg);
         void ackermann_stamped_callback(const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg);

@@ -98,24 +98,6 @@ LowLevelSpeedController &LowLevelSpeedController ::set_control_type(ControlType 
     return *this;
 }
 
-void LowLevelSpeedController::twist_callback(const geometry_msgs::Twist::ConstPtr &msg)
-{
-    last_msg_twist = *msg;
-
-    if(goal_still_active){
-        ROS_ERROR("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
-        return;
-    }
-
-    motor_cmd = commandGenerator->createSpeedCommand(last_msg_twist.linear.x);
-
-    if (!keepSendingCommands)
-    {
-        motor_cmd.req_time = ros::Time::now();
-        speedInterface->queue_command(motor_cmd);
-        speedInterface->issue_write_command();
-    }
-}
 
 void LowLevelSpeedController::send_msg(const ros::TimerEvent &e)
 {
@@ -165,13 +147,60 @@ LowLevelSpeedController &LowLevelSpeedController ::set_continously_send_msg(bool
     return *this;
 }
 
+void LowLevelSpeedController::twist_callback(const geometry_msgs::Twist::ConstPtr &msg)
+{
+    last_msg_twist = *msg;
+
+    if(goal_still_active){
+        ROS_WARN("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
+        return;
+    }
+
+    motor_cmd = commandGenerator->createSpeedCommand(last_msg_twist.linear.x);
+
+    if (!keepSendingCommands)
+    {
+        motor_cmd.req_time = ros::Time::now();
+        speedInterface->queue_command(motor_cmd);
+        speedInterface->issue_write_command();
+    }
+}
+
 void LowLevelSpeedController::ackermann_callback(const ackermann_msgs::AckermannDrive::ConstPtr &msg){
+    last_msg_ackermann = *msg;
+
+    if(goal_still_active){
+        ROS_WARN("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
+        return;
+    }
+
+    motor_cmd = commandGenerator->createSpeedCommand(last_msg_ackermann.speed);
+
+    if(!keepSendingCommands){
+        motor_cmd.req_time = ros::Time::now();
+        speedInterface->queue_command(motor_cmd);
+        speedInterface->issue_write_command();
+    }
 
 }
 
 void LowLevelSpeedController::
     ackermann_stamped_callback(const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg){
     
+    last_msg_ackermann_stamped = *msg;
+
+    if(goal_still_active){
+        ROS_WARN("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
+        return;
+    }
+
+    motor_cmd = commandGenerator->createSpeedCommand(last_msg_ackermann.speed);
+
+    if(!keepSendingCommands){
+        motor_cmd.req_time = last_msg_ackermann_stamped.header.stamp;
+        speedInterface->queue_command(motor_cmd);
+        speedInterface->issue_write_command();
+    }
 }
 
 LowLevelSpeedController &LowLevelSpeedController::set_max_limits(double acc, double max_sp, double min_sp){
@@ -240,6 +269,9 @@ LowLevelSpeedController &LowLevelSpeedController::set_goal_point_control_rate(ro
 }
 
 LowLevelSpeedController &LowLevelSpeedController::set_current_position(geometry_msgs::Point &pos){
+    if(use_odom_for_position)
+        return *this;
+
     current_position = pos;
     commandGenerator->set_last_point(pos);
 
