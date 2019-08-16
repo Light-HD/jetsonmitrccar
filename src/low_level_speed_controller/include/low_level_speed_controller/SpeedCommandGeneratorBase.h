@@ -2,6 +2,8 @@
 
 #include "ros/ros.h"
 #include "nav_msgs/Odometry.h"
+#include "geometry_msgs/Point.h"
+
 #include "low_level_speed_controller/SpeedCommandInterfaceBase.h"
 #include "math_utils.h"
 
@@ -24,8 +26,16 @@ class SpeedCommandGeneratorBase{
             return *this;
         }
 
-        SpeedCommandGeneratorBase &set_odom_data(nav_msgs::Odometry msg){
+        SpeedCommandGeneratorBase &set_odom_data(nav_msgs::Odometry &msg){
             last_odom_msg = msg;
+            last_position = last_odom_msg.pose.pose.position;
+
+            return *this;
+        }
+
+        SpeedCommandGeneratorBase &set_last_point(geometry_msgs::Point &data){
+            last_position = data;
+
             return *this;
         }
 
@@ -42,25 +52,29 @@ class SpeedCommandGeneratorBase{
         double get_min_speed() const { return min_linear_speed; }
         double get_max_linear_speed() const { return max_linear_speed; }
 
+        virtual void on_goal_reached() = 0;
+        virtual void on_goal_initialize() = 0;
+        virtual CommandRequest createSpeedCommand(geometry_msgs::Point &goal_point) = 0;
         virtual CommandRequest createSpeedCommand(double speed_setpoint) = 0;
 
     private:
     protected:
-        
-        //virtual void odom_callback(const nav_msgs::Odometry::ConstPtr &msg){ last_odom_msg = *msg; }
-        //void send_msg(ros::TimerEvent &e);
-        std::string odom_topic_name;
+        ros::NodeHandle node_handle;
+
         CommandRequest last_request;
+        
         ControlType control_type;
 
-        ros::NodeHandle node_handle;
+        std::string odom_topic_name;
+        
         double max_acc_limit;
         double max_linear_speed;
         double min_linear_speed;
-        //bool keepSendingMessages;
+        
         double current_speed;
-        //ros::Duration message_sending_rate;
+
         nav_msgs::Odometry last_odom_msg;
-        //ros::Subscriber odom_sub;
-        //ros::Timer message_timer;
+        geometry_msgs::Point last_position;
+
+        geometry_msgs::Point goal_point;
 };

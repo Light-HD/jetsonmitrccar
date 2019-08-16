@@ -16,13 +16,36 @@ VescSpeedInterface::VescSpeedInterface(ros::NodeHandle &n) : SpeedCommandInterfa
         topic_name = "/commands/motor/speed";
     }
 
+    if(!node_handle.getParam("takeoff_topic_name",takeoff_topic_name)){
+        ROS_WARN("Did not receive takeoff_topic_name param. Using /commands/motor/current");
+        takeoff_topic_name = "/commands/motor/current";
+    }
+
+    if(!node_handle.getParam("takeoff_current", takeoff_current)){
+        ROS_WARN("Did not receive takeoff_current param. Using 10.0");
+        takeoff_current = 10.0;
+    }
+
+    takeoff_publisher = node_handle.advertise<std_msgs::Float64>(takeoff_topic_name, 10, false);
     data_publisher = node_handle.advertise<std_msgs::Float64>(topic_name,10,false);
 }
 
 
 bool VescSpeedInterface::send_command(CommandRequest &comm, bool manual = false){
     std_msgs::Float64 msg;
-    msg.data = comm.value;
 
-    data_publisher.publish(msg);
+    switch(comm.req_type){
+        case CommandRequest::RequestType::SPEED:
+        case CommandRequest::RequestType::ACCELERATION:
+            msg.data = comm.value;
+            data_publisher.publish(msg);
+        break;
+
+        case CommandRequest::RequestType::TAKEOFF:
+            msg.data = takeoff_current;
+            takeoff_publisher.publish(msg);
+        break;
+    }
+
+    return true;
 }
