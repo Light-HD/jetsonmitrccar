@@ -5,9 +5,9 @@
 CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
     CommandRequest command;
     
-    if(abs(current_speed) < 100.0){
+    if(abs(current_speed) < takeoff_speed_limit){
         command.req_type = CommandRequest::RequestType::TAKEOFF;
-        command.value = 100.0;
+        command.value = takeoff_speed_limit * sign(input_setpoint);
         return command;
     }
 
@@ -105,6 +105,8 @@ VescSpeedGenerator::VescSpeedGenerator(ros::NodeHandle &n) : SpeedCommandGenerat
     state_update_rate = ros::Duration(0.05);
     state_update_timer.setPeriod(state_update_rate);
 
+    takeoff_speed_limit = 0.25;
+
     if (!node_handle.getParam("control_effort_topic", control_effort_topic))
     {
         ROS_WARN("COULDNT FIND PARAM control_effort_topic. USING /control_effort");
@@ -123,6 +125,11 @@ VescSpeedGenerator::VescSpeedGenerator(ros::NodeHandle &n) : SpeedCommandGenerat
     if (!node_handle.getParam("enable_topic", enable_topic))
     {
         ROS_WARN("COULDNT FIND PARAM enable_topic. USING /pid_enable");
+    }
+
+    if (!node_handle.getParam("takeoff_speed_limit", takeoff_speed_limit))
+    {
+        ROS_WARN("COULDNT FIND PARAM takeoff_speed_limit. USING 0.25");
     }
     
     control_effort_sub = node_handle.subscribe(control_effort_topic, 100, &VescSpeedGenerator::control_effort_callback, this);

@@ -42,7 +42,7 @@ bool VescSpeedInterface::send_command(CommandRequest &comm, bool manual = false)
         break;
 
         case CommandRequest::RequestType::TAKEOFF:
-            msg.data = takeoff_current;
+            msg.data = takeoff_current * sign(comm.value);
             takeoff_publisher.publish(msg);
         break;
     }
