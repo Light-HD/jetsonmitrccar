@@ -2,23 +2,19 @@
 #include "low_level_speed_controller/VescSpeedGenerator.h"
 #include "low_level_speed_controller/VescSpeedInterface.h"
 
-LowLevelSpeedController ::LowLevelSpeedController() : node_handle("~"), current_speed(0), message_rate(0.1), goal_point_control_rate(0.1)
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> ::LowLevelSpeedController() : node_handle("~"), current_speed(0), message_rate(0.1)
 {
     ROS_INFO("Low Level Speed Controller Initialized");
     control_topic_name = "/cmd_vel";
-    odom_topic_name = "/odom";
-    point_topic_name = "/current_position";
     control_msg_type = ControlMsgType::Twist;
     control_type = ControlType::Speed;
 
-    use_odom_for_position = true;
 
-    motor_cmd.req_type = SpeedCommandInterfaceBase::CommandRequest::RequestType::SPEED;
-    motor_cmd.value = 0.1;
-    goal_still_active = false;
 }
 
-LowLevelSpeedController ::LowLevelSpeedController(ros::NodeHandle &n) : LowLevelSpeedController()
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface>::LowLevelSpeedController(ros::NodeHandle &n) : LowLevelSpeedController()
 {
     node_handle = n;
 
@@ -27,33 +23,28 @@ LowLevelSpeedController ::LowLevelSpeedController(ros::NodeHandle &n) : LowLevel
         ROS_WARN("COULDNT FIND PARAM control_topic_name. USING /cmd_vel");
     }
 
-     if (!node_handle.getParam("odom_topic_name", odom_topic_name))
-    {
-        ROS_WARN("COULDNT FIND PARAM control_topic_name. USING /odom");
-    }
-
-     if (!node_handle.getParam("point_topic_name", point_topic_name))
-    {
-        ROS_WARN("COULDNT FIND PARAM control_topic_name. USING /current_position");
-    }
-
-    odom_sub = node_handle.subscribe(odom_topic_name, 10, &LowLevelSpeedController::odom_callback, this);
+    speedInterface = std::make_unique<TSpeedInterface>(new TSpeedInterface);
 }
 
-LowLevelSpeedController ::
-    LowLevelSpeedController(SpeedCommandGeneratorBase *com_gen, SpeedCommandInterfaceBase *s_int)
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> ::
+    LowLevelSpeedController(std::unique_ptr<TCommandGen> com_gen, 
+        std::unique_ptr<TSpeedInterface> s_int)
     : LowLevelSpeedController()
 {
-
+    
     //SpeedCommandGeneratorBase *command_base = static_cast<SpeedCommandGeneratorBase>(com_gen);
     //SpeedCommandInterfaceBase *s_interface = static_cast<SpeedCommandInterfaceBase>(s_int);
 
-    commandGenerator = com_gen;
-    speedInterface = s_int;
+    //commandGenerator = std::make_unique<SpeedCommandGeneratorBase>(com_gen);
+    //speedInterface = std::make_unique<SpeedCommandInterfaceBase>(s_int);
     //speedInterface->set_operation_type(SpeedCommandInterfaceBase::OperationType::MANUAL);
 }
 
-LowLevelSpeedController &LowLevelSpeedController::set_control_msg_type(ControlMsgType ctrl_type)
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> 
+        &LowLevelSpeedController<TCommandGen, TSpeedInterface>
+            ::set_control_msg_type(ControlMsgType ctrl_type)
 {
 
     this->control_msg_type = ctrl_type;
@@ -79,7 +70,10 @@ LowLevelSpeedController &LowLevelSpeedController::set_control_msg_type(ControlMs
     return *this;
 }
 
-LowLevelSpeedController &LowLevelSpeedController ::set_control_type(ControlType ctrl_type)
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> 
+        &LowLevelSpeedController<TCommandGen, TSpeedInterface>
+            ::set_control_type(ControlType ctrl_type)
 {
 
     this->control_type = ctrl_type;
@@ -98,37 +92,49 @@ LowLevelSpeedController &LowLevelSpeedController ::set_control_type(ControlType 
     return *this;
 }
 
+template<class TCommandGen, class TSpeedInterface>
+void LowLevelSpeedController<TCommandGen, TSpeedInterface>::twist_callback(const geometry_msgs::Twist::ConstPtr &msg)
+{
+    last_msg_twist = *msg;
+    motor_cmd = commandGenerator->createSpeedCommand(last_msg_twist.linear.x);
 
-void LowLevelSpeedController::send_msg(const ros::TimerEvent &e)
+    if (!keepSendingCommands)
+    {
+        motor_cmd.req_time = ros::Time::now();
+        speedInterface->queue_command(motor_cmd);
+    }
+}
+
+template<class TCommandGen, class TSpeedInterface>
+void LowLevelSpeedController<TCommandGen, TSpeedInterface>::send_msg(const ros::TimerEvent &e)
 {
     motor_cmd.req_time = ros::Time::now();
     speedInterface->queue_command(motor_cmd);
-    speedInterface->issue_write_command();
 }
 
-LowLevelSpeedController &LowLevelSpeedController::set_speed_generator(SpeedCommandGeneratorBase *gen)
+/*LowLevelSpeedController &LowLevelSpeedController::set_speed_generator(SpeedCommandGeneratorBase *gen)
 {
     commandGenerator = gen;
+}*/
 
-    return *this;
-}
-
-LowLevelSpeedController &LowLevelSpeedController::set_message_send_rate(ros::Duration dur)
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> 
+    &LowLevelSpeedController<TCommandGen, TSpeedInterface>
+        ::set_message_send_rate(ros::Duration dur)
 {
     message_rate = dur;
     message_timer.setPeriod(dur);
-
-    return *this;
 }
 
-LowLevelSpeedController &LowLevelSpeedController::set_speed_interface(SpeedCommandInterfaceBase *base)
+/*LowLevelSpeedController &LowLevelSpeedController::set_speed_interface(SpeedCommandInterfaceBase *base)
 {
     speedInterface = base;
+}*/
 
-    return *this;
-}
-
-LowLevelSpeedController &LowLevelSpeedController ::set_continously_send_msg(bool send)
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> 
+    &LowLevelSpeedController<TCommandGen, TSpeedInterface> 
+        ::set_continously_send_msg(bool send)
 {
     keepSendingCommands = send;
 
@@ -143,139 +149,26 @@ LowLevelSpeedController &LowLevelSpeedController ::set_continously_send_msg(bool
         message_timer.stop();
         break;
     }
-
-    return *this;
 }
 
-void LowLevelSpeedController::twist_callback(const geometry_msgs::Twist::ConstPtr &msg)
-{
-    last_msg_twist = *msg;
-
-    if(goal_still_active){
-        ROS_WARN("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
-        return;
-    }
-
-    motor_cmd = commandGenerator->createSpeedCommand(last_msg_twist.linear.x);
-
-    if (!keepSendingCommands)
-    {
-        motor_cmd.req_time = ros::Time::now();
-        speedInterface->queue_command(motor_cmd);
-        speedInterface->issue_write_command();
-    }
-}
-
-void LowLevelSpeedController::ackermann_callback(const ackermann_msgs::AckermannDrive::ConstPtr &msg){
-    last_msg_ackermann = *msg;
-
-    if(goal_still_active){
-        ROS_WARN("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
-        return;
-    }
-
-    motor_cmd = commandGenerator->createSpeedCommand(last_msg_ackermann.speed);
-
-    if(!keepSendingCommands){
-        motor_cmd.req_time = ros::Time::now();
-        speedInterface->queue_command(motor_cmd);
-        speedInterface->issue_write_command();
-    }
+template<class TCommandGen, class TSpeedInterface>
+void LowLevelSpeedController<TCommandGen, TSpeedInterface>::ackermann_callback(const ackermann_msgs::AckermannDrive::ConstPtr &msg){
 
 }
 
-void LowLevelSpeedController::
+template<class TCommandGen, class TSpeedInterface>
+void LowLevelSpeedController<TCommandGen, TSpeedInterface>::
     ackermann_stamped_callback(const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg){
     
-    last_msg_ackermann_stamped = *msg;
-
-    if(goal_still_active){
-        ROS_WARN("ALREADY GOING TO A GOAL POINT. DISCARDING SPEED REQUEST");
-        return;
-    }
-
-    motor_cmd = commandGenerator->createSpeedCommand(last_msg_ackermann.speed);
-
-    if(!keepSendingCommands){
-        motor_cmd.req_time = last_msg_ackermann_stamped.header.stamp;
-        speedInterface->queue_command(motor_cmd);
-        speedInterface->issue_write_command();
-    }
 }
 
-LowLevelSpeedController &LowLevelSpeedController::set_max_limits(double acc, double max_sp, double min_sp){
+template<class TCommandGen, class TSpeedInterface>
+LowLevelSpeedController<TCommandGen, TSpeedInterface> 
+    &LowLevelSpeedController<TCommandGen, TSpeedInterface>
+        ::set_max_limits(double acc, double max_sp, double min_sp){
     speedInterface->set_max_limits(acc, max_sp, min_sp);
     commandGenerator->set_limits(acc, max_sp,min_sp);
 }
 
-LowLevelSpeedController &LowLevelSpeedController::set_use_odom_for_position(bool use){
-    use_odom_for_position = use;
-
-    switch(use){
-        case true:
-            point_sub.shutdown();
-        break;
-
-        case false:
-            point_sub = node_handle.subscribe(point_topic_name,10, &LowLevelSpeedController::point_cb, this);
-        break;
-    }
-
-    return *this;
-}
-
-void LowLevelSpeedController::point_cb(const geometry_msgs::Point::ConstPtr &msg){
-    current_position = *msg;
-    commandGenerator->set_last_point(current_position);
-}
-
-void LowLevelSpeedController::goal_point_callback(const ros::TimerEvent &e){
-    if(distance_between_points(current_position,goal_point) < 0.05){
-        goal_point_callback_timer.stop();
-        commandGenerator->on_goal_reached();
-        goal_still_active = false;
-    }
-
-    motor_cmd = commandGenerator->createSpeedCommand(goal_point);
-    
-
-    if(!keepSendingCommands){
-        motor_cmd.req_time = ros::Time::now();
-        speedInterface->queue_command(motor_cmd);
-        speedInterface->issue_write_command();
-    }
-}
-
-LowLevelSpeedController &LowLevelSpeedController::set_goal_point(geometry_msgs::Point &goal){
-    
-    commandGenerator->on_goal_initialize();
-
-    goal_point = goal;
-    goal_still_active = true;
-    
-    goal_point_callback_timer = node_handle.createTimer(goal_point_control_rate, 
-        &LowLevelSpeedController::goal_point_callback, this);
-
-    
-
-    return *this;
-}
-
-LowLevelSpeedController &LowLevelSpeedController::set_goal_point_control_rate(ros::Duration new_rate){
-    goal_point_control_rate = new_rate;
-    goal_point_callback_timer.setPeriod(new_rate);
-
-    return *this;
-}
-
-LowLevelSpeedController &LowLevelSpeedController::set_current_position(geometry_msgs::Point &pos){
-    if(use_odom_for_position)
-        return *this;
-
-    current_position = pos;
-    commandGenerator->set_last_point(pos);
-
-    return *this;
-}
 
 //template class LowLevelSpeedController<VescSpeedGenerator,VescSpeedInterface>;

@@ -22,7 +22,7 @@ class SpeedCommandInterfaceBase{
         };
 
         void queue_command(struct CommandRequest &command){ 
-            //ROS_INFO("COMMAND RECEIVED"); 
+            ROS_INFO("COMMAND RECEIVED"); 
             command_queue.push(command); 
         }
         int return_remaining_command_count() const{ return command_queue.size(); }
@@ -34,10 +34,6 @@ class SpeedCommandInterfaceBase{
         SpeedCommandInterfaceBase &set_current_speed(double);
 
         void issue_write_command(){
-            if(op_type == OperationType::AUTOMATIC){
-                return;
-            }
-
             if(command_queue.size()){
                 CommandRequest comm = command_queue.front();
                 
@@ -47,7 +43,7 @@ class SpeedCommandInterfaceBase{
 
                 send_command(comm, true);
                 command_queue.pop();
-                //ROS_INFO("COMMAND PROCESSED");
+                ROS_INFO("COMMAND PROCESSED");
             }else{
                 ROS_WARN("NO COMMAND LEFT TO SEND");
             }
@@ -71,7 +67,7 @@ class SpeedCommandInterfaceBase{
 
                 send_command(comm, false);
                 command_queue.pop();
-                //ROS_INFO("COMMAND PROCESSED");
+                ROS_INFO("COMMAND PROCESSED");
             }else{
                 ROS_WARN("NO COMMAND LEFT TO SEND");
             }
