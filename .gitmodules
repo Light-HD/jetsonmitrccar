@@ -16,3 +16,6 @@
 [submodule "src/pid"]
 	path = src/pid
 	url = https://bitbucket.org/enwaytech/pid.git
+[submodule "src/imu_tools"]
+	path = src/imu_tools
+	url = https://github.com/happycity26/imu_tools.git
