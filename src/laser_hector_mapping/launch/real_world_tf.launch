@@ -11,10 +11,14 @@ tf for Hokuyo UST-20LX with Hector SLAM when carried by hand:
 
 <launch>
 
-    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link"
-          args="0.0 0.0 0.0 0 0 0.0 /slam_base_footprint /slam_base_link 10"/>
+    <!--node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link"
+          args="0.0 0.0 0.0 0 0 0.0 /slam_base_footprint /slam_base_link 10"/-->
 
     <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
-          args="0.2245 0.0 0.2 0.0 0.0 0.0 /slam_base_link /laser 10"/>
+          args="0.2245 0.0 0.2 0.0 0.0 0.0 /base_link /laser 10"/>
+
+   <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+          args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom 10"/>
+	
 
 </launch>

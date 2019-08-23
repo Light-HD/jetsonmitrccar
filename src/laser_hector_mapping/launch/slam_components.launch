@@ -8,7 +8,7 @@ Optionally, the scan msgs can be recorded into a bagfile.
 
 <launch>
 
-    <!-- <node name="rviz" pkg="rviz" type="rviz"/> -->
+    <!--node name="rviz" pkg="rviz" type="rviz"/-->
 
     <!-- Start the node for your lidar here:
     <node pkg="urg_node" name="urg_node" type="urg_node" output="screen">
