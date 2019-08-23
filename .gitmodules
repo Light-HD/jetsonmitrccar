@@ -21,4 +21,13 @@
 	url = https://github.com/happycity26/imu_tools.git
 [submodule "src/rf2o_laser_odometry"]
 	path = src/rf2o_laser_odometry
-	url = https://github.com/MAPIRlab/mapir-ros-pkgs.git
+	url = https://github.com/MAPIRlab/rf2o_laser_odometry.git
+[submodule "src/gscam"]
+	path = src/gscam
+	url = https://github.com/ros-drivers/gscam.git
+[submodule "src/hector_slam"]
+	path = src/hector_slam
+	url = https://github.com/tu-darmstadt-ros-pkg/hector_slam.git
+[submodule "src/rplidar_ros"]
+	path = src/rplidar_ros
+	url = https://github.com/Slamtec/rplidar_ros.git
