@@ -1,9 +1,13 @@
 # This is a slightly modified version with including both patch scripts and realsense install scripts.
 Install realsense script should be called with correct version number inside. Please make sure no librealsense folder exists in the target destination in script. Currently it is ~.
 You should proceed with continuing the build of realsense in the folder. Inside realsense folder:
+
 $ mkdir -p build/
+
 $ cd build/
+
 $ cmake ..
+
 $ sudo make install
 
 Patch kernel script should take care of the rest afterwards. Please make sure to have 5 6 Gb of free space before this step.
