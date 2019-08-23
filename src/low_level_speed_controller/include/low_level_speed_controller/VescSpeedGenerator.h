@@ -8,7 +8,6 @@
 
 class VescSpeedGenerator : public SpeedCommandGeneratorBase{
     public:
-        VescSpeedGenerator();
         VescSpeedGenerator(ros::NodeHandle &n);
         CommandRequest createSpeedCommand(double speed_setpoint);
         CommandRequest createSpeedCommand(geometry_msgs::Point &nav_goal);
@@ -18,6 +17,7 @@ class VescSpeedGenerator : public SpeedCommandGeneratorBase{
         ~VescSpeedGenerator(){}
 
     private:
+        VescSpeedGenerator();
         void control_effort_callback(const std_msgs::Float64::ConstPtr &msg);
 
         ros::Subscriber control_effort_sub;

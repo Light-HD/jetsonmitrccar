@@ -4,41 +4,47 @@
 
 CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
     CommandRequest command;
-    
-    if(abs(current_speed) < takeoff_speed_limit){
-        command.req_type = CommandRequest::RequestType::TAKEOFF;
-        command.value = takeoff_speed_limit * sign(input_setpoint);
-        return command;
-    }
+
+    //ROS_INFO("Set Point received for speed: %f", input_setpoint);
 
     
     switch(control_type){
         case SpeedCommandGeneratorBase::ControlType::Acceleration:
         {
             input_setpoint = (input_setpoint > 0.0) ? 
-                (clamp_value(input_setpoint, 0.0, max_acc_limit)) : 
-                    (-clamp_value(-input_setpoint, 0.0, max_acc_limit));
+                (clamp_value(input_setpoint, max_acc_limit, 0.0)) : 
+                    (-clamp_value(-input_setpoint, max_acc_limit, 0.0));
 
             double setpoint = input_setpoint + current_speed;
             setpoint = (setpoint > 0.0) ? 
-                (clamp_value(setpoint,max_linear_speed,min_linear_speed)) : 
+                (clamp_value(setpoint, max_linear_speed, min_linear_speed)) : 
                     (-clamp_value(-setpoint, max_linear_speed, min_linear_speed));
 
             command.value = setpoint;
             command.req_type = CommandRequest::RequestType::SPEED;
             break;
-
         }
             
         case SpeedCommandGeneratorBase::ControlType::Speed:
         {
-            input_setpoint = (input_setpoint * 3485.3528) + 16.6;
-            input_setpoint = (input_setpoint > 0.0) ? 
-                (clamp_value(input_setpoint,max_linear_speed,min_linear_speed)) : 
-                    (-clamp_value(-input_setpoint, max_linear_speed, min_linear_speed));
-   
-            command.value = input_setpoint;
-            command.req_type = CommandRequest::RequestType::SPEED;
+            if(input_setpoint != 0.0){
+                input_setpoint = (input_setpoint > 0.0) ? 
+                    (clamp_value(input_setpoint, max_linear_speed, min_linear_speed)) : 
+                        (-clamp_value(-input_setpoint, max_linear_speed, min_linear_speed));
+            }
+
+
+            if(abs(current_speed) < takeoff_speed_limit && abs(input_setpoint) > takeoff_speed_limit){
+                //ROS_INFO("Current Speed %f", current_speed);
+                ROS_INFO("Takeoff Issued. Current Speed: %f", current_speed);
+                command.req_type = CommandRequest::RequestType::TAKEOFF;
+                command.value = input_setpoint;
+                return command;
+            }else{
+                command.value = input_setpoint;
+                command.req_type = CommandRequest::RequestType::SPEED;
+            }
+
             break;
         }
             
@@ -70,7 +76,7 @@ void VescSpeedGenerator::update_states(const ros::TimerEvent &e){
 
     state_pub.publish(msg);
 
-    ROS_INFO("Distance to Goal is %f",msg.data);
+    ROS_INFO("Distance to Goal is %f", msg.data);
 
     std_msgs::Float64 setpoint;
     setpoint.data = 0;
@@ -105,7 +111,8 @@ VescSpeedGenerator::VescSpeedGenerator(ros::NodeHandle &n) : SpeedCommandGenerat
     state_update_rate = ros::Duration(0.05);
     state_update_timer.setPeriod(state_update_rate);
 
-    takeoff_speed_limit = 0.25;
+    takeoff_speed_limit = 0.2524;
+    
 
     if (!node_handle.getParam("control_effort_topic", control_effort_topic))
     {
@@ -129,7 +136,7 @@ VescSpeedGenerator::VescSpeedGenerator(ros::NodeHandle &n) : SpeedCommandGenerat
 
     if (!node_handle.getParam("takeoff_speed_limit", takeoff_speed_limit))
     {
-        ROS_WARN("COULDNT FIND PARAM takeoff_speed_limit. USING 0.25");
+        ROS_WARN("COULDNT FIND PARAM takeoff_speed_limit. USING 0.2524");
     }
     
     control_effort_sub = node_handle.subscribe(control_effort_topic, 100, &VescSpeedGenerator::control_effort_callback, this);

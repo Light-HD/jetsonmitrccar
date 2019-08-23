@@ -53,8 +53,8 @@ namespace pose_follower {
 
     collision_planner_.initialize(name, tf_, costmap_ros_);
 
-    node_private.param("k_trans", K_trans_, 0.9);
-    node_private.param("k_rot", K_rot_, 0.9);
+    node_private.param("k_trans", K_trans_, 2.0);
+    node_private.param("k_rot", K_rot_, 2.0);
 
     //within this distance to the goal, finally rotate to the goal heading (also, we've reached our goal only if we're within this dist)
     node_private.param("tolerance_trans", tolerance_trans_, 0.02); 
@@ -135,7 +135,7 @@ namespace pose_follower {
     setpoint_msg.data = 0.0;
     setpoint_pub.publish(setpoint_msg);
 
-    ROS_INFO("Initialization Finished");
+    ROS_INFO("Initialized");
   }
 
   void PoseFollower::odomCallback(const nav_msgs::Odometry::ConstPtr& msg){
@@ -423,6 +423,7 @@ namespace pose_follower {
       cmd_vel = empty_twist;
     }
 
+    cmd_vel.linear.y = 0.0;
     return true;
   }
 
@@ -470,7 +471,7 @@ namespace pose_follower {
         pose2.getOrigin().x(), pose2.getOrigin().y(), tf2::getYaw(pose2.getRotation()));
 
     //we'll also check if we can move more effectively backwards
-    if (allow_backwards_) 
+    /*if (allow_backwards_) 
     {
       double neg_yaw_diff = headingDiff(pose1.getOrigin().x(), pose1.getOrigin().y(), 
 					pose2.getOrigin().x(), pose2.getOrigin().y(), M_PI + tf2::getYaw(pose2.getRotation()));
@@ -480,7 +481,7 @@ namespace pose_follower {
         ROS_DEBUG("Negative is better: %.2f", neg_yaw_diff);
         yaw_diff = neg_yaw_diff;
       }
-    }
+    }*/
 
     //compute the desired quaterion
     tf2::Quaternion rot_diff;
@@ -499,7 +500,7 @@ namespace pose_follower {
 
   geometry_msgs::Twist PoseFollower::limitTwist(const geometry_msgs::Twist& twist)
   {
-    geometry_msgs::Twist res = twist;
+    /*geometry_msgs::Twist res = twist;
     res.linear.x *= K_trans_;
     if(!holonomic_)
       res.linear.y = 0.0;
@@ -540,9 +541,27 @@ namespace pose_follower {
     if (std::isnan(res.linear.y))
         res.linear.y = 0.0;
 
+    //we want to check for whether or not we're desired to rotate in place
+    if(sqrt(twist.linear.x * twist.linear.x + twist.linear.y * twist.linear.y) < in_place_trans_vel_){
+      if (fabs(res.angular.z) < min_in_place_vel_th_) res.angular.z = min_in_place_vel_th_ * sign(res.angular.z);
+      res.linear.x = 0.0;
+      res.linear.y = 0.0;
+    }*/
+    geometry_msgs::Twist res = twist;
+
+    if (fabs(res.angular.z) > max_vel_th_) res.angular.z = max_vel_th_ * sign(res.angular.z);
+    if (fabs(res.angular.z) < min_vel_th_) res.angular.z = min_vel_th_ * sign(res.angular.z);
+    if (std::isnan(res.linear.x))
+        res.linear.x = 0.0;
+    if (std::isnan(res.linear.y))
+        res.linear.y = 0.0;
+
+    if (fabs(res.linear.x) > max_vel_th_) res.linear.x = max_vel_lin_ * sign(res.linear.x);
+    if (fabs(res.linear.x) < min_vel_th_) res.linear.x = min_vel_lin_ * sign(res.linear.x);
     
 
-    ROS_INFO("Angular command %f", res.angular.z);
+    ROS_INFO("Angular command: %f", res.angular.z);
+    ROS_INFO("Linear command: %f", res.linear.x);
     return res;
   }
 

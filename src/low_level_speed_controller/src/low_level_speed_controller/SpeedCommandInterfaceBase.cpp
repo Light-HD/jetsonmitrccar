@@ -7,6 +7,9 @@ SpeedCommandInterfaceBase::SpeedCommandInterfaceBase() : auto_execute_rate(1.0 /
     this->max_acceleration = 0;
     this->max_speed = 0;
     this->min_speed = 0;
+    this->speed_gain = 1.0;
+    this->speed_offset = 0.0;
+    this->current_speed = 0.0;
 }
 
 SpeedCommandInterfaceBase::SpeedCommandInterfaceBase(ros::NodeHandle &n) : SpeedCommandInterfaceBase(){
@@ -19,6 +22,18 @@ SpeedCommandInterfaceBase &SpeedCommandInterfaceBase::set_max_limits(double max_
     this->max_acceleration = max_acc;
     this->max_speed = max_s;
     this->min_speed = min_s;
+
+    return *this;
+}
+
+SpeedCommandInterfaceBase &SpeedCommandInterfaceBase::set_speed_gain(double gain){
+    this->speed_gain = gain;
+
+    return *this;
+}
+
+SpeedCommandInterfaceBase &SpeedCommandInterfaceBase::set_speed_offset(double offset){
+    this->speed_offset = offset;
 
     return *this;
 }
@@ -42,7 +57,8 @@ SpeedCommandInterfaceBase& SpeedCommandInterfaceBase::set_command_timeout(ros::D
 }
 
 SpeedCommandInterfaceBase& SpeedCommandInterfaceBase::set_current_speed(double speed){
-    this->current_speed = speed;
+    this->current_speed = (speed * speed_gain) + speed_offset;
+    //ROS_INFO("Current Speed: %f", current_speed);
 
     return *this;
 }

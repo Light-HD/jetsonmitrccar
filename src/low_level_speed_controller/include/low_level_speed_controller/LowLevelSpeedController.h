@@ -15,15 +15,19 @@
 
 #include "math_utils.h"
 
+/** This is a class for coordinating linear speed commands and motor commands output.
+ * It has one object for each SpeedCommandInterfaceBase and SpeedCommandGeneratorBase derived classes.
+ * Those classes do not listen to any topic. Only way to pass information to them is through this class.
+ * Utilities are also included to modify underlying objects properties.
+
+**/
+
 class SpeedCommandInterfaceBase;
 class SpeedCommandGeneratorBase;
 
 
-//template<class TCommandGen, class TSpeedInterface>
 class LowLevelSpeedController{
     public:
-        //static_assert(std::is_base_of<SpeedCommandInterfaceBase, TSpeedInterface>::value,"Class should inherit SpeedCommandInterface");
-        //static_assert(std::is_base_of<SpeedCommandGeneratorBase, TCommandGen>::value,"Class Should inherit SpeedCommandInterface");
         
         //Type of the control message to the system. Only one control message type is active at a time.
         enum ControlMsgType { Twist, Ackermann, AckermannStamped };
@@ -43,7 +47,9 @@ class LowLevelSpeedController{
         // Constructor which sets the internal class handles.
         LowLevelSpeedController(SpeedCommandGeneratorBase *com_gen, SpeedCommandInterfaceBase *speed_interface);
         
-        // Switch between different Control Message Types
+        // Switch between different Control Message Types.
+        // Only one Control type will be listened. Before a call to this function,
+        // No message will be processed.
         LowLevelSpeedController &set_control_msg_type(ControlMsgType ctrl_type);
 
         // Set Speed Generator Handler
@@ -71,6 +77,9 @@ class LowLevelSpeedController{
         LowLevelSpeedController &set_goal_point_control_rate(ros::Duration new_rate);
 
         // Set the point to go. 
+        // When received a goal from this interface, direct speed commands are discarded.
+        // Speed Generation happens at the function generateCommand(geometry_msgs::Point)
+        // of SpeedGenerator Class.
         LowLevelSpeedController &set_goal_point(geometry_msgs::Point &goal_point);
 
         // If this is set, current position data will be fetched from incoming odom messages.
@@ -99,14 +108,18 @@ class LowLevelSpeedController{
         }
 
     protected:
+        // Periodic event to send motor commands with a rate.
         void send_msg(const ros::TimerEvent &e);
 
+        // Callback for Position Callback
         void point_cb(const geometry_msgs::Point::ConstPtr &msg);
 
+        // This is the callback that starts the goal following behaviour.
         void goal_point_callback(const ros::TimerEvent &e);
 
-        virtual void odom_callback(const nav_msgs::Odometry::ConstPtr &msg){ 
+        void odom_callback(const nav_msgs::Odometry::ConstPtr &msg){ 
             last_odom_data = *msg;
+            //ROS_INFO("Odom Received %f", msg->twist.twist.linear.x);
             
             if(use_odom_for_current_speed){
                 current_speed = last_odom_data.twist.twist.linear.x;
