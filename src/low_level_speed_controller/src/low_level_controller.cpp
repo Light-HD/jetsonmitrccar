@@ -5,13 +5,9 @@
 #include "low_level_speed_controller/VescSpeedGenerator.h"
 
 
-#include "vesc_msgs/VescStateStamped.h"
 
 LowLevelSpeedController *test;
 
-void speed_cb(const vesc_msgs::VescStateStamped::ConstPtr &msg){
-    test->set_current_speed(msg->state.speed);
-}
 
 
 
