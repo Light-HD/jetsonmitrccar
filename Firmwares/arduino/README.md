@@ -1,6 +1,10 @@
 Arduino Code To Receive and publish steering and throttle commands from RC controller.
 Please make sure to setup rosserial_arduino package correctly.
 
+http://wiki.ros.org/rosserial
+
+This link describes the steps for setting rosserial in general. After that please refer to wiki http://wiki.ros.org/rosserial_arduino/Tutorials. Make sure to follow tutorial about adding custom packages.
+
 **TODO add link description on how to setup!**
 
 Usage:
@@ -12,6 +16,6 @@ with correct port number. Code requires the output of RC controller to be on a i
 
 To add Custom Messages to Arduino,please refer to http://wiki.ros.org/rosserial_arduino/Tutorials/Adding%20Custom%20Messages
 
-rc_msgs package is a ROS package. Please make sure to copy to catkin workspace and catkin_make.
+rc_msgs package is a ROS package. Please make sure to copy to catkin workspace and catkin_make. This is a custom package we have created for easy interfacing from arduino. It is located under the catkin workspace repository.
 
 **TODO script/commands for copying**

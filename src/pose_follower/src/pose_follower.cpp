@@ -289,78 +289,7 @@ namespace pose_follower {
       curve = slope(global_plan_world_coordinates[next_point], global_plan_world_coordinates[closestPoint]);
     }
 
-    //we want to compute a velocity command based on our current waypoint
-    /*geometry_msgs::PoseStamped target_pose = global_plan_[current_waypoint_];
-    ROS_INFO("PoseFollower: current robot pose %f %f ==> %f", robot_pose.pose.position.x, robot_pose.pose.position.y, tf2::getYaw(robot_pose.pose.orientation));
-    ROS_INFO("PoseFollower: target robot pose %f %f ==> %f", target_pose.pose.position.x, target_pose.pose.position.y, tf2::getYaw(target_pose.pose.orientation));
-
-    //get the difference between the two poses
-    geometry_msgs::Twist diff = diff2D(target_pose.pose, robot_pose.pose);
-    ROS_INFO("PoseFollower: diff %f %f ==> %f", diff.linear.x, diff.linear.y, diff.angular.z);
-
     
-    geometry_msgs::Twist limit_vel = limitTwist(diff);
-
-    geometry_msgs::Twist test_vel = limit_vel;
-    bool legal_traj = collision_planner_.checkTrajectory(test_vel.linear.x, test_vel.linear.y, test_vel.angular.z, true);
-
-    double scaling_factor = 1.0;
-    double ds = scaling_factor / samples_;
-
-    //let's make sure that the velocity command is legal... and if not, scale down
-    if(!legal_traj){
-      for(int i = 0; i < samples_; ++i){
-        test_vel.linear.x = limit_vel.linear.x * scaling_factor;
-        test_vel.linear.y = limit_vel.linear.y * scaling_factor;
-        test_vel.angular.z = limit_vel.angular.z * scaling_factor;
-        test_vel = limitTwist(test_vel);
-        if(collision_planner_.checkTrajectory(test_vel.linear.x, test_vel.linear.y, test_vel.angular.z, false)){
-          legal_traj = true;
-          break;
-        }
-        scaling_factor -= ds;
-      }
-    }
-
-    if(!legal_traj){
-      ROS_ERROR("Not legal (%.2f, %.2f, %.2f)", limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z);
-      geometry_msgs::Twist empty_twist;
-      cmd_vel = empty_twist;
-      return false;
-    }
-
-    //if it is legal... we'll pass it on
-    cmd_vel = test_vel;
-
-    bool in_goal_position = false;
-    while(fabs(diff.linear.x) <= tolerance_trans_ &&
-          fabs(diff.linear.y) <= tolerance_trans_ &&
-	  fabs(diff.angular.z) <= tolerance_rot_)
-    {
-      if(current_waypoint_ < global_plan_.size() - 1)
-      {
-        current_waypoint_++;
-        target_pose = global_plan_[current_waypoint_];
-        diff = diff2D(target_pose.pose, robot_pose.pose);
-      }
-      else
-      {
-        ROS_INFO("Reached goal: %d", current_waypoint_);
-        in_goal_position = true;
-        break;
-      }
-    }
-
-    //if we're not in the goal position, we need to update time
-    if(!in_goal_position)
-      goal_reached_time_ = ros::Time::now();
-
-    //check if we've reached our goal for long enough to succeed
-    if(goal_reached_time_ + ros::Duration(tolerance_timeout_) < ros::Time::now()){
-      geometry_msgs::Twist empty_twist;
-      cmd_vel = empty_twist;
-    }
-    */
     geometry_msgs::Twist command_signal;
 
     //command_signal.linear.x = distBetweenPoints(robot_pose.pose, 
@@ -460,8 +389,7 @@ namespace pose_follower {
     res.linear.y = diff.getOrigin().y();
     res.angular.z = tf2::getYaw(diff.getRotation());
 
-    if(holonomic_ || (fabs(res.linear.x) <= tolerance_trans_ && fabs(res.linear.y) <= tolerance_trans_))
-      return res;
+    
 
     //in the case that we're not rotating to our goal position and we have a non-holonomic robot
     //we'll need to command a rotational velocity that will help us reach our desired heading
@@ -470,18 +398,7 @@ namespace pose_follower {
     double yaw_diff = headingDiff(pose1.getOrigin().x(), pose1.getOrigin().y(), 
         pose2.getOrigin().x(), pose2.getOrigin().y(), tf2::getYaw(pose2.getRotation()));
 
-    //we'll also check if we can move more effectively backwards
-    /*if (allow_backwards_) 
-    {
-      double neg_yaw_diff = headingDiff(pose1.getOrigin().x(), pose1.getOrigin().y(), 
-					pose2.getOrigin().x(), pose2.getOrigin().y(), M_PI + tf2::getYaw(pose2.getRotation()));
-
-      //check if its faster to just back up
-      if(fabs(neg_yaw_diff) < fabs(yaw_diff)){
-        ROS_DEBUG("Negative is better: %.2f", neg_yaw_diff);
-        yaw_diff = neg_yaw_diff;
-      }
-    }*/
+    
 
     //compute the desired quaterion
     tf2::Quaternion rot_diff;
@@ -500,53 +417,6 @@ namespace pose_follower {
 
   geometry_msgs::Twist PoseFollower::limitTwist(const geometry_msgs::Twist& twist)
   {
-    /*geometry_msgs::Twist res = twist;
-    res.linear.x *= K_trans_;
-    if(!holonomic_)
-      res.linear.y = 0.0;
-    else    
-      res.linear.y *= K_trans_;
-    res.angular.z *= K_rot_;
-
-    //if turn_in_place_first is true, see if we need to rotate in place to face our goal first
-    if (turn_in_place_first_ && fabs(twist.angular.z) > max_heading_diff_before_moving_)
-    {
-      res.linear.x = 0;
-      res.linear.y = 0;
-      if (fabs(res.angular.z) > max_vel_th_) res.angular.z = max_vel_th_ * sign(res.angular.z);
-      if (fabs(res.angular.z) < min_in_place_vel_th_) res.angular.z = min_in_place_vel_th_ * sign(res.angular.z);
-      return res;
-    }
-
-    //make sure to bound things by our velocity limits
-    double lin_overshoot = sqrt(res.linear.x * res.linear.x + res.linear.y * res.linear.y) / max_vel_lin_;
-    double lin_undershoot = min_vel_lin_ / sqrt(res.linear.x * res.linear.x + res.linear.y * res.linear.y);
-    if (lin_overshoot > 1.0) 
-    {
-      res.linear.x /= lin_overshoot;
-      res.linear.y /= lin_overshoot;
-    }
-
-    //we only want to enforce a minimum velocity if we're not rotating in place
-    if(lin_undershoot > 1.0)
-    {
-      res.linear.x *= lin_undershoot;
-      res.linear.y *= lin_undershoot;
-    }
-
-    if (fabs(res.angular.z) > max_vel_th_) res.angular.z = max_vel_th_ * sign(res.angular.z);
-    if (fabs(res.angular.z) < min_vel_th_) res.angular.z = min_vel_th_ * sign(res.angular.z);
-    if (std::isnan(res.linear.x))
-        res.linear.x = 0.0;
-    if (std::isnan(res.linear.y))
-        res.linear.y = 0.0;
-
-    //we want to check for whether or not we're desired to rotate in place
-    if(sqrt(twist.linear.x * twist.linear.x + twist.linear.y * twist.linear.y) < in_place_trans_vel_){
-      if (fabs(res.angular.z) < min_in_place_vel_th_) res.angular.z = min_in_place_vel_th_ * sign(res.angular.z);
-      res.linear.x = 0.0;
-      res.linear.y = 0.0;
-    }*/
     geometry_msgs::Twist res = twist;
 
     if (fabs(res.angular.z) > max_vel_th_) res.angular.z = max_vel_th_ * sign(res.angular.z);

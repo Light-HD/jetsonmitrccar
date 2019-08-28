@@ -9,6 +9,8 @@ from morse.core.services import service, async_service, interruptible
 from morse.core import status
 from morse.helpers.components import add_data, add_property
 
+# Class for basic interaction with the blender game engine. For simulation, basically we change the
+# coordinates of the car on the world. Some decay factor gives it more realistic behaviour but no actual physics is currently simulated
 class Basicspeed(morse.core.actuator.Actuator):
     """Write here the general documentation of your actuator.
     It will appear in the generated online documentation.
@@ -18,9 +20,12 @@ class Basicspeed(morse.core.actuator.Actuator):
 
     # define here the data fields required by your actuator
     # format is: field name, initial value, type, description
-    add_property("Velocity", 0, "Velocity","double", "Velocity of the car")
-    add_property("WheelBase",0,"WheelBase","double","WheelBase of the car")
-    add_property("Mass",0,"Mass","double","Mass of the car")
+
+    # These params could be useful for better physics simulation	
+    # add_property("Velocity", 0, "Velocity","double", "Velocity of the car")
+    # add_property("WheelBase",0,"WheelBase","double","WheelBase of the car")
+    # add_property("Mass",0,"Mass","double","Mass of the car")
+
     add_property("MaxSpeed",0,"MaxSpeed","double","Max Speed car can achieve")
     add_property("MaxAngularSpeed",0,"MaxAngularSpeed","double","Max Angular Speed car can achieve")
     add_property("Acceleration",0,"Acceleration","double","Acceleration When in Acceleration Mode")
@@ -45,28 +50,6 @@ class Basicspeed(morse.core.actuator.Actuator):
         # Do here actuator specific initializations
         logger.info('Component initialized at %d' % self._frequency)
 
-    @service
-    def get_position(self):
-        """ This is a sample service.
-
-        Simply returns the value of the internal counter.
-
-        You can access it as a RPC service from clients.
-        """
-
-        return self.local_data['X']
-
-    @interruptible
-    @async_service
-    def async_test(self, value):
-        """ This is a sample asynchronous service.
-
-        Returns when the internal counter reaches ``value``.
-
-        You can access it as a RPC service from clients.
-        """
-        self._target_count = value
-
     def default_action(self):
         """ Main loop of the actuator.
         
@@ -81,8 +64,6 @@ class Basicspeed(morse.core.actuator.Actuator):
 
         local_x = self.local_data['XDot']
         local_y = self.local_data['YDot']
-
-        # self.local_data['XDot'] = self.local_data['YDot'] = 0
 
         
         #if self.Mode == "Acceleration":
@@ -113,30 +94,19 @@ class Basicspeed(morse.core.actuator.Actuator):
         else:
             local_y = min(local_y,self.MaxAngularSpeed)
             
-            
-
         if linear_change == 0:
             local_x *= self.decay
-                #if self.local_data['XDot'] < 0:
-                #    self.local_data['XDot'] += self.Acceleration
-                #if self.local_data['XDot'] > 0:
-                #    self.local_data['XDot'] -= self.Acceleration
 
         if abs(local_x) < 0.005:
             local_x = 0.0
 
         if angular_change == 0:
             local_y *= self.decay
-                #if self.local_data['YDot'] < 0:
-                #    self.local_data['YDot'] += self.AngularAcc
-                #if self.local_data['YDot'] > 0:
-                #    self.local_data['YDot'] -= self.AngularAcc
 
         if abs(local_y) < 0.005:
             local_y = 0.0
 
             # logger.info("YDot: %s" % self.local_data['YDot'])
-            # check if we have an on-going asynchronous tasks...
         self.local_data['XDot'] = local_x
         self.local_data['YDot'] = local_y
         self.local_data["LastData"] -= 1
