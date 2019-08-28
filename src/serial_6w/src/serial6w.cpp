@@ -23,18 +23,18 @@ public:
     motor_cmd_sub = n.subscribe("motor_commands", 1000, &Translator::motorcmdCallback, this);
     motor_info_pub = n.advertise<sixwd_msgs::SixWheelInfo>("motor_controler_info", 1000);
     //motor_info_timer = n.createTimer(ros::Duration(0.1),&Translator::motorinfoCallback,this); //every 100ms for now
-    motor_cmd_timer = n.createTimer(ros::Duration(1.0 / 50.0), &Translator::motorcmdCallback, this); //every 100ms for now
+    motor_cmd_timer = n.createTimer(ros::Duration(1.0 / 25.0), &Translator::motorcmdCallback, this); //every 100ms for now
     bytes_to_send = new unsigned char[10];
     serial_buffer = new unsigned char[1];
 
     //////////////////
     //Initilise USB//
     /////////////////
-    serial_port = open("/dev/ttyUSB1", O_RDWR);
+    serial_port = open("/dev/ttyUSB0", O_RDWR);
     // Check for errors
     if (serial_port < 0)
     {
-      ROS_INFO("Error %i from open: %s\n", errno, strerror(errno));
+      ROS_ERROR("Error %i from open: %s\n", errno, strerror(errno));
     }
     // Create new termios struc, we call it 'tty' for convention
     struct termios tty;
@@ -98,7 +98,7 @@ public:
 
   void motorcmdCallback(const sixwd_msgs::SixWheelCommand::ConstPtr &msg)
   {
-    ROS_INFO("Motor Command Call Back");
+   // ROS_INFO("Motor Command Call Back");
 
     if (msg->controltype)
     {
@@ -174,7 +174,7 @@ public:
     u_int8_t RecievedControlByte = 0;    // This vabiable contains the ControlByte
     u_int8_t InformationByteCounter = 0; //This variable keep the current number of information byte
 
-    ROS_INFO("Reading From MCU");
+   // ROS_INFO("Reading From MCU");
 
     write(serial_port, (char *)bytes_to_send, sizeof(char) * bytes_to_send[2]); // Writes the message and Triggers MCU response
 
@@ -183,12 +183,12 @@ public:
 
     if (byte_checker < 0)
     {
-      ROS_INFO("Error reading: %s", strerror(errno));
+      ROS_ERROR("Error reading: %s", strerror(errno));
     } //Check if Serial port woeks fine
 
     if (State == 0) //STATE 0: Start byte check
     {
-      ROS_INFO("STATE0");
+     // ROS_INFO("STATE0");
 
       if (serial_buffer[0] == 1) //Protocol Start Byte is 1
       {
@@ -205,7 +205,7 @@ public:
 
     if (State == 1) // State 1 : Check Adress
     {
-      ROS_INFO("STATE1");
+      //ROS_INFO("STATE1");
 
       if (serial_buffer[0] == 255) //My Adress is 255
       {
@@ -221,7 +221,7 @@ public:
     }
     if (State == 2) // State 2: Check message size and calculate Information size
     {
-      ROS_INFO("STATE2");
+      //ROS_INFO("STATE2");
       // The RecievedByte in this state contains the size of the message
       BytesToReceive = serial_buffer[0];
       // Calcule the size of information bytes : That is BytesToReceive minus startbyte, adressbyte, lenghtbyte, controlbyte and stopbyte = 5
@@ -232,7 +232,7 @@ public:
     }
     if (State == 3) // State 3: Check control byte
     {
-      ROS_INFO("STATE3");
+      //ROS_INFO("STATE3");
       // Put the ReceivedByte in RecievedControlByte
       RecievedControlByte = serial_buffer[0];
       State++; // Pass The Stage
@@ -241,7 +241,7 @@ public:
     // State 4:
     if (State == 4)
     {
-      ROS_INFO("STATE4");
+      //ROS_INFO("STATE4");
 
       // Assign Information to Related Message
 
@@ -327,9 +327,9 @@ public:
           }
           if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) <= 20) // if Setpoint is under 20 Wheels stops
           {
-            info_message.motor1_speed = 0;
-            info_message.motor2_speed = 0;
-            info_message.motor3_speed = 0;
+            info_message.motor1_speed = 0.0;
+            info_message.motor2_speed = 0.0;
+            info_message.motor3_speed = 0.0;
           }
         }
         else if ((bytes_to_send[4] == 2)) //Turning Right Command issued Motor 4,5,6 Getting Slower
@@ -342,9 +342,9 @@ public:
           }
           if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
           {
-            info_message.motor4_speed = 0;
-            info_message.motor5_speed = 0;
-            info_message.motor6_speed = 0;
+            info_message.motor4_speed = 0.0;
+            info_message.motor5_speed = 0.0;
+            info_message.motor6_speed = 0.0;
           }
         }
       }
@@ -368,9 +368,9 @@ public:
           }
           if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
           {
-            info_message.motor4_speed = 0;
-            info_message.motor5_speed = 0;
-            info_message.motor6_speed = 0;
+            info_message.motor4_speed = 0.0;
+            info_message.motor5_speed = 0.0;
+            info_message.motor6_speed = 0.0;
           }
         }
         else if ((bytes_to_send[4] == 4)) //Turning Right Command issued Motor 4,5,6 Getting Slower
@@ -383,9 +383,9 @@ public:
           }
           if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
           {
-            info_message.motor1_speed = 0;
-            info_message.motor2_speed = 0;
-            info_message.motor3_speed = 0;
+            info_message.motor1_speed = 0.0;
+            info_message.motor2_speed = 0.0;
+            info_message.motor3_speed = 0.0;
           }
         }
       }
@@ -400,13 +400,13 @@ public:
       // Check Message Integrity, End Byte and Publish It
       if ((InformationByteCounter == InformationSize) && (serial_buffer[0] == 4) && (Bytes_Number == 20))
       {
-        ROS_INFO("Message is in integrity!!!");
+        //ROS_INFO("Message is in integrity!!!");
         State++;
         motor_info_pub.publish(info_message);
       }
       else
       {
-        ROS_ERROR("FAILED AFTER STATE 4");
+        ROS_ERROR("Message is NOT in integrity");
       }
     }
   }

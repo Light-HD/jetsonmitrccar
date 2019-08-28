@@ -6,6 +6,7 @@
 #include "std_msgs/Bool.h"
 
 
+
 class SixWheelSpeedGenerator : public SpeedCommandGeneratorBase{
     public:
         SixWheelSpeedGenerator(ros::NodeHandle &n);
@@ -17,7 +18,7 @@ class SixWheelSpeedGenerator : public SpeedCommandGeneratorBase{
         ~SixWheelSpeedGenerator(){}
 
     private:
-       SixWheelSpeedGenerator();
+        SixWheelSpeedGenerator();
         void control_effort_callback(const std_msgs::Float64::ConstPtr &msg);
 
         ros::Subscriber control_effort_sub;

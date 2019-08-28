@@ -40,6 +40,8 @@ void six_wheel_odom::six_wheel_infoCallback(const sixwd_msgs::SixWheelInfo::Cons
     right_velocity = ((motor_info->motor5_speed) + 1.458243) / 143.1781;
     left_velocity = ((motor_info->motor2_speed) + 1.458243) / 143.1781;
 
+
+
     linear_velocity = (left_velocity+right_velocity)/2;
     angular_velocity = (left_velocity-right_velocity)/2;
 

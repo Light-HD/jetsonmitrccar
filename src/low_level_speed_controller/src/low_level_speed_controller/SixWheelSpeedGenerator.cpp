@@ -1,14 +1,18 @@
 #include "low_level_speed_controller/SixWheelSpeedGenerator.h"
 
+
 CommandRequest SixWheelSpeedGenerator::createSpeedCommand(double input_setpoint)
 {
     CommandRequest command;
 
-    //ROS_INFO("Set Point received for speed: %f", input_setpoint);
+    ROS_INFO("Set Point received for speed: %f", input_setpoint);
 
-    input_setpoint = (input_setpoint > 0.0) ? 
+    input_setpoint = ((input_setpoint > 0.0) ? 
         (clamp_value(input_setpoint, max_linear_speed, min_linear_speed)) : 
-            (-clamp_value(-input_setpoint, max_linear_speed, min_linear_speed));
+            (-clamp_value(-input_setpoint, max_linear_speed, min_linear_speed))) * (input_setpoint != 0.0);
+
+    command.value = input_setpoint;
+    command.req_type = CommandRequest::RequestType::SPEED;
 
     return command;
 }

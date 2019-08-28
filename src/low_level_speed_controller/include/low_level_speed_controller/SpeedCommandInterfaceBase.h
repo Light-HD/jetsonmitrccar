@@ -33,7 +33,8 @@ class SpeedCommandInterfaceBase{
         // Value is transformed by value = value * gain + offset; 
         void queue_command(struct CommandRequest command){ 
             //ROS_INFO("COMMAND RECEIVED");
-            command.value = (command.value * speed_gain) + speed_offset; 
+            double com_sign = sign(command.value);
+            command.value = ((command.value * speed_gain) + (speed_offset * com_sign)) * (command.value != 0.0); 
             command_queue.push(command); 
         }
 
