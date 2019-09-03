@@ -121,6 +121,18 @@ namespace pose_follower {
       
       double linear_control_effort;
 
+      ros::Subscriber steer_control_effort_sub;
+      ros::Publisher steer_state_pub;
+      ros::Publisher steer_setpoint_pub;
+      ros::Publisher steer_enable_pub;
+
+      std::string steer_control_effort_topic;
+      std::string steer_state_topic;
+      std::string steer_setpoint_topic;
+      std::string steer_enable_topic;
+      
+      double steer_control_effort;
+
       std::vector<geometry_msgs::PoseStamped> global_plan_world_coordinates;
 
       double distBetweenPoints(const geometry_msgs::Pose& a, const geometry_msgs::Pose& b);
@@ -130,6 +142,10 @@ namespace pose_follower {
 
       void control_effort_callback(const std_msgs::Float64::ConstPtr &msg){
         linear_control_effort = msg->data;
+      }
+
+      void steer_control_effort_callback(const std_msgs::Float64::ConstPtr &msg){
+        steer_control_effort = msg->data;
       }
 
       geometry_msgs::PoseStamped current_closest_point;

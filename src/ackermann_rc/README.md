@@ -1,0 +1,3 @@
+# ackermann_rc ROS package
+
+This package is an interface between an RC receiver connected arduino and ROS. Arduino code is in Firmwares folder and instructions can be found for installation. Uses rosserial package for serial communication. System can be used for interfacing with racecar_simulator, morse simulations and 4/6 Wd platforms. Before using please tune the parameters of the receiver which can be found in param folder

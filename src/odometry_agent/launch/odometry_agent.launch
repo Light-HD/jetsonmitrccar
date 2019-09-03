@@ -64,7 +64,7 @@
 
     
 
-    <include file="$(find laser_hector_mapping)/launch/hector_configuration.launch">
+    <include file="$(find odometry_agent)/launch/hector_configuration.launch">
         <arg name="scan_topic_name" value="scan"/>
     </include>
 

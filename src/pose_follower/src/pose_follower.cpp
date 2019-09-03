@@ -107,10 +107,20 @@ namespace pose_follower {
     state_topic = "/linear_pid/state";
     enable_topic = "/linear_pid/pid_enable";
 
+    steer_control_effort_topic = "/steer_pid/control_effort";
+    steer_setpoint_topic = "/steer_pid/setpoint";
+    steer_state_topic = "/steer_pid/state";
+    steer_enable_topic = "/steer_pid/pid_enable";
+
     node_private.param("control_effort_topic", control_effort_topic, control_effort_topic);
     node_private.param("setpoint_topic", setpoint_topic, setpoint_topic);
     node_private.param("state_topic", state_topic, state_topic);
     node_private.param("enable_topic", enable_topic, enable_topic);
+
+    node_private.param("steer_control_effort_topic", steer_control_effort_topic, steer_control_effort_topic);
+    node_private.param("steer_setpoint_topic", steer_setpoint_topic, steer_setpoint_topic);
+    node_private.param("steer_state_topic", steer_state_topic, steer_state_topic);
+    node_private.param("steer_enable_topic", steer_enable_topic, steer_enable_topic);
 
     executing_goal = false;
 
@@ -127,14 +137,25 @@ namespace pose_follower {
     setpoint_pub = node_private.advertise<std_msgs::Float64>(setpoint_topic, 10, false);
     enable_pub = node_private.advertise<std_msgs::Bool>(enable_topic, 10, false);
 
+
+    steer_control_effort_sub = node_private.subscribe(steer_control_effort_topic, 100, 
+                                &PoseFollower::steer_control_effort_callback, this);
+    steer_state_pub = node_private.advertise<std_msgs::Float64>(steer_state_topic, 10, false);
+    steer_setpoint_pub = node_private.advertise<std_msgs::Float64>(steer_setpoint_topic, 10, false);
+    steer_enable_pub = node_private.advertise<std_msgs::Bool>(steer_enable_topic, 10, false);
+
     std_msgs::Bool enable_msg;
     enable_msg.data = true;
     enable_pub.publish(enable_msg);
+    steer_enable_pub.publish(enable_msg);
 
     std_msgs::Float64 setpoint_msg;
     setpoint_msg.data = 0.0;
     setpoint_pub.publish(setpoint_msg);
+    steer_setpoint_pub.publish(setpoint_msg);
 
+    linear_control_effort = 0.0;
+    steer_control_effort = 0.0;
     ROS_INFO("Initialized");
   }
 
@@ -151,10 +172,14 @@ namespace pose_follower {
       std_msgs::Float64 state;
       state.data = distBetweenPoints(msg->pose.pose, current_closest_point.pose);
       state_pub.publish(state);
+      
       enable_pub.publish(enable_msg);
+      steer_enable_pub.publish(enable_msg);
+
     }else{
       enable_msg.data = false;
       enable_pub.publish(enable_msg);
+      steer_enable_pub.publish(enable_msg);
     }
     
 
@@ -259,6 +284,7 @@ namespace pose_follower {
     }
 
     executing_goal = true;
+    std_msgs::Float64 state_msg;
 
     //ROS_INFO("Robot is w.r.t to %s",robot_pose.header.frame_id.c_str());
     //ROS_INFO("Path is w.r.t to %s",global_plan_world_coordinates[0].header.frame_id.c_str());
@@ -296,7 +322,10 @@ namespace pose_follower {
             //global_plan_world_coordinates[global_plan_world_coordinates.size() -1].pose) * K_linear;
     
     command_signal.linear.x = linear_control_effort;
-    command_signal.angular.z = (distBetweenPoints(robot_pose.pose, closestPose.pose) * K_rotational) - yaw_difference;
+    state_msg.data = (distBetweenPoints(robot_pose.pose, closestPose.pose) * K_rotational) - yaw_difference;
+    steer_state_pub.publish(state_msg);
+    //auto return_signal = ros::topic::waitForMessage<std_msgs::Float64>(steer_control_effort_topic);
+    command_signal.angular.z = steer_control_effort;
     
     max_vel_th_ = command_signal.linear.x * tan(max_turn_angle) / wheelbase;
 
