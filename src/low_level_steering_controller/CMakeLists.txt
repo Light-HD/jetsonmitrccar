@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(low_level_steering_controller)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  sixwd_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,10 +107,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES low_level_steering_controller
-#  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy sensor_msgs std_msgs
-#  DEPENDS system_lib
+  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy sensor_msgs std_msgs
+ # DEPENDS system_lib
 )
 
 ###########
@@ -127,6 +128,8 @@ include_directories(
 add_library(${PROJECT_NAME}_STEERING_CONTROLLER
   src/${PROJECT_NAME}/SteeringCommandInterfaceBase.cpp
   src/${PROJECT_NAME}/VescSteeringInterface.cpp
+  src/${PROJECT_NAME}/SixWheelSteeringInterface.cpp
+  
 )
 
 #add_library(${PROJECT_NAME}_VESC_IMPLEMENTATION
@@ -143,12 +146,14 @@ add_library(${PROJECT_NAME}_STEERING_CONTROLLER
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/low_level_steer_controller_node.cpp)
+add_executable(${PROJECT_NAME}_six_wheel_node src/six_wheel_low_level_steer_controller_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME low_level_steering_controller PREFIX "")
+set_target_properties(${PROJECT_NAME}_six_wheel_node PROPERTIES OUTPUT_NAME six_wheel_low_level_steering_controller PREFIX "")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -158,7 +163,9 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(${PROJECT_NAME}_node
    ${catkin_LIBRARIES} ${PROJECT_NAME}_STEERING_CONTROLLER
 )
-
+target_link_libraries(${PROJECT_NAME}_six_wheel_node
+   ${catkin_LIBRARIES} ${PROJECT_NAME}_STEERING_CONTROLLER
+)
 #############
 ## Install ##
 #############

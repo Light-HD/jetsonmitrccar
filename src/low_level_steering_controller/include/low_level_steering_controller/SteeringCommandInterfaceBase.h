@@ -82,7 +82,7 @@ class SteeringCommandInterfaceBase{
                 command_queue.pop();
                 //ROS_INFO("COMMAND PROCESSED");
             }else{
-                ROS_WARN("NO COMMAND LEFT TO SEND");
+             //   ROS_WARN("NO COMMAND LEFT TO SEND");
             }
         }
 

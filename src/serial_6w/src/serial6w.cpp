@@ -98,12 +98,35 @@ public:
 
   void motorcmdCallback(const sixwd_msgs::SixWheelCommand::ConstPtr &msg)
   {
-   // ROS_INFO("Motor Command Call Back");
-
-    if (msg->controltype)
+    bytes_to_send[0] = 1;
+    bytes_to_send[1] = 255;
+    // ROS_INFO("Motor Command Call Back");
+    switch (msg->controltype)
     {
-      bytes_to_send[0] = 1;
-      bytes_to_send[1] = 255;
+    case 0:
+      bytes_to_send[2] = 7;
+      if ((msg->left_speed >= 0) && (msg->right_speed >= 0))
+      {
+        bytes_to_send[3] = 52;
+      }
+      if ((msg->left_speed >= 0) && (msg->right_speed < 0))
+      {
+        bytes_to_send[3] = 53;
+      }
+      if ((msg->left_speed < 0) && (msg->right_speed >= 0))
+      {
+        bytes_to_send[3] = 54;
+      }
+      if ((msg->left_speed < 0) && (msg->right_speed < 0))
+      {
+        bytes_to_send[3] = 55;
+      }
+      bytes_to_send[4] = abs(msg->right_speed);
+      bytes_to_send[5] = abs(msg->left_speed);
+      bytes_to_send[6] = 4;
+      bytes_to_send[7] = '\0';
+      break;
+    case 1:
       bytes_to_send[2] = 8;
       bytes_to_send[3] = 51;
       if ((msg->linearspeed) > 0)
@@ -125,11 +148,11 @@ public:
       {
         if ((msg->angle) > 0)
         {
-          bytes_to_send[4] = 4; //we will see //TODO: Bacward direction error
+          bytes_to_send[4] = 3;
         }
         else
         {
-          bytes_to_send[4] = 3; //we will see //TODO: Bacward direction error
+          bytes_to_send[4] = 4;
         }
       }
 
@@ -137,11 +160,8 @@ public:
       bytes_to_send[6] = abs(msg->angle);
       bytes_to_send[7] = 4; //Stop Byte
       bytes_to_send[8] = '\0';
-    }
-    else
-    {
-      bytes_to_send[0] = 1;
-      bytes_to_send[1] = 255;
+      break;
+    case 2:
       bytes_to_send[2] = 7;
       bytes_to_send[3] = (msg->motor_number + 9);
       bytes_to_send[4] = abs(msg->individual_motors_speed);
@@ -161,6 +181,7 @@ public:
 
       bytes_to_send[6] = 4;
       bytes_to_send[7] = '\0';
+      break;
     }
   }
 
@@ -174,7 +195,7 @@ public:
     u_int8_t RecievedControlByte = 0;    // This vabiable contains the ControlByte
     u_int8_t InformationByteCounter = 0; //This variable keep the current number of information byte
 
-   // ROS_INFO("Reading From MCU");
+    // ROS_INFO("Reading From MCU");
 
     write(serial_port, (char *)bytes_to_send, sizeof(char) * bytes_to_send[2]); // Writes the message and Triggers MCU response
 
@@ -188,7 +209,7 @@ public:
 
     if (State == 0) //STATE 0: Start byte check
     {
-     // ROS_INFO("STATE0");
+      // ROS_INFO("STATE0");
 
       if (serial_buffer[0] == 1) //Protocol Start Byte is 1
       {
@@ -313,6 +334,18 @@ public:
         info_message.motor4_speed = 0;
         info_message.motor5_speed = 0;
         info_message.motor6_speed = 0;
+      }
+      if (bytes_to_send[3] == 54 || bytes_to_send[3] == 55)
+      {
+        info_message.motor1_speed = -info_message.motor1_speed;
+        info_message.motor2_speed = -info_message.motor2_speed;
+        info_message.motor3_speed = -info_message.motor3_speed;
+      }
+      if (bytes_to_send[3] == 53 || bytes_to_send[3] == 55)
+      {
+        info_message.motor4_speed = -info_message.motor4_speed;
+        info_message.motor5_speed = -info_message.motor5_speed;
+        info_message.motor6_speed = -info_message.motor6_speed;
       }
 
       if ((bytes_to_send[3] == 51) && ((bytes_to_send[4] == 1) || (bytes_to_send[4] == 2))) //We are Going Forward Speeds are True

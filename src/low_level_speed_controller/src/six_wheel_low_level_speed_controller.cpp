@@ -24,8 +24,8 @@ int main(int argc,char **argv){
 
     SixWheel_speed_gen.set_limits(10.0, 2.0, 0.27);
     SixWheel.set_max_limits(512.0, 255.0, 0.0);
-    SixWheel.set_speed_offset(-88.65495);
-    SixWheel.set_speed_gain(411.6445);
+    SixWheel.set_speed_offset(0);
+    SixWheel.set_speed_gain(1);
     
     
     test = new LowLevelSpeedController(n);

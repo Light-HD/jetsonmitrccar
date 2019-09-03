@@ -1,6 +1,6 @@
 #include "low_level_steering_controller/SteeringCommandInterfaceBase.h"
 
-SteeringCommandInterfaceBase::SteeringCommandInterfaceBase() : auto_execute_rate(1.0 / 10.0), node_handle("~"), command_timeout(1.0){
+SteeringCommandInterfaceBase::SteeringCommandInterfaceBase() : auto_execute_rate(1.0 / 50.0), node_handle("~"), command_timeout(1.0){
     ROS_INFO("Speed Interface Initialized");
     this->op_type = OperationType::MANUAL;
     this->max_angle = 0;
