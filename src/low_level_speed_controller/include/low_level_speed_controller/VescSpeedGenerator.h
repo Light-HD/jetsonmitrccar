@@ -34,4 +34,7 @@ class VescSpeedGenerator : public SpeedCommandGeneratorBase{
         ros::Duration state_update_rate;
 
         double takeoff_speed_limit;
+
+        bool still_executing_takeoff;
+        bool has_took_off;
 };

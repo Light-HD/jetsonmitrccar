@@ -6,7 +6,7 @@ CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
     CommandRequest command;
 
     //ROS_INFO("Set Point received for speed: %f", input_setpoint);
-
+    
     
     switch(control_type){
         case SpeedCommandGeneratorBase::ControlType::Acceleration:
@@ -27,27 +27,34 @@ CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
             
         case SpeedCommandGeneratorBase::ControlType::Speed:
         {
+            ROS_INFO("Speed Input Received: %f", input_setpoint);
             if(input_setpoint != 0.0){
                 input_setpoint = (input_setpoint > 0.0) ? 
                     (clamp_value(input_setpoint, max_linear_speed, min_linear_speed)) : 
                         (-clamp_value(-input_setpoint, max_linear_speed, min_linear_speed));
-            }
-
-
-            if(abs(current_speed) < takeoff_speed_limit && abs(input_setpoint) > takeoff_speed_limit){
-                //ROS_INFO("Current Speed %f", current_speed);
-                ROS_INFO("Takeoff Issued. Current Speed: %f", current_speed);
-                command.req_type = CommandRequest::RequestType::TAKEOFF;
-                command.value = input_setpoint;
-                return command;
+                if(abs(current_speed) < takeoff_speed_limit && abs(input_setpoint) > takeoff_speed_limit && !has_took_off){
+                    //ROS_INFO("Current Speed %f", current_speed);
+                    still_executing_takeoff = true;
+                    ROS_INFO("Takeoff Issued. Current Speed: %f", current_speed);
+                }else{
+                    command.value = input_setpoint;
+                    command.req_type = CommandRequest::RequestType::SPEED;
+                    still_executing_takeoff = false;
+                    has_took_off = true;
+                }
+            
             }else{
-                command.value = input_setpoint;
                 command.req_type = CommandRequest::RequestType::SPEED;
+                command.value = 0.0;
             }
-
             break;
         }
             
+    }
+
+    if(still_executing_takeoff){
+        command.req_type = CommandRequest::RequestType::TAKEOFF;
+        command.value = input_setpoint;
     }
     
     return command;
@@ -112,6 +119,9 @@ VescSpeedGenerator::VescSpeedGenerator(ros::NodeHandle &n) : SpeedCommandGenerat
     state_update_timer.setPeriod(state_update_rate);
 
     takeoff_speed_limit = 0.2524;
+
+    has_took_off = false;
+    still_executing_takeoff = false;
     
 
     if (!node_handle.getParam("control_effort_topic", control_effort_topic))

@@ -22,7 +22,7 @@ int main(int argc,char **argv){
     vesc.set_execution_rate(ros::Duration(1.0 / 50.0));
 
 
-    vesc_speed_gen.set_limits(1000.0, 1.0, 0.26);
+    vesc_speed_gen.set_limits(1000.0, 1.0, 0.42);
     vesc.set_max_limits(10000.0, 3000.0, 0.0);
     vesc.set_speed_offset(16.6);
     vesc.set_speed_gain(3485.3528);

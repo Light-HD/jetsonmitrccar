@@ -11,7 +11,7 @@ LowLevelSpeedController ::LowLevelSpeedController(ros::NodeHandle &n) : current_
 {
     node_handle = n;
     
-    odom_topic_name = "/odom";
+    odom_topic_name = "/odometry/filtered";
     point_topic_name = "/current_position";
     control_msg_type = ControlMsgType::Twist;
     control_type = ControlType::Speed;
@@ -31,7 +31,7 @@ LowLevelSpeedController ::LowLevelSpeedController(ros::NodeHandle &n) : current_
 
      if (!node_handle.getParam("odom_topic_name", odom_topic_name))
     {
-        ROS_WARN("COULDNT FIND PARAM odom_topic_name. USING /odom");
+        ROS_WARN("COULDNT FIND PARAM odom_topic_name. USING /odometry/filtered");
     }
 
      if (!node_handle.getParam("point_topic_name", point_topic_name))
