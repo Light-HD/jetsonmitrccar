@@ -167,7 +167,7 @@ namespace pose_follower {
     base_odom_.twist.twist.angular.z = msg->twist.twist.angular.z;
     std_msgs::Bool enable_msg;
     
-    if(executing_goal){
+    //if(executing_goal){
       enable_msg.data = true;
       std_msgs::Float64 state;
       state.data = distBetweenPoints(msg->pose.pose, current_closest_point.pose);
@@ -176,11 +176,11 @@ namespace pose_follower {
       enable_pub.publish(enable_msg);
       steer_enable_pub.publish(enable_msg);
 
-    }else{
-      enable_msg.data = false;
-      enable_pub.publish(enable_msg);
-      steer_enable_pub.publish(enable_msg);
-    }
+   // }//else{
+     // enable_msg.data = false;
+     // enable_pub.publish(enable_msg);
+     // steer_enable_pub.publish(enable_msg);
+   // }
     
 
     //ROS_INFO("In the odometry callback with velocity values: (%.2f, %.2f, %.2f)",
@@ -301,6 +301,13 @@ namespace pose_follower {
                 closestPose.pose.position.x, closestPose.pose.position.y, tf2::getYaw(closestPose.pose.orientation));
     
     double yaw_difference = tf2::getYaw(robot_pose.pose.orientation) - tf2::getYaw(closestPose.pose.orientation);
+    tf2::Quaternion robot_quat;
+    tf2::Quaternion close_quat;
+
+    tf2::fromMsg(robot_pose.pose.orientation, robot_quat);
+    tf2::fromMsg(closestPose.pose.orientation, close_quat);
+
+    ROS_INFO("Difference: %f Minimum Angle:%f", yaw_difference, tf2::angleShortestPath(robot_quat, close_quat));
 
     geometry_msgs::Twist diff = diff2D(robot_pose.pose, 
               global_plan_world_coordinates[global_plan_world_coordinates.size() -1].pose);
@@ -322,12 +329,12 @@ namespace pose_follower {
             //global_plan_world_coordinates[global_plan_world_coordinates.size() -1].pose) * K_linear;
     
     command_signal.linear.x = linear_control_effort;
-    state_msg.data = (distBetweenPoints(robot_pose.pose, closestPose.pose) * K_rotational) - yaw_difference;
+    state_msg.data = distBetweenPoints(robot_pose.pose, closestPose.pose) * sign(robot_pose.pose.position.y - closestPose.pose.position.y);
     steer_state_pub.publish(state_msg);
     //auto return_signal = ros::topic::waitForMessage<std_msgs::Float64>(steer_control_effort_topic);
     command_signal.angular.z = steer_control_effort;
     
-    max_vel_th_ = command_signal.linear.x * tan(max_turn_angle) / wheelbase;
+    //max_vel_th_ = command_signal.linear.x * tan(max_turn_angle) / wheelbase;
 
     geometry_msgs::Twist limit_vel = limitTwist(command_signal);
 
@@ -369,6 +376,8 @@ namespace pose_follower {
         ROS_INFO("Reached goal: %d", current_waypoint_);
         executing_goal = false;
         in_goal_position = true;
+	//cmd_vel.linear.x = 0.0;
+        //cmd_vel.angular.z = 0.0;
     }
 
     //if we're not in the goal position, we need to update time
@@ -377,8 +386,9 @@ namespace pose_follower {
 
     //check if we've reached our goal for long enough to succeed
     if(goal_reached_time_ + ros::Duration(tolerance_timeout_) < ros::Time::now()){
-      geometry_msgs::Twist empty_twist;
-      cmd_vel = empty_twist;
+      cmd_vel.linear.x = 0.0;
+      cmd_vel.angular.z = 0.0;
+      ROS_WARN("Long Enough To Succeed");
     }
 
     cmd_vel.linear.y = 0.0;
@@ -401,7 +411,7 @@ namespace pose_follower {
   }
 
   bool PoseFollower::isGoalReached(){
-    return goal_reached_time_ + ros::Duration(tolerance_timeout_) < ros::Time::now() && stopped();
+    return goal_reached_time_ + ros::Duration(tolerance_timeout_) < ros::Time::now();
   }
 
   

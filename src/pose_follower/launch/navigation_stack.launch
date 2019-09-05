@@ -26,13 +26,13 @@
   		<rosparam file="$(find pose_follower)/cfg/carlike/pose_follower.yaml" command="load" />
 
 		<param name="base_global_planner" value="global_planner/GlobalPlanner" />
-		<param name="planner_frequency" value="1.0" />
+		<param name="planner_frequency" value="0.01" />
 		<param name="planner_patience" value="5.0" />
 
 		<param name="base_local_planner" value="pose_follower/PoseFollower" />
-		<param name="controller_frequency" value="5.0" />
+		<param name="controller_frequency" value="10.0" />
 		<param name="controller_patience" value="15.0" />
-		<remap from="odom" to="/wheel_odom"/>
+		<remap from="odom" to="/odometry/filtered"/>
                 <param name="clearing_rotation_allowed" value="false" /> <!-- Our carlike robot is not able to rotate in place -->
 	</node>
 
