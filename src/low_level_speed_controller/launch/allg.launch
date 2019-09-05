@@ -1,5 +1,7 @@
 <launch>
 
+<include file="$(find pose_follower)/launch/pid_controller.launch" />
+
 <arg name="is_four_wd" default="true"/>
 
 <node pkg="low_level_speed_controller" name="low_level_controller" type="low_level_controller" required="true" output="screen" if="$(eval is_four_wd == true)">
@@ -13,5 +15,4 @@
 <rosparam command="load" file="$(find low_level_speed_controller)/param/six_wd_params.yaml" />
 
 </node>
-
 </launch>
