@@ -1,33 +1,8 @@
 # software_integration
 
-Integration repository for all relevant software pieces/submodules
-
-
-##How To Install
-##How To Run
-##How To Interface
-##Other Details
-##TODO
-1. For VESC We applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, ıt should also be implemented for ROS. Note that Vesc only reads 
-encoder as rotor position. Therefore, two there exists two steps add postion reading to VESC_Driver node Convert it into speed.
-2. Motor controller for six wheeled platform' motor contreller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
-
-3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data my be improved later.
-
-4. 6 Wheeed platform's one motor has demaged. I shoul be changed. Please check the issue .
-
-5.
-
-6.
-
-7.
-
-8.
-
-
-
-
-
+Integration repository for all relevant software pieces/submodules.
+This project normally runs on Nvidia jetsonTX2 PCs on the cars (already installed).
+If you would like to run some of the packages on your PC, please refer to the Build section.
 
 
 ##Questions/TODOs in/about submodules/directories
@@ -43,11 +18,6 @@ encoder as rotor position. Therefore, two there exists two steps add postion rea
 9. TODO all of your packages require a README that exlains what it is
 10. low_level_speed_controller fails during compilation.
 
-2. 
-
-**TODO if appropriate link READMEs of subdirectories/modules below**
-
-
 
 ## Structure
 
@@ -56,7 +26,7 @@ encoder as rotor position. Therefore, two there exists two steps add postion rea
 
 ## Build
 
-**TODO Describe cloning + dependency resolving/installs + build**
+**TODO Describe cloning (recursive) + dependency resolving/installs + build**
 
 **TODO This should also reflect the different environments such as Arduino, ROS, Linux Kernel modules, AVR for 6WD motorcontoller ...**
 
@@ -69,9 +39,20 @@ rosdep install --from-paths src --ignore-src -r -y
 
 ## Run
 
+### Running Four Wheel
 ** TODO Describe how to run the code, potentially explaining different launch files for different purposes**
 
 ** TODO Different setups are, for instance remote controlled driving, move_base-based driving, different simulation engines.
+
+### Running Six Wheel
+blabla
+
+
+## Other Documentations
+
+** TODO add the links of the other README files for each package
+**TODO if appropriate link READMEs of subdirectories/modules below**
+
 
 ## Sensors Setup
 
@@ -81,10 +62,10 @@ rosdep install --from-paths src --ignore-src -r -y
 
 rs_cam_and_imu_filter_launch is the launch file for launching realsense camera and imu filter together. Output is in the topic /imu/data and it can be seen with rviz plugin
  that is in imu_tools packages(can be installed with $sudo apt-get install ros-melodic-imu-tools but I suggest to build it from source since we are going to change the source code).
-Do not forget to install imu_tools. 
+Do not forget to install imu_tools.
 
 Below is the link for to know how to calibrate the realsense D435i's imu.(Imu is not calibrated in the production line) Calibration is done with the python script
-that is already in realsense_ros package in folder rs-imu-calibration. 
+that is already in realsense_ros package in folder rs-imu-calibration.
 [https://www.intel.com/content/www/us/en/support/articles/000032303/emerging-technologies/intel-realsense-technology.html](url)
 
 
@@ -94,12 +75,30 @@ since jetson has a arm core which doesnt support pip.
 
  quaternion_to_yaw is used to obtain yaw angle. Imu filter madgwick publishes data as quaternion but we need yaw angle to know the vehicles orientaion, so it simply subscribes
  to /imu/data topic from taken from filter and publishes the yaw angle as Float64 to /yaw topic.
- 
- The yaw angle was drifting due to gyro drift and it is handled with increasing "zeta" in the filter which adds/substracts a value for each time instant from the reading which 
- makes the yaw angle almost constant for long time. However, the main code handles this issue with the help of magnetometer which we don't have. Therefore, we changed the code 
+
+ The yaw angle was drifting due to gyro drift and it is handled with increasing "zeta" in the filter which adds/substracts a value for each time instant from the reading which
+ makes the yaw angle almost constant for long time. However, the main code handles this issue with the help of magnetometer which we don't have. Therefore, we changed the code
  a little bit to work fine without magnetometer. New imu filter madgwick folder is in repo and you need to build it from source to get drift compensation working without magnetometer.
+
+
+## Open Issues
+ 1. For VESC We applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, ıt should also be implemented for ROS. Note that Vesc only reads
+ encoder as rotor position. Therefore, two there exists two steps add postion reading to VESC_Driver node Convert it into speed.
+ 2. Motor controller for six wheeled platform' motor contreller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
+
+ 3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data my be improved later.
+
+ 4. 6 Wheeed platform's one motor has demaged. I shoul be changed. Please check the issue .
+
+ 5. We do not have any visual odometry. General odometry performance and suggestions.
+
+ 6. PID performances and suggestions
+
+ 7.
+
+ 8.
+
 
 #FAQ
 
 **TODO if you have collect solutions for common pitfalls (maybe things you experienced yourself)**
-
