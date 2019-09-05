@@ -2,6 +2,34 @@
 
 Integration repository for all relevant software pieces/submodules
 
+
+##How To Install
+##How To Run
+##How To Interface
+##Other Details
+##TODO
+1. For VESC We applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, ıt should also be implemented for ROS. Note that Vesc only reads 
+encoder as rotor position. Therefore, two there exists two steps add postion reading to VESC_Driver node Convert it into speed.
+2. Motor controller for six wheeled platform' motor contreller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
+
+3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data my be improved later.
+
+4. 6 Wheeed platform's one motor has demaged. I shoul be changed. Please check the issue .
+
+5.
+
+6.
+
+7.
+
+8.
+
+
+
+
+
+
+
 ##Questions/TODOs in/about submodules/directories
 
 1. buildRealsenseTX2 did we change anything here? Why not a submodule if not?
