@@ -25,7 +25,7 @@ Low level elements are consist of three main nodes. These are ;
 
   Which listens <u>/motor_controller/motor_commands</u> topic and publishes <u>/motor_controller/motor_controller_info</u>
 
-* low_level_speed_controller: Stars the speed command generator. 
+* low_level_speed_controller: Stars the speed command generator.
 
   Which listens <u>/cmd_vel</u> topic and publishes <u>/output_speed</u>
 
@@ -47,7 +47,7 @@ This command following commands:
 
 
 
-<u>/cmd_vel</u> is a physically appropriate message type which consists of geometry_msgs/Twist 
+<u>/cmd_vel</u> is a physically appropriate message type which consists of geometry_msgs/Twist
 
 <u>/serial_communicator/motor_commands</u> contains the motor control type and motor speeds in bytes
 
@@ -55,7 +55,7 @@ This command following commands:
 
 ##### *Starting Sensors:*
 
-For now available sensors are 
+For now available sensors are
 
 - Lidar
 
@@ -69,15 +69,15 @@ For now available sensors are
 
   `roslaunch rplidar_ros rplidar_a3.launch`
 
-  Which publishes /scan Topic and starts laser Scanner 
+  Which publishes /scan Topic and starts laser Scanner
 
   ###### For Camera Run:
 
   `roslaunch rs_cam_and_imu_filter_launch rs_imu.launch`
 
-  Which starts Realsense camera publishes /camera/imu data from Intel Realsense Camera then Filters it and Publishes again as /imu/data as sensor_msgs/Imu. 
+  Which starts Realsense camera publishes /camera/imu data from Intel Realsense Camera then Filters it and Publishes again as /imu/data as sensor_msgs/Imu.
 
-  It uses 
+  It uses
 
   For Wheel Encoder Run:
 
@@ -130,7 +130,12 @@ In cfg folder of pose_follower package also there is a rviz config for visualiza
 To also start PID Controler
 `roslaunch pose_follower six_pid_controller.launch`
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
+
 **TODO: how to run RC**
+To run in RC mode, DO NOT launch pose_follower diff_drive.launch:
+`roslaunch ackermann_rc rc_driver_vesc.launch`
+
+To run in RC mode with our low-level controller (integrated, but issues remain. See the open issues page), assign `true` to `use_twist` parameter under *ackermann_rc/param/rc_driver_vesc.yaml*, then run the rc_driver_vesc.launch above:
 
 If you run in the Jetson PC directly (with a monitor), run rviz to control the car and its navigation:
 `rosrun rviz rviz`

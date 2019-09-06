@@ -84,7 +84,7 @@ In our platforms we are using following sensors
 
  3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data my be improved lasoftware_integration
      Integration repository for all relevant software pieces/submodules.
-     
+
  4. 6 Wheeled platform's one motor has damaged. It should be changed. Please check the issue .
 
  5. This project normally runs on Nvidia jetsonTX2 PCs on the cars (already installed).
@@ -92,9 +92,9 @@ In our platforms we are using following sensors
 
  6. PID performances can be improved to see the interface please loo interface section.
 
-     
 
-     
+
+
 
      ##Questions/TODOs in/about submodules/directories
 
@@ -124,9 +124,9 @@ In our platforms we are using following sensors
      ** TODO add the links of the other README files for each package
      TODO if appropriate link READMEs of subdirectories/modules below
 
-     
 
-     
+
+
 
      Open Issues
 
@@ -142,7 +142,7 @@ In our platforms we are using following sensors
 
  8. We do not have any visual odometry. General odometry performance and suggestions.
 
- 9. 
+ 9.
 
  7.
 
