@@ -21,7 +21,7 @@ six_wheel_odom::six_wheel_odom(ros::NodeHandle nh, ros::NodeHandle private_nh) :
     private_nh.param("publish_tf", publish_tf, publish_tf);
 
     // create odom publisher
-    odom_pub = nh.advertise<nav_msgs::Odometry>("six_wheel_odom", 10);
+    odom_pub = nh.advertise<nav_msgs::Odometry>("wheel_odom", 10);
 
     // create tf broadcaster
     if (publish_tf)
@@ -36,14 +36,35 @@ six_wheel_odom::six_wheel_odom(ros::NodeHandle nh, ros::NodeHandle private_nh) :
 void six_wheel_odom::six_wheel_infoCallback(const sixwd_msgs::SixWheelInfo::ConstPtr &motor_info)
 {
     message_time = ros::Time::now();
+    double sign_right = (motor_info->motor5_speed > 0) ? 1.0 : -1.0;
+    double sign_left = (motor_info->motor2_speed > 0) ? 1.0 : -1.0;
 
-    right_velocity = ((motor_info->motor5_speed) + 1.458243) / 143.1781;
-    left_velocity = ((motor_info->motor2_speed) + 1.458243) / 143.1781;
+
+    right_velocity = ((motor_info->motor5_speed) + (1.458243*sign_right)) / 143.1781;
+    left_velocity = ((motor_info->motor2_speed) + (1.458243*sign_left)) / 143.1781;
+
+    if ((abs(right_velocity)*10000)<(0.02*10000))
+    {
+        right_velocity=0;
+        
+    }
+        if ((abs(left_velocity)*10000)<(0.02*10000))
+    {
+        left_velocity=0;
+        
+    }
+
+
 
 
 
     linear_velocity = (left_velocity+right_velocity)/2;
-    angular_velocity = (left_velocity-right_velocity)/2;
+    angular_velocity = (left_velocity-right_velocity)/0.27;
+
+    if((abs(angular_velocity)*10000)<(0.15*10000))
+    {
+        angular_velocity=0;
+    }
 
     ROS_INFO_ONCE("Message Received");
 

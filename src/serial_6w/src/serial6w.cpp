@@ -30,7 +30,7 @@ public:
     //////////////////
     //Initilise USB//
     /////////////////
-    serial_port = open("/dev/ttyUSB0", O_RDWR);
+    serial_port = open("/dev/ttyUSB1", O_RDWR);
     // Check for errors
     if (serial_port < 0)
     {
@@ -331,10 +331,15 @@ public:
         info_message.motor1_speed = 0;
         info_message.motor2_speed = 0;
         info_message.motor3_speed = 0;
+      }
+
+      if(bytes_to_send[4] < 20)
+      {
         info_message.motor4_speed = 0;
         info_message.motor5_speed = 0;
         info_message.motor6_speed = 0;
       }
+
       if (bytes_to_send[3] == 54 || bytes_to_send[3] == 55)
       {
         info_message.motor1_speed = -info_message.motor1_speed;
@@ -348,80 +353,79 @@ public:
         info_message.motor6_speed = -info_message.motor6_speed;
       }
 
-      if ((bytes_to_send[3] == 51) && ((bytes_to_send[4] == 1) || (bytes_to_send[4] == 2))) //We are Going Forward Speeds are True
-      {
-        if ((bytes_to_send[4] == 1)) //Turning Left Command issued Motor 1,2,3 Getting Slower
-        {
-          if (bytes_to_send[6] > 126) //After 126 They turns to oposit direction
-          {
-            info_message.motor1_speed = -info_message.motor1_speed;
-            info_message.motor2_speed = -info_message.motor2_speed;
-            info_message.motor3_speed = -info_message.motor3_speed;
-          }
-          if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) <= 20) // if Setpoint is under 20 Wheels stops
-          {
-            info_message.motor1_speed = 0.0;
-            info_message.motor2_speed = 0.0;
-            info_message.motor3_speed = 0.0;
-          }
-        }
-        else if ((bytes_to_send[4] == 2)) //Turning Right Command issued Motor 4,5,6 Getting Slower
-        {
-          if (bytes_to_send[6] > 126)
-          {
-            info_message.motor4_speed = -info_message.motor4_speed;
-            info_message.motor5_speed = -info_message.motor5_speed;
-            info_message.motor6_speed = -info_message.motor6_speed;
-          }
-          if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
-          {
-            info_message.motor4_speed = 0.0;
-            info_message.motor5_speed = 0.0;
-            info_message.motor6_speed = 0.0;
-          }
-        }
-      }
+      // if ((bytes_to_send[3] == 51) && ((bytes_to_send[4] == 1) || (bytes_to_send[4] == 2))) //We are Going Forward Speeds are True
+      // {
+      //   if ((bytes_to_send[4] == 1)) //Turning Left Command issued Motor 1,2,3 Getting Slower
+      //   {
+      //     if (bytes_to_send[6] > 126) //After 126 They turns to oposit direction
+      //     {
+      //       info_message.motor1_speed = -info_message.motor1_speed;
+      //       info_message.motor2_speed = -info_message.motor2_speed;
+      //       info_message.motor3_speed = -info_message.motor3_speed;
+      //     }
+      //     if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) <= 20) // if Setpoint is under 20 Wheels stops
+      //     {
+      //       info_message.motor1_speed = 0.0;
+      //       info_message.motor2_speed = 0.0;
+      //       info_message.motor3_speed = 0.0;
+      //     }
+      //   }
+      //   else if ((bytes_to_send[4] == 2)) //Turning Right Command issued Motor 4,5,6 Getting Slower
+      //   {
+      //     if (bytes_to_send[6] > 126)
+      //     {
+      //       info_message.motor4_speed = -info_message.motor4_speed;
+      //       info_message.motor5_speed = -info_message.motor5_speed;
+      //       info_message.motor6_speed = -info_message.motor6_speed;
+      //     }
+      //     if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
+      //     {
+      //       info_message.motor4_speed = 0.0;
+      //       info_message.motor5_speed = 0.0;
+      //       info_message.motor6_speed = 0.0;
+      //     }
+      //   }
+      // }
+      // else if ((bytes_to_send[3] == 51) && ((bytes_to_send[4] == 3) || (bytes_to_send[4] == 4))) //We are Going Backwards Speeds are inversed
+      // {
+      //   info_message.motor1_speed = -info_message.motor1_speed;
+      //   info_message.motor2_speed = -info_message.motor2_speed;
+      //   info_message.motor3_speed = -info_message.motor3_speed;
+      //   info_message.motor4_speed = -info_message.motor4_speed;
+      //   info_message.motor5_speed = -info_message.motor5_speed;
+      //   info_message.motor6_speed = -info_message.motor6_speed;
 
-      else if ((bytes_to_send[3] == 51) && ((bytes_to_send[4] == 3) || (bytes_to_send[4] == 4))) //We are Going Backwards Speeds are inversed
-      {
-        info_message.motor1_speed = -info_message.motor1_speed;
-        info_message.motor2_speed = -info_message.motor2_speed;
-        info_message.motor3_speed = -info_message.motor3_speed;
-        info_message.motor4_speed = -info_message.motor4_speed;
-        info_message.motor5_speed = -info_message.motor5_speed;
-        info_message.motor6_speed = -info_message.motor6_speed;
-
-        if (bytes_to_send[4] == 3) //Going Back ward and right side is getting slower w.r.t to car
-        {
-          if (bytes_to_send[6] > 126) //After 126 They turns to oposit direction
-          {
-            info_message.motor4_speed = -info_message.motor4_speed;
-            info_message.motor5_speed = -info_message.motor5_speed;
-            info_message.motor6_speed = -info_message.motor6_speed;
-          }
-          if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
-          {
-            info_message.motor4_speed = 0.0;
-            info_message.motor5_speed = 0.0;
-            info_message.motor6_speed = 0.0;
-          }
-        }
-        else if ((bytes_to_send[4] == 4)) //Turning Right Command issued Motor 4,5,6 Getting Slower
-        {
-          if (bytes_to_send[6] >= 126)
-          {
-            info_message.motor1_speed = -info_message.motor1_speed;
-            info_message.motor2_speed = -info_message.motor2_speed;
-            info_message.motor3_speed = -info_message.motor3_speed;
-          }
-          if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
-          {
-            info_message.motor1_speed = 0.0;
-            info_message.motor2_speed = 0.0;
-            info_message.motor3_speed = 0.0;
-          }
-        }
-      }
+      //   if (bytes_to_send[4] == 3) //Going Back ward and right side is getting slower w.r.t to car
+      //   {
+      //     if (bytes_to_send[6] > 126) //After 126 They turns to oposit direction
+      //     {
+      //       info_message.motor4_speed = -info_message.motor4_speed;
+      //       info_message.motor5_speed = -info_message.motor5_speed;
+      //       info_message.motor6_speed = -info_message.motor6_speed;
+      //     }
+      //     if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
+      //     {
+      //       info_message.motor4_speed = 0.0;
+      //       info_message.motor5_speed = 0.0;
+      //       info_message.motor6_speed = 0.0;
+      //     }
+      //   }
+      //   else if ((bytes_to_send[4] == 4)) //Turning Right Command issued Motor 4,5,6 Getting Slower
+      //   {
+      //     if (bytes_to_send[6] >= 126)
+      //     {
+      //       info_message.motor1_speed = -info_message.motor1_speed;
+      //       info_message.motor2_speed = -info_message.motor2_speed;
+      //       info_message.motor3_speed = -info_message.motor3_speed;
+      //     }
+      //     if (abs((bytes_to_send[6] / 126) - bytes_to_send[5]) < 20) // if Setpoint is under 20 Wheels stops
+      //     {
+      //       info_message.motor1_speed = 0.0;
+      //       info_message.motor2_speed = 0.0;
+      //       info_message.motor3_speed = 0.0;
+      //     }
+      //   }
+      // }
 
       info_message.linearspeed = (info_message.motor2_speed + info_message.motor5_speed) / 2;
 

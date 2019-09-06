@@ -21,8 +21,7 @@ bool SixWheelSteeringInterface::send_command(SteerRequest com, bool manual)
 {
     sixwd_msgs::SixWheelCommand msg;
     msg.controltype = 0;
-
-    ROS_INFO("Linear = %f, Angular = %f  ", output_speed, com.value);
+	com.value=-com.value;
 
     double left_speed_req = ((output_speed * 2) + (com.value * 0.27)) / 2;
     double right_speed_req = ((output_speed * 2) - (com.value * 0.27)) / 2;
@@ -32,37 +31,34 @@ bool SixWheelSteeringInterface::send_command(SteerRequest com, bool manual)
 
     msg.left_speed = (411.6445 * left_speed_req) - (88.65495 * sign_left);
     msg.right_speed = (411.6445 * right_speed_req) - (88.65495 * sign_right);
-    ROS_INFO("right %f , %d ", right_speed_req, msg.right_speed);
-    ROS_INFO("left %f, %d", left_speed_req, msg.left_speed);
-
-    if (abs(left_speed_req * 1000) < (0.27 * 1000))
+    if (abs(left_speed_req * 10000) < (0.2740 * 10000))
     {
         msg.left_speed = 0;
-    }
+  	 if (abs(left_speed_req * 10000) > (0.10 * 10000))
+   	 {
+        msg.left_speed = 22*sign_left;
+    	}
+}
 
-    if (abs(right_speed_req * 1000) < (0.27 * 1000))
+    if (abs(right_speed_req * 10000) < (0.2740 * 10000))
     {
         msg.right_speed = 0;
-    }
-    if (abs(left_speed_req * 1000) < (0.27 * 1000))
-    {
-        msg.left_speed = 0;
-    }
-
-    if (abs(right_speed_req * 1000) < (0.27 * 1000))
-    {
-        msg.right_speed = 0;
+      if (abs(right_speed_req * 10000) > (0.10 * 10000))
+       {
+        msg.right_speed = 22*sign_right;
+        } 
     }
 
-    if (abs(left_speed_req * 1000) < (0.82 * 1000))
+    if (abs(left_speed_req * 10000) > (0.82 * 10000))
     {
         msg.left_speed = 255 * sign_left;
     }
 
-    if (abs(right_speed_req * 1000) < (0.82 * 1000))
+    if (abs(right_speed_req * 10000) > (0.82 * 10000))
     {
         msg.right_speed = 255 * sign_left;
     }
+
 
     steer_data_publisher.publish(msg);
 
