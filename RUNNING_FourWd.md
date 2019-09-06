@@ -88,6 +88,13 @@ None of these launch files require odometry_agent to be running.
 
 If you run in the Jetson PC directly (with a monitor), run rviz to control the car and its navigation:
 `rosrun rviz rviz`
+
+Also With the configuration:
+
+rosrun rviz rviz -d `rospack find pose_follower`/rviz/rviz_navigation.rviz
+
+
+
 **TODO: here write how to add the config file**
 
  - WRITE Data that are available already with the config
