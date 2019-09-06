@@ -33,6 +33,7 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 **TODO here we could also differentiate between what has to be build on the car and what on the developer machine? SHOULD we create two integration repositories for this?** << This would also save a lot of space on the jetson because there we dont need simulation etc.
 
 **TODO is this enough for resolving dependencies?**
+
 ```bash
 rosdep install --from-paths src --ignore-src -r -y
 ```
@@ -60,7 +61,7 @@ In our platforms we are using following sensors
 
 - Wheel Encoder:
 
-  Six Wheeled platform has its own wheel encoders for each wheels bu they are only one phase encoders. Therefore the cant sense rotation direction, we solved this issue at odometry node assuming wheels never slides and rotates in commanded direction. Four wheeled system uses ERPM readings from BLDC motor. We also integrated an additional wheel encoder on it but not integrated it to ROS environment.
+  Six Wheeled platform has its own wheel encoders for each wheels but they are only one phase encoders. Therefore they can't sense rotation direction, we solved this issue at odometry node assuming wheels never slides and rotates in commanded direction. Four wheeled system uses ERPM readings from BLDC motor. We also integrated an additional wheel encoder on it but not integrated it to ROS environment.
 
 - Laser Scanner:
 
@@ -77,14 +78,14 @@ In our platforms we are using following sensors
 
 ## Open Issues
  1. For VESC We applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, ıt should also be implemented for ROS. Note that Vesc only reads
- encoder as rotor position. Therefore, two there exists two steps add postion reading to VESC_Driver node Convert it into speed.
+ encoder as rotor position. Therefore, two there exists two steps add position reading to VESC_Driver node Convert it into speed.
 
- 2. Motor controller for six wheeled platform' motor contreller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
+ 2. Motor controller for six wheeled platform' motor controller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
 
  3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data my be improved lasoftware_integration
      Integration repository for all relevant software pieces/submodules.
      
- 4. 6 Wheeled platform's one motor has damaged. I should be changed. Please check the issue .
+ 4. 6 Wheeled platform's one motor has damaged. It should be changed. Please check the issue .
 
  5. This project normally runs on Nvidia jetsonTX2 PCs on the cars (already installed).
      If you would like to run some of the packages on your PC, please refer to the Build section.
