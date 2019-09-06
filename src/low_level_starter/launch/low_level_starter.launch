@@ -3,9 +3,10 @@
  
 
 
-  <include file="$(find low_level_speed_controller)/launch/six_wd.launch"/>
+  <node pkg="low_level_speed_controller" name="speed_controller" type="six_wheel_low_level_controller" required="true" output="screen">
 
-  
+  </node>
+
 
   <node pkg="low_level_steering_controller" name="steer_controller" type="six_wheel_low_level_steering_controller" required="true" output="screen">
 
