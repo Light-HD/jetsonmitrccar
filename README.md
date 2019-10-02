@@ -37,6 +37,16 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 ```bash
 rosdep install --from-paths src --ignore-src -r -y
 ```
+### Installation
+
+To install the ros project, some packages that might be missing (may not come with full desktop installation):
+- Ackermann (sudo apt install ros-<version>-ackermann*)
+- gstreamer-1.0
+- teleop_twist_joy (sudo apt install ros-<version>-teleop-twist-joy)
+- teleop_twist_keyboard (sudo apt install ros-<version>-teleop-twist-keyboard)
+- geographic-msgs (sudo apt install ros-<version>-geographic-msgs)
+- serialConfig (sudo apt install ros-<version>-serial*)
+- opencv
 
 ## Run
 
