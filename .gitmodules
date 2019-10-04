@@ -34,3 +34,6 @@
 [submodule "src/rplidar_ros"]
 	path = src/rplidar_ros
 	url = https://github.com/Slamtec/rplidar_ros.git
+[submodule "buildLibrealsense2TX"]
+	path = buildLibrealsense2TX
+	url = https://github.com/goksukv/buildLibrealsense2TX.git
