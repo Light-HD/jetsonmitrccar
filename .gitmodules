@@ -1,24 +1,6 @@
-[submodule "src/vesc"]
-	path = src/vesc
-	url = https://github.com/erwincoumans/vesc.git
-[submodule "src/racecar_simulator"]
-	path = src/racecar_simulator
-	url = https://github.com/mit-racecar/racecar_simulator.git
-[submodule "src/racecar"]
-	path = src/racecar
-	url = https://github.com/mit-racecar/racecar.git
-[submodule "src/racecar_gazebo"]
-	path = src/racecar_gazebo
-	url = https://github.com/mit-racecar/racecar_gazebo.git
 [submodule "src/conde"]
 	path = src/conde
 	url = https://github.com/ee09115/conde_simulator.git
-[submodule "src/pid"]
-	path = src/pid
-	url = https://bitbucket.org/enwaytech/pid.git
-[submodule "src/imu_tools"]
-	path = src/imu_tools
-	url = https://github.com/happycity26/imu_tools.git
 [submodule "src/rf2o_laser_odometry"]
 	path = src/rf2o_laser_odometry
 	url = https://github.com/MAPIRlab/rf2o_laser_odometry.git
@@ -28,9 +10,27 @@
 [submodule "src/hector_slam"]
 	path = src/hector_slam
 	url = https://github.com/tu-darmstadt-ros-pkg/hector_slam.git
-[submodule "src/rplidar_ros"]
-	path = src/rplidar_ros
-	url = https://github.com/Slamtec/rplidar_ros.git
 [submodule "src/robot_localization"]
 	path = src/robot_localization
 	url = https://github.com/cra-ros-pkg/robot_localization.git
+[submodule "src/imu_tools"]
+	path = src/imu_tools
+	url = https://github.com/happycity26/imu_tools.git
+[submodule "src/vesc"]
+	path = src/vesc
+	url = https://github.com/goksukv/vesc.git
+[submodule "src/pid"]
+	path = src/pid
+	url = https://bitbucket.org/enwaytech/pid.git
+[submodule "src/racecar"]
+	path = src/racecar
+	url = https://github.com/mit-racecar/racecar.git
+[submodule "src/racecar_gazebo"]
+	path = src/racecar_gazebo
+	url = https://github.com/mit-racecar/racecar_gazebo.git
+[submodule "src/racecar_simulator"]
+	path = src/racecar_simulator
+	url = https://github.com/mit-racecar/racecar_simulator.git
+[submodule "src/rplidar_ros"]
+	path = src/rplidar_ros
+	url = https://github.com/Slamtec/rplidar_ros.git
