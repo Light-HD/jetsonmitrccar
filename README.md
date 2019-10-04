@@ -7,9 +7,9 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
 ##Questions/TODOs in/about submodules/directories
 
-1. buildRealsenseTX2 did we change anything here? Why not a submodule if not?
-2. FourWheelCarConfigurations(VESC) needs README
-3. SixwheelFırmware needs README
+1. buildRealsenseTX2 did we change anything here? Why not a submodule if not?(Added Ass Submodule -Goksu)
+2. FourWheelCarConfigurations(VESC) needs README(Briefly Explained How to Use Them -Göksu)
+3. SixwheelFırmware needs README()
 4. arduino has TODO in Readme
 5. jetsonTX2Power TODOS in Readme
 6. Where is the 4WD simulation environment?
@@ -107,29 +107,29 @@ In our platforms we are using following sensors
 
 
      ##Questions/TODOs in/about submodules/directories
-
+    
      **TODO Describe repo structure, all included packages have to be mentioned and for what are they responsible, how should/can they be used briefly, more detailed information should be referenced in a subreadme within the corresponding package/module. Here, you should also make clear what is just a git submodule from someone else and what you/we have been developed**
-
+    
      Build
      TODO Describe cloning (recursive) + dependency resolving/installs + build
-
+    
      TODO This should also reflect the different environments such as Arduino, ROS, Linux Kernel modules, AVR for 6WD motorcontoller ...
-
+    
      TODO here we could also differentiate between what has to be build on the car and what on the developer machine? SHOULD we create two integration repositories for this? << This would also save a lot of space on the jetson because there we dont need simulation etc.
-
+    
      TODO is this enough for resolving dependencies?
-
+    
      ￼
      rosdep install --from-paths src --ignore-src -r -y
      Run
      Running Four Wheel
      ** TODO Describe how to run the code, potentially explaining different launch files for different purposes**
-
+    
      ** TODO Different setups are, for instance remote controlled driving, move_base-based driving, different simulation engines.
-
+    
      Running Six Wheel
      blabla
-
+    
      Other Documentations
      ** TODO add the links of the other README files for each package
      TODO if appropriate link READMEs of subdirectories/modules below
@@ -139,13 +139,13 @@ In our platforms we are using following sensors
 
 
      Open Issues
-
+    
       7.
-
+    
       8.
-
+    
      #FAQ
-
+    
      **TODO if you have collect solutions for common pitfalls (maybe things you experienced yourself)**ter.
 
  7. 6 Wheeed platform's one motor has demaged. I shoul be changed. Please check the issue .
