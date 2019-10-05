@@ -85,20 +85,9 @@ For now available sensors are
 
 
 
-
-
-
-
-
-
 ##### *Starting planners:*
 
 `roslaunch pose_follower diff_drive.launch`
-
-
-
-
-**TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
 This starts the controller node with parameters in param folder. By default this node listens to /cmd_vel and publishes commands with 50.0Hz and uses 4% duty cycle for takeoff. Topic names can be changed from the yaml file and control type, timeout and publish rate can be changed inside the node. Example setup can be found in nodes source code.
 
@@ -106,7 +95,6 @@ This starts the controller node with parameters in param folder. By default this
 To start the steering controller:
 
 `rosrun low_level_steering_controller six_wheel_low_level_steering_controller`
-**TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
 This is only an interface which takes rad/s and translates it into servo command. Details can be found in the  architecture part.
 
@@ -114,7 +102,6 @@ This is only an interface which takes rad/s and translates it into servo command
 To start odometry and sensors:
 
 `roslaunch odometry_agent odometry_agent.launch`
-**TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
 This package launches hector_slam, LIDAR driver and camera driver. All data from sensors are fused using robot_localization package. Imu data is retrieved from realsense camera.
 
@@ -140,12 +127,13 @@ To run in RC mode with our low-level controller (integrated, but issues remain. 
 If you run in the Jetson PC directly (with a monitor), run rviz to control the car and its navigation:
 `rosrun rviz rviz`
 **TODO: here write how to add the config file**
+
  - WRITE Data that are available already with the config
  - How to give a goal (mention about the final orientation) -->
  - In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
 
 ##### Emergency Stop
-**TODO: which terminals to kill, or additional commands to stop (manual methods)**
+Kill switch is on the car.
 
 #### Interfacing
 ** TODO Services, topics their descriptions (high-level)
@@ -154,3 +142,5 @@ If you run in the Jetson PC directly (with a monitor), run rviz to control the c
 **TODO: local cost map parameters (from move base)**
 **TODO: how to send path arrays (overwriting the global planner)**
 **TODO: odometry: Localization does fusion (how to change the weights of odometries?) and how to select the sensors/types/values from the launch file **
+
+THe odometry agent related interfaces explained in thr readme inside the package.
