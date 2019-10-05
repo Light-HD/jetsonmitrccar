@@ -16,9 +16,6 @@
 [submodule "src/imu_tools"]
 	path = src/imu_tools
 	url = https://github.com/happycity26/imu_tools.git
-[submodule "src/vesc"]
-	path = src/vesc
-	url = https://github.com/goksukv/vesc.git
 [submodule "src/pid"]
 	path = src/pid
 	url = https://bitbucket.org/enwaytech/pid.git
@@ -37,3 +34,7 @@
 [submodule "buildLibrealsense2TX"]
 	path = buildLibrealsense2TX
 	url = https://github.com/goksukv/buildLibrealsense2TX.git
+[submodule "src/vesc"]
+	path = src/vesc
+	url = https://github.com/goksukv/vesc.git
+	branch = master
