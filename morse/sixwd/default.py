@@ -101,7 +101,7 @@ robot.append(pose)
 
 # To ease development and debugging, we add a socket interface to our robot.
 #
-# Check here: http://www.openrobots.org/morse/doc/stable/user/integration.html 
+# Check here: http://www.openrobots.org/morse/doc/stable/user/integration.html
 # the other available interfaces (like ROS, YARP...)
 # robot.add_default_interface('socket')
 # basic_actuate.add_interface('ros',topic = "/test")
@@ -118,7 +118,7 @@ env.set_viewport(viewport_shade='TEXTURED', clip_end=1000)
 
 env.show_framerate(True)
 
-robot.add_default_interface('ros') 
+robot.add_default_interface('ros')
 pose.add_stream('ros')
 imu.add_stream('ros')
 laser_scanner.add_stream('ros',topic="/base_scan")

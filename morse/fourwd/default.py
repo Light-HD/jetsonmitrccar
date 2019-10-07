@@ -7,7 +7,7 @@ Feel free to edit this template as you like!
 
 from morse.builder import *
 from morse.sensors import *
-from test.builder.robots import Hummerscaled
+from fourwd.builder.robots import Hummerscaled
 
 robot = Hummerscaled()
 robot.properties(scale = 0.2)
@@ -60,7 +60,7 @@ robot.set_mass(0.1)
 # 'morse add actuator <name> test' can help you with the creation of a custom
 # actuator.
 steerforce = SteerForce()
-steerforce.add_stream('ros','test.middleware.ros.ackermann_ros.AckermannROS')
+steerforce.add_stream('ros','fourwd.middleware.ros.ackermann_ros.AckermannROS')
 # place your component at the correct location
 steerforce.translate(0, 0, 0)
 steerforce.rotate(0, 0, 0)
@@ -84,14 +84,14 @@ robot.append(pose)
 
 # To ease development and debugging, we add a socket interface to our robot.
 #
-# Check here: http://www.openrobots.org/morse/doc/stable/user/integration.html 
+# Check here: http://www.openrobots.org/morse/doc/stable/user/integration.html
 # the other available interfaces (like ROS, YARP...)
 
 
 
 # set 'fastmode' to True to switch to wireframe mode
 # env = Environment('environments/indoor.blend', fastmode = False)
-env = Environment('test/environments/test_last.blend',fastmode = False)
+env = Environment('fourwd/environments/test_last.blend',fastmode = False)
 env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
 env.properties(latitude=1.53, longitude=45.1, altitude=0.0)
