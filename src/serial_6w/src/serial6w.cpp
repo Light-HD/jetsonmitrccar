@@ -323,7 +323,7 @@ public:
       InformationByteCounter = InformationByteCounter + byte_checker;    // Info = 13 + 1 = 14
 
       byte_checker = read(serial_port, serial_buffer, sizeof(char) * 1); // Read Another one
-      info_message.temprature = serial_buffer[0];                        // Temprature
+      info_message.temperature = serial_buffer[0];                        // Temperature
       InformationByteCounter = InformationByteCounter + byte_checker;    // Info = 14 + 1 = 15
 
       if (bytes_to_send[5] < 20)

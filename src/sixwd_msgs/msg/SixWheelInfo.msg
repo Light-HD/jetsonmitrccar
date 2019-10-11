@@ -12,5 +12,5 @@ int16 motor3_current
 int16 motor4_current
 int16 motor5_current
 int16 motor6_current
-int16 voltage  #Battery voltage reading and temprature
-int16 temprature
+int16 voltage  #Battery voltage reading and temperature
+int16 temperature

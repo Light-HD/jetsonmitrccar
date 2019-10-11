@@ -8,11 +8,8 @@ project(sixwd_msgs)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  message_generation
-  message_runtime
-  roscpp
-  rospy
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -107,7 +104,7 @@ add_message_files(
 catkin_package(
 #INCLUDE_DIRS include
 #LIBRARIES sixwd_msgs
-  CATKIN_DEPENDS message_generation message_runtime roscpp rospy std_msgs
+  CATKIN_DEPENDS message_runtime std_msgs
 # DEPENDS system_lib
 )
 
@@ -117,10 +114,10 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(
+# include_directories(
 # include
-  ${catkin_INCLUDE_DIRS}
-)
+#  ${catkin_INCLUDE_DIRS}
+#)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
