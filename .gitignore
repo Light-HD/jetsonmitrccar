@@ -2,6 +2,8 @@
 /devel
 /src/CMakeLists.txt
 /.vscode
+/.idea/
 *.ko
 *.mk
 *.pyc
+

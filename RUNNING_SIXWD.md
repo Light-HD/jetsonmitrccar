@@ -13,15 +13,15 @@ password for the jetson3: *jetsongtarc*
 System is compromised of four basic components.
 
 - Motor Controller Interface which takes cmd_vel message and translates it into motor commands.
-- Optometry agent which initializes sensors and starts slam algorithms. Also publishes necessary transform trees.
+- Odometry agent which initializes sensors and starts SLAM algorithms. Also publishes necessary transform trees.
 - Local planner which calculates cmd_vel given odometry and path data
 - Global planner which calculates the path from start to the end.
 
 ### *Starting Low Level Elements:*
 
-Low level elements are consist of three main nodes. These are ;
+Low level elements consist of three main nodes. These are ;
 
-* serial_communicator: Starts the serial Communication between motor controller and Nvidia.
+* serial_communicator: Starts the serial Communication between motor controller and Nvidia Jetson TX2.
 
   Which listens <u>/motor_controller/motor_commands</u> topic and publishes <u>/motor_controller/motor_controller_info</u>
 
@@ -29,7 +29,7 @@ Low level elements are consist of three main nodes. These are ;
 
   Which listens <u>/cmd_vel</u> topic and publishes <u>/output_speed</u>
 
-* low_level_steering_controller: Starts The steering commands generator.
+* low_level_steering_controller: Starts the steering commands generator.
 
   Which listens <u>/cmd_vel</u>  and /<u>speed_output</u> topics and publishes motor_controller/motor_commands</u>
 
@@ -51,16 +51,14 @@ This command following commands:
 
 <u>/serial_communicator/motor_commands</u> contains the motor control type and motor speeds in bytes
 
-<u>/serial_communicator/motor_controller_info</u> contains motor speeds , battery voltage motor currents and temperature as bytes
+<u>/serial_communicator/motor_controller_info</u> contains motor speeds, battery voltage motor currents and temperature as bytes
 
 ##### *Starting Sensors:*
 
 For now available sensors are
 
-- Lidar
-
+- 2D Lidar
 - Camera IMU
-
 - Wheel Encoder
 
   ##### To run them individually ;
@@ -77,12 +75,10 @@ For now available sensors are
 
   Which starts Realsense camera publishes /camera/imu data from Intel Realsense Camera then Filters it and Publishes again as /imu/data as sensor_msgs/Imu.
 
-  It uses
 
-  For Wheel Encoder Run:
+  ###### For Wheel Encoder Run:
 
   `roslaunch six_wheel_odom six_wheel_odom.launch`
-
 
 
 ##### *Starting planners:*
@@ -103,8 +99,7 @@ To start odometry and sensors:
 
 `roslaunch odometry_agent odometry_agent.launch`
 
-This package launches hector_slam, LIDAR driver and camera driver. All data from sensors are fused using robot_localization package. Imu data is retrieved from realsense camera.
-
+This package launches hector_slam, LIDAR driver and camera driver. All data from sensors are fused using robot_localization package. IMU data is retrieved from realsense camera.
 
 
 To start all planners and pid controllers for them:
@@ -118,7 +113,6 @@ To also start PID Controler
 `roslaunch pose_follower six_pid_controller.launch`
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
-**TODO: how to run RC**
 To run in RC mode, DO NOT launch pose_follower diff_drive.launch:
 `roslaunch ackermann_rc rc_driver_vesc.launch`
 
@@ -133,14 +127,16 @@ If you run in the Jetson PC directly (with a monitor), run rviz to control the c
  - In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
 
 ##### Emergency Stop
+
 Kill switch is on the car.
 
 #### Interfacing
-** TODO Services, topics their descriptions (high-level)
-**TODO: global planner practical parameters (the ones that launch file imports). For all the rest provide the online links**
-**TODO: local planner practical parameters, e.g. how to tune PID parameters, reaching goal point etc.**
-**TODO: local cost map parameters (from move base)**
-**TODO: how to send path arrays (overwriting the global planner)**
-**TODO: odometry: Localization does fusion (how to change the weights of odometries?) and how to select the sensors/types/values from the launch file **
 
-THe odometry agent related interfaces explained in thr readme inside the package.
+* TODO Services, topics their descriptions (high-level)
+* TODO: global planner practical parameters (the ones that launch file imports). For all the rest provide the online links**
+* TODO: local planner practical parameters, e.g. how to tune PID parameters, reaching goal point etc.**
+* TODO: local cost map parameters (from move base)**
+* TODO: how to send path arrays (overwriting the global planner)**
+* TODO: odometry: Localization does fusion (how to change the weights of odometries?) and how to select the sensors/types/values from the launch file **
+
+The odometry agent related interfaces are explained in thr readme inside the package.
