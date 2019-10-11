@@ -9,22 +9,19 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
 1. Latest SixwheelFirmware --> Still open?
     * Byte 7 Individual motor control ?!
-2. How to run simulation? Readme for the simulation environments.
+2. How to run simulation? Extend Readme for the simulation environments.
 3. Readme low_level_steering_controller
 4. Readme morse_teleop
 5. Readme rc_msgs
 6. arduino has TODO in Readme(Ege knows it better)
 7. jetsonTX2Power TODOS in Readme 
-8. Where is the 4WD simulation environment?
-9. Morse basicspeed.py is missing code docu, currently mostly boilerplate docu.
-10. TODO add the end in all of your code either document why codes are commented or remove commented code.
-11. TODO all of your packages require a README that exlains what it is
-12. low_level_speed_controller fails during compilation.
+8. Morse basicspeed.py is missing code docu, currently mostly boilerplate docu.
+9. TODO add the end in all of your code either document why codes are commented or remove commented code.
+10. TODO all of your packages require a README that exlains what it is
+11. low_level_speed_controller fails during compilation.
 
 
 ## Structure
-
-
 
 * software_integration
 
@@ -50,11 +47,11 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * ackermann_rc: Interface between an RC receiver connected to arduino and ROS
 
-    * conde (3rd party submodule): **TODO**
+    * conde (3rd party submodule): **[optional]** Simple lane following Autonomous Driving Simulator for the Portuguese Robotics Open
 
-    * gscam(3rd party submodule): **TODO**
+    * gscam(3rd party submodule): **TODO where is this used?** Broadcasting any GStreamer camera source as ROS image
 
-    * hector_slam(3rd party submodule): Lidar SLAM package that we use
+    * hector_slam(3rd party submodule): 2D Lidar SLAM package that we use
 
     * imu_tools(custom submodule): Contains IMU filters 				
 

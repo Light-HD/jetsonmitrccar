@@ -6,4 +6,4 @@
 *.ko
 *.mk
 *.pyc
-
+/.catkin_workspace
