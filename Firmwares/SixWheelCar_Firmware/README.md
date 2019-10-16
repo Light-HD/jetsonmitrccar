@@ -1,7 +1,5 @@
 #SixwheelFirmware
 
-TODO Latest Custom Firmware Will be Added
-
 `/Custom` MCU is the being used
 `/Original` was sent by the AREX company and it is not used.
 
