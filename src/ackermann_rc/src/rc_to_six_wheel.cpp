@@ -7,7 +7,7 @@
 #include<rc_msgs/RCControlMsg.h>
 #include<ackermann_msgs/AckermannDriveStamped.h>
 #include<ackermann_msgs/AckermannDrive.h>
-#include<serial_6w/SixWheelCommand.h>
+#include<sixwd_msgs/SixWheelCommand.h>
 #include<string>
 
 // #define DEBUG 1
@@ -55,7 +55,7 @@ public:
 
 
         rc_command_sub = n.subscribe(rc_command_topic,10,&RC_Driver::rc_command_callback_unique_command,this);
-        rc_to_six_wheel_pub = n.advertise<serial_6w::SixWheelCommand>(drive_topic,10);
+        rc_to_six_wheel_pub = n.advertise<sixwd_msgs::SixWheelCommand>(drive_topic,10);
         
 
         ROS_INFO("INITIALIZATION COMPLETE. STARTING MESSAGE TRANSFORMING");
@@ -139,7 +139,7 @@ private:
     ros::NodeHandle n;
 
     //Store old Command Value
-    serial_6w::SixWheelCommand drive_output;
+    sixwd_msgs::SixWheelCommand drive_output;
     rc_msgs::RCControlMsg command_value;
 
     //Store Max and Min RC Values and the middle point

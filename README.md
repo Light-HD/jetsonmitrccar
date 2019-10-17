@@ -122,7 +122,9 @@ There are several environments the project consists of.
 
 ### Installation
 
-Automatic resolving or ROS dependencies
+#### Dependendies
+
+Automatic resolving of ROS dependencies
 
 ```bash
 rosdep install --from-paths src --ignore-src -r -y
@@ -136,6 +138,12 @@ To install the ros project, some packages that might be missing (may not come wi
 - geographic-msgs (`sudo apt install ros-<version>-geographic-msgs`)
 - serialConfig (`sudo apt install ros-<version>-serial*`)
 - opencv
+
+#### Installation
+
+```bash
+catkin_make
+```
 
 ## Run
 
