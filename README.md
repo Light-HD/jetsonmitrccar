@@ -7,8 +7,6 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
 ## Questions/TODOs in/about submodules/directories
 
-1. Latest SixwheelFirmware --> Still open?
-    * Byte 7 Individual motor control ?!
 2. How to run simulation? Extend Readme for the simulation environments.
 3. Readme low_level_steering_controller
 4. Readme morse_teleop

@@ -64,7 +64,7 @@ It gets a speed and sets the all motors speeds. If it gets an angle it slows dow
 4.	--> Control Type (motor number+9)
 5. 	--> Info Bytes (speed)
 6.	--> Info Bytes (direction)(1 forward or 2 backward)
-8.	--> End Byte (4)
+7.	--> End Byte (4)
 
 ### Communication Between MAIN MCU and MOTOR MCU (I2C):
 
