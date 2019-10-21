@@ -12,7 +12,7 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 4. Readme morse_teleop
 5. Readme rc_msgs
 6. arduino has TODO in Readme(Ege knows it better)
-7. jetsonTX2Power TODOS in Readme 
+7. jetsonTX2Power TODOS in Readme
 8. Morse basicspeed.py is missing code docu, currently mostly boilerplate docu.
 9. TODO add the end in all of your code either document why codes are commented or remove commented code.
 10. TODO all of your packages require a README that exlains what it is
@@ -33,10 +33,10 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
         * SixWheelCar_Firmware: MCU Codes and compiled HEX files
 
-    * JetsonPower: Module and user-space application for integrating LiPo battery readings into Linux 
+    * JetsonPower: Module and user-space application for integrating LiPo battery readings into Linux
 
 * morse: Morse simulation environments
-    * fourwd: Environment for the 4WD car 
+    * fourwd: Environment for the 4WD car
     * sixwd: Environment for the 6WD car
 
 * Six_Wheeled_Motor_Controller: The files in the CD sent with Motor Controller
@@ -55,11 +55,11 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * imu_tools(custom submodule): Contains IMU filters 				
 
-    * low_level_speed_controller: Speed Controllers 
+    * low_level_speed_controller: Speed Controllers
 
     * low_level_steering_controller : Steering Controller 
 
-    * morse_teleop : **TODO** 
+    * morse_teleop : **TODO**
 
     * odometry_agent : Configurations of sensor integrations
 
@@ -87,14 +87,14 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * six_wheel_odom: The package that publishes odometry by six wheeled car's motor controllers
 
-    * vesc(custom submodule): VESC interface for ROS and odometry 
+    * vesc(custom submodule): VESC interface for ROS and odometry
 
 
 ## Clone and Build
 
 First, create your self a SSH key to access the repository. To do so click to your avatar at the top right then click Settings after that choose SSH keys section at the right of the screen. There you will see a tutorial to generate a SSH key provided by Git-Lab.
 
-After that you will be able to clone the repository 
+After that you will be able to clone the repository
 
 `git clone git@gitlab-edu.aot.tu-berlin.de:small_autonomous_driving/software_integration.git `
 
@@ -174,7 +174,7 @@ In our platforms we are using following sensors
 1. For VESC we applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, it should also be implemented for ROS. Note that VESC only reads
  encoder as rotor position. Therefore, two steps are required. First, add position reading to VESC_Driver node. Secondly, Convert it into speed.
 2. Motor controller for six wheeled platform' motor controller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
-3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data may be improved 
+3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data may be improved
 4. 6 Wheeled platform's one motor has damaged. It should be changed. Please check the issue.
 5. PID performances can be improved to see the interface please look interface section.
 7. Adding additional visual odometry to the cars.

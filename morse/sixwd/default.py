@@ -16,7 +16,7 @@ from sixwd.builder.actuators import Basicspeed
 #
 # 'morse add robot <name> sixwd' can help you to build custom robots.
 robot = Sixwd()
-
+robot.add_default_interface('ros')
 robot.properties(scale = 1.5)
 robot.scale = [1.5, 1.5, 1.5]
 
