@@ -30,7 +30,7 @@ public:
     //////////////////
     //Initilise USB//
     /////////////////
-    serial_port = open("/dev/ttyUSB1", O_RDWR);
+    serial_port = open("/dev/ttyUSB_thumper", O_RDWR);
     // Check for errors
     if (serial_port < 0)
     {

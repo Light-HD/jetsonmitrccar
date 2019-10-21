@@ -44,6 +44,8 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 * src : All catkin based packages
 
     * ackermann_rc: Interface between an RC receiver connected to arduino and ROS
+    
+    * bear_car_launch: Collection of launch files that integrate most of the other packages here.
 
     * conde (3rd party submodule): **[optional]** Simple lane following Autonomous Driving Simulator for the Portuguese Robotics Open
 
@@ -54,8 +56,6 @@ If you would like to run some of the packages on your PC, please refer to the Bu
     * imu_tools(custom submodule): Contains IMU filters 				
 
     * low_level_speed_controller: Speed Controllers 
-
-    * low_level_starter: The launch file to easily start six wheeled platform
 
     * low_level_steering_controller : Steering Controller 
 
@@ -73,15 +73,13 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * racecar_simulator(3rd party submodule): **TODO**
 
-    * rc_msgs: **TODO**
+    * rc_msgs: Remote control ROS message definitions
 
     * rf2o_laser_odometry(3rd party submodule): The package that publishes odometry messages from Hector Slam
 
     * robot_localization(3rd party submodule): The package that contains EKF integrations that we use
 
     * rplidar_ros(3rd party submodule): ROS package of Laser Scanner
-
-    * rs_cam_and_imu_filter_launch: Launch file to start imu filter and sensor
 
     * serial_6w: Serial Communication node to communicate with motor controller
 

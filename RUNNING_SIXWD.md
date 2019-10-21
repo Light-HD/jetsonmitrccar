@@ -35,7 +35,7 @@ Low level elements consist of three main nodes. These are ;
 
 To start them as a whole you can run the command:
 
-`roslaunch slow_level_starter low_level_starter`
+`roslaunch bear_car_launch low_level_starter.launch`
 
 This command following commands:
 
@@ -65,13 +65,13 @@ For now available sensors are
 
   ###### For Lidar Run:
 
-  `roslaunch rplidar_ros rplidar_a3.launch`
+  `roslaunch bear_car_launch rplidar_a3.launch`
 
   Which publishes /scan Topic and starts laser Scanner
 
   ###### For Camera Run:
 
-  `roslaunch rs_cam_and_imu_filter_launch rs_imu.launch`
+  `roslaunch bear_car_launch rs_imu.launch`
 
   Which starts Realsense camera publishes /camera/imu data from Intel Realsense Camera then Filters it and Publishes again as /imu/data as sensor_msgs/Imu.
 
