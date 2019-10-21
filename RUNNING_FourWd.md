@@ -2,7 +2,7 @@
 
 ## Four Wheeled (4WD) Platform
 
-#### Connecting to the Jetson PC
+### Connecting to the Jetson PC
 
 Connect to the *CARS* wifi with password *Test1234*
 Then, ssh terminals to Jetson PC:  
@@ -10,7 +10,7 @@ Then, ssh terminals to Jetson PC:
 `ssh jetson2@192.168.1.188`
 password for the jetson2: *jetsongtarc*
 
-#### Running the project
+### Running the project
 System is compromised of four basic components.
 
 - Motor Controller Interface which takes cmd_vel message and translates it into motor commands.
@@ -57,35 +57,13 @@ To start odometry and sensors:
 This package launches hector_slam, LIDAR driver rplidar_ros and realsense camera driver. All data from sensors are fused using robot_localization package. IMU data is retrieved from realsense camera. Currently laser odometry and wheel odometry is used. IMU was causing oscillations in the pose which the problem may be solved by changing weights.
 
 
-
 To start all planners and pid controllers for them:
 
 `roslaunch pose_follower navigation_stack.launch`
 
 This will make the car run in autonomous mode.
 
-
-
-To start the **RC mode**, there are two options currently implemented.  First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended. Second option is to use the interface created for morse. This is included in rc_driver_morse launch file. Morse accepts twist message for control and that twist output can be fed into low level controllers which would result in a better control. Currently not fully implemented but possible solution is to use rc_driver launch file. This node outputs AckermannDrive msg and linear low speed controller can handle this message. But steering controller lacks a simple listener to this message type.
-
-**TODO: How to tune the control (throttle and steer) parameters, e.g. the location of the yaml file**
-
-To run in RC mode, DO NOT launch pose_follower navigation_stack.launch:
-
-`roslaunch ackermann_rc rc_driver_vesc.launch`
-
-To run in RC mode with our low-level controller (integrated, but issues remain. See the open issues page), assign `true` to `use_twist` parameter under *ackermann_rc/param/rc_driver_vesc.yaml*, then run the rc_driver_vesc.launch above:
-
-
-To run using  morse interface
-
-`roslaunch ackermann_rc rc_driver_morse.launch`
-
-
-
-None of these launch files require odometry_agent to be running.
-
-
+#### Visualization:
 
 If you run in the Jetson PC directly (with a monitor), run rviz to control the car and its navigation:
 `rosrun rviz rviz`
@@ -96,13 +74,34 @@ rosrun rviz rviz -d `rospack find pose_follower`/rviz/rviz_navigation.rviz
 
 
 
+#### RC mode for running the project and for the simulation
+
+To start the **RC mode**, there are two options currently implemented.  First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended. Second option is to use the interface created for morse. This is included in rc_driver_morse launch file. Morse accepts twist message for control and that twist output can be fed into low level controllers which would result in a better control. Currently not fully implemented but possible solution is to use rc_driver launch file. This node outputs AckermannDrive msg and linear low speed controller can handle this message. But steering controller lacks a simple listener to this message type.
+
+To run in RC mode, *DO NOT launch pose_follower navigation_stack.launch*. To run in RC mode with our low-level controller (integrated, but issues remain. See the open issues page), assign `true` to `use_twist` parameter under *ackermann_rc/param/rc_driver_vesc.yaml*, then run the rc_driver_vesc.launch below:
+
+`roslaunch ackermann_rc rc_driver_vesc.launch`
+
+
+To run using morse interface:
+
+`roslaunch ackermann_rc rc_driver_morse.launch`
+
+None of these launch files require odometry_agent to be running.
+
+### Tuning the control parameters
+
+For the purpose, a YAML file is created to interface the low level control units. This directly loads the parameters to the VESC driver.
+**TODO: where is this YAML file??? ackermann_rc/param/rc_driver_vesc.yaml**
+
+
 **TODO: here write how to add the config file**
 
  - WRITE Data that are available already with the config
  - How to give a goal (mention about the final orientation) -->
  - In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
 
-##### Emergency Stop
+### Emergency Stop
 
 For emergency stop, there are couple of methods. Killing the terminal with **low_level_speed_controller** shuts down communication with VESC. This causes VESC to stop in a short while usually under a second.
 
@@ -111,19 +110,19 @@ If **navigation_stack** is killed, cmd_vel generation is stopped. This causes lo
 Currently, there is only one hardware kill switch on the battery that supplies digital boards. Closing it would shutdown motors immediately.
 
 
-#### Interfacing
+### Interfacing
 
-##### VESC Driver:
+#### VESC Driver:
 
 ​	/sensors/core: This topic outputs the internal values of VESC like erpm, input voltage, current, temp...
 
    /commands/motor/... : There are several topics like this. They receive double values to corresponding interfaces. For example a 0.04 published to /commands/motor/duty_cycle causes a switch to duty_cycle control with 4% duty_cycle.
 
-##### Low Level Controllers
+#### Low Level Controllers
 
 ​	/cmd_vel: This basically the only input topic they need. They also listen to the odometry data. Topic names can be changed from the yaml file four_wd_params.yaml. In that file you can also configure takeoff duty_cycle levels.
 
-##### Local And Global Planners
+#### Local And Global Planners
 
 They generate the cmd_vel necessary to complete the path. All PID controller parameters can be changed from`pose_follower/launch/pid_controller.launch`.  Also in cfg/carlike folder, all parameters necessary for the system is present. In pose_follower.yaml you can change goal point tolerance and goal point timeout as well as controller limits.  To send a goal, you can use rviz 2D nav goal interface. Also move_base also has an action interface to send goal points.
 

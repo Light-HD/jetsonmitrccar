@@ -11,6 +11,7 @@ from fourwd.builder.robots import Hummerscaled
 
 robot = Hummerscaled()
 robot.properties(scale = 0.2)
+robot.add_default_interface('ros')
 robot.name = "Hummer"
 robot.scale = [0.2, 0.2, 0.2]
 
