@@ -1,0 +1,16 @@
+# Custom USB symlinks
+
+#USB device found, idVendor=10c4, idProduct=ea60, Mfr=1, Product=2, SerialNumber=3
+KERNEL=="ttyUSB[0-9]*", SUBSYSTEMS=="usb", ATTRS{idProduct}=="ea60", GROUP="plugdev", SYMLINK+="ttyUSB_rplidar"
+
+
+#USB device found, idVendor=0403, idProduct=6001, Mfr=1, Product=2, SerialNumber=3
+KERNEL=="ttyUSB[0-9]*", SUBSYSTEMS=="usb", ATTRS{serial}=="A4004Ahm", GROUP="plugdev", SYMLINK+="ttyUSB_thumper"
+
+
+#USB device found, idVendor=0403, idProduct=6001, Mfr=1, Product=2, SerialNumber=3
+KERNEL=="ttyUSB[0-9]*", SUBSYSTEMS=="usb", ATTRS{serial}=="A9007Lt8", GROUP="plugdev", SYMLINK+="ttyUSB_remote"
+
+
+# General usb stuff
+KERNEL=="ttyUSB[0-9]*", ACTION=="add", MODE="0666", GROUP="dialout"
