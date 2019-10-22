@@ -65,13 +65,13 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * pid(3rd party submodule): General use PID package
 
-    * pose_follower: **TODO**
+    * pose_follower: **TODO** Adjusted local planner implementation.
 
     * racecar(3rd party submodule): **TODO**
 
-    * racecar_gazebo(3rd party submodule): **TODO**
+    * racecar_gazebo(3rd party submodule): **[optional]**  **TODO**
 
-    * racecar_simulator(3rd party submodule): **TODO**
+    * racecar_simulator(3rd party submodule): **[optional]**  **TODO**
 
     * rc_msgs: Remote control ROS message definitions
 

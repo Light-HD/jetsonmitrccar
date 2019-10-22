@@ -109,7 +109,7 @@ To start all planners and pid controllers for them:
 
 In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
 
-To also start PID Controler
+To also start PID Controller
 `roslaunch pose_follower six_pid_controller.launch`
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 

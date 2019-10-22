@@ -24,3 +24,7 @@ Making both simulation environments available to Morse Simulator
 * 6WD platform:
 
 `morse run sixwd`
+
+# Tele-operation
+
+Please see the documentation about morse tele-operation in the package [bear_car_launch](../src/bear_car_launch/README.md)

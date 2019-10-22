@@ -53,6 +53,9 @@
   <exec_depend>rplidar_ros</exec_depend>
   <exec_depend>low_level_speed_controller</exec_depend>
   <exec_depend>serial_6w</exec_depend>
+  <exec_depend>teleop_twist_joy</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
+  <exec_depend>joy</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

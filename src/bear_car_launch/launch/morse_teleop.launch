@@ -1,8 +1,8 @@
 <launch>
+  <arg name="use_keyboard" default="true" />
 
-  <arg name="use_keyboard" default="false" />
-    <group if="$(arg use_joy)">
-      <node name="teleop_twist_keyboard.py" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" />
+    <group if="$(arg use_keyboard)">
+      <node name="teleop_twist_keyboard_node" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" />
     </group>
 
     <group unless="$(arg use_keyboard)">

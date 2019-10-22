@@ -22,4 +22,16 @@ Launch file to start imu filter and sensor
 
 rs_imu.launch is launched by odometry_agent. IMU filtered data is being fused under ekf for acceleration after filtering.
 
+## morse_telop
 
+Running nodes for tele-operation of simulated morse robots.
+
+Nodes are publishing twist messages to the topic `/robot/basic_actuate`
+
+Keyboard control:
+`roslaunch bear_car_launch morse_teleop.launch use_keyboard:=true` 
+
+Gamepad control:
+`roslaunch bear_car_launch morse_teleop.launch use_keyboard:=false`
+
+Without the parameter `use_keyboard` default will be keyboard.
