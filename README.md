@@ -59,8 +59,6 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * low_level_steering_controller : Steering Controller 
 
-    * morse_teleop : **TODO**
-
     * odometry_agent : Configurations of sensor integrations
 
     * pid(3rd party submodule): General use PID package
