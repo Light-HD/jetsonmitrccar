@@ -97,7 +97,7 @@ This is only an interface which takes rad/s and translates it into servo command
 
 To start odometry and sensors:
 
-`roslaunch odometry_agent odometry_agent.launch`
+`roslaunch odometry_agent odometry_agent.launch is_four_wd:=false`
 
 This package launches hector_slam, LIDAR driver and camera driver. All data from sensors are fused using robot_localization package. IMU data is retrieved from realsense camera.
 
