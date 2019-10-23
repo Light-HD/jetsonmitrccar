@@ -1,0 +1,14 @@
+
+<launch>
+
+  <!-- Launch file for directly controlling the 6WD with the RC-->
+
+  <node pkg="serial_6w" name="motor_controller" type="serial_communicator_6w" required="true" output="screen">
+  </node>
+
+  <include file="$(find ackermann_rc)/launch/rc_six_wheel.launch">
+  </include>
+
+
+</launch>
+

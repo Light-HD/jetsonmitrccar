@@ -126,6 +126,18 @@ If you run in the Jetson PC directly (with a monitor), run rviz to control the c
  - How to give a goal (mention about the final orientation) -->
  - In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
 
+##### Remote Control Mode (RC Mode)
+
+For using the remote for controlling the car directly on low-level you only need the serial_6w package
+
+`rosrun serial_6w serial_communicator_6w`
+
+and `roslaunch ackermann_rc rc_six_wheel.launch`
+
+Alternatively, you can directly launch the following launch file which includes above commands.
+
+`roslaunch bear_car_launch sixwd_direct_rc.launch`
+
 ##### Emergency Stop
 
 Kill switch is on the car.
