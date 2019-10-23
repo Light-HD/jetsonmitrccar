@@ -53,7 +53,7 @@
 
   <group if="$(arg imu_odometry)">
 
-   <include file="$(find rs_cam_and_imu_filter_launch)/launch/rs_imu.launch"/>
+   <include file="$(find bear_car_launch)/launch/rs_imu.launch"/>
 
   </group>
 
