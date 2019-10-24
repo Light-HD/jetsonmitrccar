@@ -1,4 +1,4 @@
-# Custom USB symlinks
+# Custom USB symlinks for reliable device identification
 
 # RPLidar Laser Scanner
 #USB device found, idVendor=10c4, idProduct=ea60, Mfr=1, Product=2, SerialNumber=3
@@ -15,7 +15,9 @@ KERNEL=="ttyUSB[0-9]*", SUBSYSTEMS=="usb", ATTRS{serial}=="A4004Ahm", GROUP="plu
 KERNEL=="ttyUSB[0-9]*", SUBSYSTEMS=="usb", ATTRS{serial}=="A9007Lt8", GROUP="plugdev", SYMLINK+="ttyUSB_remote"
 
 
-# VESC serial connection
+# VESC (4WD) serial connection
+# USB device found, idVendor=0483, idProduct=5740, Mfr=1, Product=2, SerialNumber=3
+KERNEL=="ttyUSB[0-9]*", SUBSYSTEMS=="usb", ATTRS{idProduct}=="5740", GROUP="plugdev", SYMLINK+="ttyUSB_vesc"
 
 
 # General usb stuff
