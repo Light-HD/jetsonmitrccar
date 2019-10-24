@@ -36,5 +36,5 @@
 	url = https://github.com/goksukv/buildLibrealsense2TX.git
 [submodule "src/vesc"]
 	path = src/vesc
-	url = https://github.com/goksukv/vesc.git
+	url = https://gitlab-edu.aot.tu-berlin.de/small_autonomous_driving/vesc.git
 	branch = master
