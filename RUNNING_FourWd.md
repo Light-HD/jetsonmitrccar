@@ -29,6 +29,7 @@ This starts ROS node for communicating with servo and BLDC.  Node launched is th
 Next step is to start the low level speed and steering controller. These nodes take cmd_vel and translates it into correct messages for vesc_driver_node.
 
 
+
 To start linear controller:
 
 `roslaunch low_level_speed_controller allg.launch is_four_wd:=true`
@@ -49,12 +50,11 @@ This is only an interface which takes rad/s and translates it into servo command
 
 To start odometry and sensors:
 
-`roslaunch odometry_agent odometry_agent.launch`
+`roslaunch odometry_agent odometry_agent.launch is_four_wd:=true`
 
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
-**TODO: Which odometry types are available in this run, and the fact that they are fused in EKF**
 
-This package launches hector_slam, LIDAR driver rplidar_ros and realsense camera driver. All data from sensors are fused using robot_localization package. IMU data is retrieved from realsense camera. Currently laser odometry and wheel odometry is used. IMU was causing oscillations in the pose which the problem may be solved by changing weights.
+This package launches hector_slam, LIDAR driver rplidar_ros and realsense camera driver. All data from sensors are fused using robot_localization package (an EKF is launched for the operation). IMU data is retrieved from realsense camera. Currently laser odometry and wheel odometry is used. IMU was causing oscillations in the pose which the problem may be solved by changing weights.
 
 
 To start all planners and pid controllers for them:
@@ -72,9 +72,22 @@ Also With the configuration:
 
 rosrun rviz rviz -d `rospack find pose_follower`/rviz/rviz_navigation.rviz
 
+#### Running 4WD Simulation
 
+A simulation environment is prepared for the 4WD car in MORSE environment. Make sure that you have latest MORSE master installed.
+To run, first we need to import the MORSE project, then simply run the builder script:
 
-#### RC mode for running the project and for the simulation
+`cd <project_folder>/morse`
+`morse import fourwd`
+`morse run fourwd fourwd/default.py`
+
+This will initialize the environment. Note that you need relevant ROS nodes or projects running that interfaces the MORSE environment. If you would like to navigate in the environment, at least start a *roscore* so the interface between MORSE and ROS starts.
+
+For the odometry agent, this time we run with the parameter that is stating it is simulation
+
+`roslaunch odometry_agent odometry_agent.launch is_four_wd:=true is_simulation:=true`
+
+#### RC mode for running the project and to control the simulation
 
 To start the **RC mode**, there are two options currently implemented.  First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended. Second option is to use the interface created for morse. This is included in rc_driver_morse launch file. Morse accepts twist message for control and that twist output can be fed into low level controllers which would result in a better control. Currently not fully implemented but possible solution is to use rc_driver launch file. This node outputs AckermannDrive msg and linear low speed controller can handle this message. But steering controller lacks a simple listener to this message type.
 
@@ -83,7 +96,7 @@ To run in RC mode, *DO NOT launch pose_follower navigation_stack.launch*. To run
 `roslaunch ackermann_rc rc_driver_vesc.launch`
 
 
-To run using morse interface:
+To run using morse interface, RC interface is also created. However, for the ease of use, we strongly recommend developing a teleop packages to be able to control the car with the keyboard.
 
 `roslaunch ackermann_rc rc_driver_morse.launch`
 
@@ -116,7 +129,7 @@ Currently, there is only one hardware kill switch on the battery that supplies d
 
 ​	/sensors/core: This topic outputs the internal values of VESC like erpm, input voltage, current, temp...
 
-   /commands/motor/... : There are several topics like this. They receive double values to corresponding interfaces. For example a 0.04 published to /commands/motor/duty_cycle causes a switch to duty_cycle control with 4% duty_cycle.
+/commands/motor/... : There are several topics like this. They receive double values to corresponding interfaces. For example a 0.04 published to /commands/motor/duty_cycle causes a switch to duty_cycle control with 4% duty_cycle.
 
 #### Low Level Controllers
 

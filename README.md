@@ -44,7 +44,7 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 * src : All catkin based packages
 
     * ackermann_rc: Interface between an RC receiver connected to arduino and ROS
-    
+
     * bear_car_launch: Collection of launch files that integrate most of the other packages here.
 
     * conde (3rd party submodule): **[optional]** Simple lane following Autonomous Driving Simulator for the Portuguese Robotics Open
@@ -57,7 +57,7 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * low_level_speed_controller: Speed Controllers
 
-    * low_level_steering_controller : Steering Controller 
+    * low_level_steering_controller : Steering Controller
 
     * odometry_agent : Configurations of sensor integrations
 
@@ -134,6 +134,8 @@ To install the ros project, some packages that might be missing (may not come wi
 - geographic-msgs (`sudo apt install ros-<version>-geographic-msgs`)
 - serialConfig (`sudo apt install ros-<version>-serial*`)
 - opencv
+- realsense2-camera (`sudo apt install ros-<version>-realsense2-camera`)
+- imu_filter_madgwick (`sudo apt install ros-<version>-imu_filter_madgwick`)
 
 #### Installation
 

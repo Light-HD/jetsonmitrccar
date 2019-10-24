@@ -10,27 +10,33 @@ from morse.sensors import *
 from fourwd.builder.robots import Hummerscaled
 
 robot = Hummerscaled()
-robot.properties(scale = 0.2)
 robot.add_default_interface('ros')
+robot.properties(scale = 0.2)
 robot.name = "Hummer"
 robot.scale = [0.2, 0.2, 0.2]
 
 odom = Odometry()
+odom.add_stream('ros',child_frame_id="/base_link",topic="odom")
 odom.translate(0.0, 0.0, 0.0)
 odom.rotate(-1.57, 0.0, 1.57)
 # odom.level("differential")
 
 imu = IMU()
 imu.name = "imu"
+imu.add_stream('ros', topic='imu/data')
 imu.translate(0.0, 0.0, 0.0)
 imu.rotate(0.0, -1.57, 0.0)
 
+# Add a pose sensor that exports the current location and orientation
+pose = Pose()
+robot.append(pose)
+pose.add_stream('ros', topic='pose')
 
 # place your component at the correct location
 
-
 laser_scanner = Hokuyo()
 laser_scanner.name = "laser_scan"
+laser_scanner.add_stream('ros',topic="/base_scan")
 laser_scanner.properties(resolution = 0.5)
 laser_scanner.translate(0.0, 0.0, 0.6)
 laser_scanner.properties(laser_range = 5.0)
@@ -40,11 +46,12 @@ laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
 kinect = Kinect()
-
+kinect.add_stream('ros')
 kinect.translate(0.1, 0.3, 1.5)
 kinect.rotate(0.0, 0.0, 1.57)
 
 rgba_camera = VideoCamera()
+rgba_camera.add_stream('ros')
 rgba_camera.translate(-0.1, 0.0, 0.5)
 rgba_camera.rotate(1.57, 3.14, 1.57)
 
@@ -73,15 +80,7 @@ robot.append(odom)
 robot.append(rgba_camera)
 robot.append(kinect)
 
-# Add a pose sensor that exports the current location and orientation
-# of the robot in the world frame
-# Check here the other available actuators:
-# http://www.openrobots.org/morse/doc/stable/components_library.html#sensors
-#
-# 'morse add sensor <name> test' can help you with the creation of a custom
-# sensor.
-pose = Pose()
-robot.append(pose)
+
 
 # To ease development and debugging, we add a socket interface to our robot.
 #
@@ -96,18 +95,6 @@ env = Environment('fourwd/environments/test_last.blend',fastmode = False)
 env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
 env.properties(latitude=1.53, longitude=45.1, altitude=0.0)
-
 env.set_viewport(viewport_shade='TEXTURED', clip_end=1000)
-
 env.show_framerate(True)
-
 env.add_stream('ros')
-
-robot.add_default_interface('ros')
-steerforce.add_stream('ros')
-pose.add_stream('ros')
-imu.add_stream('ros')
-laser_scanner.add_stream('ros',topic="/base_scan")
-odom.add_stream('ros',child_frame_id="/base_link",topic="/odom")
-rgba_camera.add_stream('ros')
-kinect.add_stream('ros')
