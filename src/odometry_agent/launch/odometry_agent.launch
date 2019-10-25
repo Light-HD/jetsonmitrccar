@@ -7,7 +7,7 @@
   <!-- ////////////// -->
 
   <!--False for "six_wheel" or True for "four_wheel"  -->
-  <arg name="is_four_wheel" default="true"  />
+  <arg name="is_four_wd" default="true"  />
 
   <!-- True if running simulation, not the real car -->
   <arg name="is_simulation" default="false" />
@@ -29,7 +29,7 @@
   <include file="$(find odometry_agent)/launch/ekf_template.launch"/>
 
   <group if="$(arg wheel_odometry)">
-    <group if="$(arg is_four_wheel)">
+    <group if="$(arg is_four_wd)">
       <group unless="$(arg is_simulation)">
         <include file="$(find vesc_ackermann)/launch/vesc_to_odom_node.launch"/>
       </group>
@@ -54,14 +54,14 @@
 
   <!-- Publish Transforms -->
 
-  <group if="$(arg is_four_wheel)">
+  <group if="$(arg is_four_wd)">
     <group unless="$(arg is_simulation)">
       <include file="$(find odometry_agent)/launch/four_wheel_transforms.launch"/>
     </group>
   </group>
 
 
-  <group unless="$(arg is_four_wheel)">
+  <group unless="$(arg is_four_wd)">
       <include file="$(find odometry_agent)/launch/six_wheel_transforms.launch"/>
   </group>
 
