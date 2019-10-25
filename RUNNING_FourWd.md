@@ -35,9 +35,13 @@ Next step is to start the low level speed and steering controller. These nodes t
 
 
 
-To start linear controller:
+To start linear controller together with PID controller node:
 
 `roslaunch low_level_speed_controller allg.launch is_four_wd:=true`
+
+If PID controller is started separately (e.g. if you use navigation_stack.launch) you have to use
+
+`roslaunch low_level_speed_controller four_wd.launch`
 
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
