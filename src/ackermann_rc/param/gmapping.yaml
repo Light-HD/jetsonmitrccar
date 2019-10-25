@@ -1,8 +1,0 @@
-maxUrange: 5.0
-maxRange: 10.0
-xmin: -20.0
-xmax: 20.0
-ymin: -30
-ymax: 30
-particles: 100
-base_frame: '/base_footprint'
