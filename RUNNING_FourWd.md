@@ -18,6 +18,11 @@ System is compromised of four basic components.
 - Local planner which calculates cmd_vel given odometry and path data
 - Global planner which calculates the path from start to the end.
 
+To run sensor nodes:
+
+`roslaunch bear_car_launch sensors.launch`
+
+
 To run the motor controller:
 
 `roslaunch vesc_driver vesc_driver_node.launch`
