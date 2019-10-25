@@ -10,7 +10,7 @@
 
   <!-- Low level linear speed controller-->
   <include file="$(find low_level_speed_controller)/launch/allg.launch">
-    <arg name="is_four_wd:" value="true"/>
+    <arg name="is_four_wd" value="true"/>
   </include>
 
   <!-- Low level steering controller-->
