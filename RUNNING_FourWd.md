@@ -11,6 +11,9 @@ Then, ssh terminals to Jetson PC:
 password for the jetson2: *jetsongtarc*
 
 ### Running the project
+
+#### Running Autonomous Navigation
+
 System is compromised of four basic components.
 
 - Motor Controller Interface which takes cmd_vel message and translates it into motor commands.
@@ -18,10 +21,18 @@ System is compromised of four basic components.
 - Local planner which calculates cmd_vel given odometry and path data
 - Global planner which calculates the path from start to the end.
 
-To run sensor nodes:
+You can run the entire autonomous navigation stack with
+
+`roslaunch bear_car_launch fourwd_autonomous_navigation.launch`
+
+#### Running Autonomous Navigation Step-by-Step
+
+If you only want to follow the process manually, please follow commands below.
+
+To run sensor nodes separately:
 
 `roslaunch bear_car_launch sensors.launch`
-
+However, sensors are automatically started by the odometry agent below.
 
 To run the motor controller:
 
@@ -57,7 +68,7 @@ This is only an interface which takes rad/s and translates it into servo command
 
 
 
-To start odometry and sensors:
+To start odometry and sensors together:
 
 `roslaunch odometry_agent odometry_agent.launch is_four_wd:=true`
 
@@ -79,9 +90,13 @@ If you run in the Jetson PC directly (with a monitor), run rviz to control the c
 
 Also With the configuration:
 
-rosrun rviz rviz -d `rospack find pose_follower`/rviz/rviz_navigation.rviz
+```rosrun rviz rviz -d `rospack find pose_follower`/rviz/rviz_navigation.rviz```
 
-#### Running 4WD Simulation
+This is also wrapped within
+
+`roslaunch pose_follower navigation_stack_rviz.launch`
+
+### Running 4WD Simulation
 
 A simulation environment is prepared for the 4WD car in MORSE environment. Make sure that you have latest MORSE master installed.
 To run, first we need to import the MORSE project, then simply run the builder script:
@@ -96,7 +111,7 @@ For the odometry agent, this time we run with the parameter that is stating it i
 
 `roslaunch odometry_agent odometry_agent.launch is_four_wd:=true is_simulation:=true`
 
-#### RC mode for running the project and to control the simulation
+####RC mode for running the project and to control the simulation
 
 To start the **RC mode**, there are two options currently implemented.  First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended. Second option is to use the interface created for morse. This is included in rc_driver_morse launch file. Morse accepts twist message for control and that twist output can be fed into low level controllers which would result in a better control. Currently not fully implemented but possible solution is to use rc_driver launch file. This node outputs AckermannDrive msg and linear low speed controller can handle this message. But steering controller lacks a simple listener to this message type.
 
