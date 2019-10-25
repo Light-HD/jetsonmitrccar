@@ -14,7 +14,7 @@
   </include>
 
   <!-- Low level steering controller-->
-  <node pkg="low_level_steering_controller" name="steer_controller" type="six_wheel_low_level_steering_controller" required="true" output="screen">
+  <node pkg="low_level_steering_controller" name="steer_controller" type="low_level_steering_controller" required="true" output="screen">
   </node>
 
   <!-- Odometry fusion, this launch file is also starting the sensors such as RealSense and Lidar-->
