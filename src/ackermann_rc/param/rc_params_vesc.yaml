@@ -1,9 +1,17 @@
 # These are the parameters for 
 # the RC Commander. Middle value is measured when throttle stick is untouched.
 # These values can be obtained by rostopic echo /rc_command
-max_throttle_output: 1996.0
-min_throttle_output: 1124.0
-middle_throttle_output: 1624.0
+#
+# Important is that you to not change the trim configuration. Following configuration used
+# ST: R
+# TH: R
+# ST.TRIM: maximum right position
+# TH.TRIM: maximum left position
+# ATV: maximum right position
+
+max_throttle_output: 1456.0 # Throttle stick pulled to max
+min_throttle_output: 1276.0 # Throttle stick pushed to max
+middle_throttle_output: 1372.0 # Throttle stick not touched
 
 max_steering_output: 1740.0
 min_steering_output: 1408.0
