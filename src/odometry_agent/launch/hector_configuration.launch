@@ -11,9 +11,6 @@ This file configures hector slam to be used with Hokuyo UST-20LX (real or simula
     robot position.
 -->
 
-
--->
-
 <launch>
   <arg name="scan_topic_name"/>
 
