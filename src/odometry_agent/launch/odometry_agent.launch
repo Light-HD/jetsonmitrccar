@@ -38,14 +38,12 @@
 
 
   <group if="$(arg imu_odometry)">
-
    <include file="$(find bear_car_launch)/launch/rs_imu.launch"/>
-
   </group>
 
 
   <group if="$(arg laser_scanner_odometry)">
-    <include file="$(find rplidar_ros)/launch/view_rplidar_a3.launch"/>
+    <include file="$(find bear_car_launch)/launch/rplidar_a3.launch"/>
     <include file="$(find odometry_agent)/launch/hector_configuration.launch">
         <arg name="scan_topic_name" value="scan"/>
     </include>

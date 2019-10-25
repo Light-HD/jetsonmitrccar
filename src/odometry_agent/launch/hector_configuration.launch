@@ -3,19 +3,14 @@
 <!--
 This file configures hector slam to be used with Hokuyo UST-20LX (real or simulated).
 
-tf setup when used with ...
+  - if no IMU is used (when the sensor is carried by hand), the tf frames
+    slam_base_footprint, slam_base_stabilized and slam_base_link are equal.
+- hector slam only uses the roll and pitch motion recorded by the IMU to
+    filter out scans that hit the ceiling or floor. The yaw rotation isn't used.
+- the tf frame slam_base_footprint is published by hector slam and estimates the
+    robot position.
+-->
 
-... the simulated drone:
-  - height and attitude come from the simulated ideal IMU.
-  - estimated x, y, yaw are published by hector_mapping as slam_base_footprint
-
-... the real drone:
-  - height and attitude have to be collected from onboard sensors like real IMU and ultra sonic distance measurement
-  - This is possible since the drone has these sensors
-
-... the Hokuyo only, e.g. when carrying the sonsor and a laptop
-  - no IMU available, thus base_footprint, base_stabilized and base_link are all the same
-  - this project uses the prefix slam_ for frames that are associated with hector mapping.
 
 -->
 

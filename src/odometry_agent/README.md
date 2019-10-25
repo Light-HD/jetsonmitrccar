@@ -6,7 +6,7 @@ In `odometry_agent.launch` you can choose which sensors do you want to use or fu
 
 In `four/six_wheel_transforms.launch` you can find transforms for the sensors. Note that they are not placed precisely on the car.
 
-`hector_configuration.launch` and `slam_components.launch` sets parameters about hector_slam and starts slam algorithms. `real_world_tf.launch` also contains transforms related to hector_slam.
+`hector_configuration.launch`  sets parameters about hector_slam and starts slam algorithms.
 
 Note that the most critical part of the package is Extended Kalman Filter (EKF), which publishes odom to base_link transform. EKF is started under ekf_template.launch and the related parameters and detailed explanations can be found under the `param/ekf_template.yaml file`
 
