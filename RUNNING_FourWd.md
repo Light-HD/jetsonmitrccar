@@ -102,6 +102,10 @@ To run using morse interface, RC interface is also created. However, for the eas
 
 None of these launch files require odometry_agent to be running.
 
+You can also directly run the entire setup with just one launch file for direct rc control with
+
+`roslaunch bear_car_launch fourwd_direct_rc.launch`
+
 ### Tuning the control parameters
 
 For the purpose, a YAML file is created to interface the low level control units. This directly loads the parameters to the VESC driver.
