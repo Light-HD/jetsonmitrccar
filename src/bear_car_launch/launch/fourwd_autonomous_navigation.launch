@@ -18,7 +18,7 @@
   </node>
 
   <!-- Odometry fusion, this launch file is also starting the sensors such as RealSense and Lidar-->
-  <include file="$(find odometry_agent)/launch/agent.launch">
+  <include file="$(find odometry_agent)/launch/odometry_agent.launch">
     <arg name="is_four_wd:" value="true"/>
   </include>
 
