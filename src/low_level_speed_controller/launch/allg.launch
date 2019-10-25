@@ -1,18 +1,14 @@
 <launch>
 
-<include file="$(find pose_follower)/launch/pid_controller.launch" />
+    <include file="$(find pose_follower)/launch/pid_controller.launch" />
 
-<arg name="is_four_wd" default="true"/>
+    <arg name="is_four_wd" default="true"/>
 
-<node pkg="low_level_speed_controller" name="low_level_controller" type="low_level_controller" required="true" output="screen" if="$(eval is_four_wd == true)">
+    <node pkg="low_level_speed_controller" name="low_level_controller" type="low_level_controller" required="true" output="screen" if="$(eval is_four_wd == true)">
+        <rosparam command="load" file="$(find low_level_speed_controller)/param/four_wd_params.yaml" />
+    </node>
 
-<rosparam command="load" file="$(find low_level_speed_controller)/param/four_wd_params.yaml" />
-
-</node>
-
-<node pkg="low_level_speed_controller" name="sixwd_controller" type="six_wheel_low_level_controller" required="true" output="screen" if="$(eval is_four_wd == false)" >
-
-<rosparam command="load" file="$(find low_level_speed_controller)/param/six_wd_params.yaml" />
-
-</node>
+    <node pkg="low_level_speed_controller" name="sixwd_controller" type="six_wheel_low_level_controller" required="true" output="screen" if="$(eval is_four_wd == false)" >
+        <rosparam command="load" file="$(find low_level_speed_controller)/param/six_wd_params.yaml" />
+    </node>
 </launch>
