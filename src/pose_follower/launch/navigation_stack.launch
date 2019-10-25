@@ -1,7 +1,9 @@
 <launch>
        
 
-        <!--  ************** Global Parameters ***************  -->
+    <!--  ************** Global Parameters ***************  -->
+
+	<arg name="rviz_visualisation" default="false"  />
 
         <!--  ************** Navigation ***************  -->
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
@@ -19,7 +21,7 @@
 		<param name="controller_frequency" value="10.0" />
 		<param name="controller_patience" value="15.0" />
 		<remap from="odom" to="/odometry/filtered"/>
-                <param name="clearing_rotation_allowed" value="false" /> <!-- Our carlike robot is not able to rotate in place -->
+		<param name="clearing_rotation_allowed" value="false" /> <!-- Our carlike robot is not able to rotate in place -->
 	</node>
 
 	
@@ -29,7 +31,8 @@
 	<node pkg="rostopic" name="linear_pid_init" type="rostopic"  args=" pub /linear_pid/setpoint std_msgs/Float64 'data: 0.0' -1 " />
 	<node pkg="rostopic" name="steer_pid_init" type="rostopic"  args=" pub /steer_pid/setpoint std_msgs/Float64 'data: 0.0' -1 " />
 
-	  <!--  **************** Visualisation ****************  -->
-	  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pose_follower)/cfg/rviz_navigation.rviz"/>
+	<group if="$(arg rviz_visualisation)">
+	  <include file="$(find pose_follower)/launch/navigation_stack_rviz.launch" />
+	</group>
 
 </launch>
