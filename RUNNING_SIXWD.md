@@ -29,13 +29,13 @@ Low level elements consist of three main nodes. These are ;
 
   Which listens <u>/cmd_vel</u> topic and publishes <u>/output_speed</u>
 
-* low_level_steering_controller: Starts the steering commands generator.
+* low_level_steering_controller: Starts the steering commands generator. This is only an interface which takes rad/s and translates it into servo commands.
 
   Which listens <u>/cmd_vel</u>  and /<u>speed_output</u> topics and publishes motor_controller/motor_commands</u>
 
 To start them as a whole you can run the command:
 
-`roslaunch bear_car_launch low_level_starter.launch`
+`roslaunch bear_car_launch low_level_starter_sixwd.launch`
 
 This command following commands:
 
@@ -61,7 +61,9 @@ For now available sensors are
 - Camera IMU
 - Wheel Encoder
 
-  ##### To run them individually ;
+  ##### To run them individually:
+  
+  Attention, required sensors are already included in the odometry agent launch file.
 
   ###### For Lidar Run:
 
@@ -69,7 +71,7 @@ For now available sensors are
 
   Which publishes /scan Topic and starts laser Scanner
 
-  ###### For Camera Run:
+  ###### For RGBD Camera Run:
 
   `roslaunch bear_car_launch rs_imu.launch`
 
@@ -81,21 +83,12 @@ For now available sensors are
   `roslaunch six_wheel_odom six_wheel_odom.launch`
 
 
-##### *Starting planners:*
+##### *Starting Navigation stack step-by-step:*
 
-`roslaunch pose_follower diff_drive.launch`
+Starting low-level components, as described above
+`roslaunch bear_car_launch low_level_starter_sixwd.launch`
 
-This starts the controller node with parameters in param folder. By default this node listens to /cmd_vel and publishes commands with 50.0Hz and uses 4% duty cycle for takeoff. Topic names can be changed from the yaml file and control type, timeout and publish rate can be changed inside the node. Example setup can be found in nodes source code.
-
-
-To start the steering controller:
-
-`rosrun low_level_steering_controller six_wheel_low_level_steering_controller`
-
-This is only an interface which takes rad/s and translates it into servo command. Details can be found in the  architecture part.
-
-
-To start odometry and sensors:
+To start odometry and sensors (Lidar,Camera,IMU):
 
 `roslaunch odometry_agent odometry_agent.launch is_four_wd:=false`
 
@@ -104,13 +97,16 @@ This package launches hector_slam, LIDAR driver and camera driver. All data from
 
 To start all planners and pid controllers for them:
 
+`roslaunch pose_follower navigation_stack_sixwd.launch`
+
+This starts the controller node with parameters in param folder. By default this node listens to /cmd_vel and publishes commands with 50.0Hz and uses 4% duty cycle for takeoff. Topic names can be changed from the yaml file and control type, timeout and publish rate can be changed inside the node. Example setup can be found in nodes source code.
 
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
 In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
 
-To also start PID Controller
-`roslaunch pose_follower six_pid_controller.launch`
+To also start PID Controller but which is also contained in `navigation_stack_sixwd.launch`
+`roslaunch pose_follower pid_controller_sixwd.launch`
 **TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
 To run in RC mode, DO NOT launch pose_follower diff_drive.launch:
@@ -136,11 +132,11 @@ and `roslaunch ackermann_rc rc_six_wheel.launch`
 
 Alternatively, you can directly launch the following launch file which includes above commands.
 
-`roslaunch bear_car_launch sixwd_direct_rc.launch`
+`roslaunch bear_car_launch direct_rc_sixwd.launch`
 
 ##### Emergency Stop
 
-Kill switch is on the car.
+Kill switch is on the rear of car on the large motor controller board.
 
 #### Interfacing
 

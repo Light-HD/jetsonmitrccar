@@ -24,7 +24,7 @@
 	</node>
 
 	
-	<include file="$(find pose_follower)/launch/pid_controller.launch" />
+	<include file="$(find pose_follower)/launch/pid_controller_fourwd.launch" />
 
 	<!-- PID nodes requires setpoint to be published. Because reference point is constant and zero, this is done once -->
 	<node pkg="rostopic" name="linear_pid_init" type="rostopic"  args=" pub /linear_pid/setpoint std_msgs/Float64 'data: 0.0' -1 " />

@@ -22,7 +22,7 @@
   </include>
 
   <!--Global and Local Planner-->
-  <include file="$(find pose_follower)/launch/navigation_stack.launch">
+  <include file="$(find pose_follower)/launch/navigation_stack_fourwd.launch">
   </include>
 
 </launch>

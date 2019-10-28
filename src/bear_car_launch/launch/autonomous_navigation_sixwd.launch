@@ -6,7 +6,7 @@
 
   <!-- Node for interfacing the low-level 6WD platform controller, this also includes serial communication and
        the speed controllers-->
-  <include file="$(find bear_car_launch)/launch/low_level_starter.launch">
+  <include file="$(find bear_car_launch)/launch/low_level_starter_sixwd.launch">
   </include>
 
   <!-- 6WD odometry publisher-->
@@ -18,8 +18,8 @@
     <arg name="is_four_wd" value="false"/>
   </include>
 
-  <!--Global and Local Planner-->
-  <include file="$(find pose_follower)/launch/navigation_stack.launch">
+  <!--Global and Local Planner, PID controllers-->
+  <include file="$(find pose_follower)/launch/navigation_stack_sixwd.launch">
   </include>
 
 </launch>
