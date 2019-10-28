@@ -8,4 +8,4 @@ This package is an interface between an RC receiver connected to arduino and ROS
  - `rc_driver.launch` to publish AckermannDrive message to control racecar simulations of MIT
  - `rc_six_wheel.launch` to drive the 6WD car directly sending speed commands to 6WD motor drivers.
 
- To tune / modify the RC signals (button configs might change and need some tunning from time to time), use the *rc_params<mode>.yaml* under */param* folder.
+ To tune / modify the RC signals (button configs might change and need some tuning from time to time), use the *rc_params<mode>.yaml* under */param* folder.

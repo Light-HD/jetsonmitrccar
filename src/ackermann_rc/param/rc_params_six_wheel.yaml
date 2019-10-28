@@ -27,7 +27,7 @@ max_car_angle: 250.0
 min_car_angle: 0.0
 
 #There are different modes of RACECAR Simulator.
-#These parameters are for choosing between themç
+#These parameters are for choosing between them
 unique_command: true
 stamped_output: true
 
