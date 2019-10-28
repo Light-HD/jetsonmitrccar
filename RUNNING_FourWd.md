@@ -79,7 +79,7 @@ This package launches hector_slam, LIDAR driver rplidar_ros and realsense camera
 
 To start all planners and pid controllers for them:
 
-`roslaunch pose_follower navigation_stack.launch`
+`roslaunch pose_follower navigation_stack_fourwd.launch`
 
 This will make the car run in autonomous mode.
 
@@ -135,7 +135,7 @@ None of these launch files require odometry_agent to be running.
 
 You can also directly run the entire setup with just one launch file for direct rc control with
 
-`roslaunch bear_car_launch fourwd_direct_rc.launch`
+`roslaunch bear_car_launch direct_rc_fourwd.launch`
 
 ### Tuning the control parameters
 

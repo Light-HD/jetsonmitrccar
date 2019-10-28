@@ -25,7 +25,10 @@
         <param name="clearing_rotation_allowed" value="false" />
 			
 	</node>
+
+	<!-- Include PID controllers-->
 	<include file="$(find pose_follower)/launch/six_pid_controller.launch" />
+
 	<node pkg="rostopic" name="linear_pid_init" type="rostopic"  args=" pub /linear_pid/setpoint std_msgs/Float64 'data: 0.0' -1 " />
 	<node pkg="rostopic" name="steer_pid_init" type="rostopic"  args=" pub /steer_pid/setpoint std_msgs/Float64 'data: 0.0' -1 " />
 	<!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find teb_local_planner_tutorials)/cfg/rviz_navigation.rviz"/-->

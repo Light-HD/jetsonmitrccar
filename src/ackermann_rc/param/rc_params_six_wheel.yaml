@@ -32,7 +32,7 @@ unique_command: true
 stamped_output: true
 
 # This is the topic RACECAR Simulator expects the ackermann_msgs
-drive_topic: '/serial_communicator/motor_commands'
+drive_topic: '/motor_controller/motor_commands'
 
 # This is the topic which Arduino publishes the RC command measurements
 rc_topic: '/rc_command'

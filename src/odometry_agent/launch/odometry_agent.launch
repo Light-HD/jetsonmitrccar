@@ -18,7 +18,7 @@
   <arg name="imu_odometry" default="true"  />
   <arg name="laser_scanner_odometry" default="true"  />
 
-  <!-- Note that all odometry sources will be fused aslong as they are published  -->
+  <!-- Note that all odometry sources will be fused as long as they are published  -->
 
   <!-- ///////////////////// -->
   <!-- END OF CONFIGURATIONS -->
@@ -64,10 +64,10 @@
     <!--</group>-->
   </group>
 
-
   <group unless="$(arg is_four_wd)">
       <include file="$(find odometry_agent)/launch/six_wheel_transforms.launch"/>
   </group>
+
 
   <group unless="$(arg is_simulation)">
     <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />

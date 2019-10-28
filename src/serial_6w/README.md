@@ -1,73 +1,28 @@
-This Codes proved the communication between Main MCU on Motor controller and Nvidia TX2.
 
-Note that the default protocol for six wheeled car was not usable for our cases. 
-There are two protocols we have created.
+# serial_6w package
 
-One of them to send data to serial_communicator node.
+This package, respectively node, is responsible for the communication between main MCU of the motor controller 
+(Arexx WTR-CK1) of the 6WD car and PC.
 
-At SixWheelCommand.msg if you set control type to 0 you can set right and left side speed separately.
-if you set this to 1 the car uses its own control method where it accepts only speed and angle as input. If it gets an angle it slows down the tires at the turning direction according to the formula: 
+Note that the default protocol for six wheeled car was not usable for our cases. For this reason we have created
+two own protocols and adjusted the Firmware accordingly (see **[Firmware](../../Firmwares/SixWheelCar_Firmware/README.md)**).
 
-Speed = Given_Speed-(Given_Speed*Angle/125)  if you set it to 2 you can control tires separately.
+The node of this package listens to the topic `motor_commands`, which is using the `SixWheelCommand.msg` message type and
+publishes some status information on the topic `motor_controller_info` with the message type `SixWheelInfo.msg`.
 
-Between MCU and ROS communications we are only using bytes so;
 
-The introduction and ending of the message is always same. And you can see an example byte array to control the car.
+At SixWheelCommand.msg if you set control type (`controltype`) to 0 you can set right and left side speed separately.
+if you set `controltype` to 1 the car uses its own control method where it accepts only speed and angle as input. If it gets an angle it slows down the tires at the turning direction according to the formula: 
 
-1. 	--> Start Byte (1)
-2.	-->MCU Address (255)
-3. 	--> Message Length
-4.	--> Control Type 
-5. 	--> Info Bytes
-6.	--> Info Bytes
-7. 	--> Info Bytes
-8. 	--> Info Bytes
-9.	--> End Byte (4)
+`Speed = Given_Speed-(Given_Speed*Angle/125)`  
 
-***We used three control types***
+if you set `controltype` to 2 you can control tires separately.
 
-##### 1) The one we control left and right separately
+## PC to MCU communication
 
-1. 	--> Start Byte(1)
-2.	--> MCU Address(255)
-3. 	--> Message Length (7)
-4.	--> Direction Select (52,53,54 or 55)
-5. 	--> Info Bytes (Right Speed)
-6.	--> Info Bytes (Left Speed)
-7.	--> End Byte (4)
+Between MCU and ROS communications we are only using bytes though.
 
-To choose Control Type byte
-* 52: Both Right and Left side goes forward
-* 53: Right Side backward left side forward
-* 54: Right Side forward left side backward
-* 55: Both Right and Left side goes backward
+Please refer to **[Firmware ReadMe](../../Firmwares/SixWheelCar_Firmware/README.md)** for details about the communication protcol.
 
-##### 2) Default Controller 
-
-It Gets a speed and sends it to them. If it gets an angle it slows down the tires at the turning direction according to the formula: 
-
-Speed = Given_Speed-(Given_Speed*Angle/125)  
-
-1. 	--> Start Byte(1)
-2.	--> MCU Address(255)
-3. 	--> Message Length (8)
-4.	--> Control Type (51)
-5. 	--> Direction Select (1,2,3 or 4)
-6.	--> Info Bytes (speed)
-7.	--> Info Bytes (angle)
-8.	--> End Byte (4)
-
-* 1: Go Forward Turn clockwise
-* 2: Go Forward Turn counter clockwise
-* 3: Go Backward Turn clockwise
-* 4: Go Backward Turn counter clockwise
-
-##### 3) Individual motor control
-
-1. 	--> Start Byte(1)
-2.	--> MCU Address(255)
-3. 	--> Message Length (7)
-4.	--> Control Type (motor number+9)
-5. 	--> Info Bytes (speed)
-6.	--> Info Bytes (direction)(1 forward or 2 backward)
-8.	--> End Byte (4)
+This nodes expects the serial device to be available as `/dev/ttyUSB_thumper`, please check related udev configuration
+in **[Linux Setup](../../linux_env/README.md)** for further information.

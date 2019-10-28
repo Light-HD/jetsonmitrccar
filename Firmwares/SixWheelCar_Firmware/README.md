@@ -5,7 +5,7 @@
 
 ## Serial Communication Protocols
 
-### Communication Between MAIN_MCU and JETSON (UART - RS432):
+### Communication Between MAIN_MCU and PC (UART - RS432):
 The introduction and ending of the message is always same. And you can see an example byte array to control the car.
 
 1. --> Start Byte (1)
