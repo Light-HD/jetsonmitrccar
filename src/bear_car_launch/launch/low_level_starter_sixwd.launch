@@ -1,8 +1,8 @@
 <launch>
 
   <!-- Low level speed controller-->
-  <node pkg="low_level_speed_controller" name="speed_controller" type="six_wheel_low_level_controller" required="true" output="screen">
-  </node>
+  <include file="$(find low_level_speed_controller)/launch/six_wd.launch">
+  </include>
 
   <!-- Low level steering controller-->
   <node pkg="low_level_steering_controller" name="steer_controller" type="six_wheel_low_level_steering_controller" required="true" output="screen">
