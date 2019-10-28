@@ -11,7 +11,7 @@
 #include <errno.h>   // Error integer and strerror() function
 #include <termios.h> // Contains POSIX terminal control definitions
 #include <unistd.h>  // write(), read(), close()
-//TODO: Bacward direction error
+//TODO: Backward direction error
 
 class Translator
 {
@@ -21,7 +21,7 @@ public:
     ROS_INFO("Initializing");
     n = ros::NodeHandle("~");
     motor_cmd_sub = n.subscribe("motor_commands", 1000, &Translator::motorcmdCallback, this);
-    motor_info_pub = n.advertise<sixwd_msgs::SixWheelInfo>("motor_controler_info", 1000);
+    motor_info_pub = n.advertise<sixwd_msgs::SixWheelInfo>("motor_controller_info", 1000);
     //motor_info_timer = n.createTimer(ros::Duration(0.1),&Translator::motorinfoCallback,this); //every 100ms for now
     motor_cmd_timer = n.createTimer(ros::Duration(1.0 / 25.0), &Translator::motorcmdCallback, this); //every 100ms for now
     bytes_to_send = new unsigned char[10];
