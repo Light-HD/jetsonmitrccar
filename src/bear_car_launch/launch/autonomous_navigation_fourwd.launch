@@ -13,9 +13,9 @@
   </include>
 
   <!-- Low level steering controller-->
-  <node pkg="low_level_steering_controller" name="steer_controller" type="low_level_steering_controller" required="true" output="screen">
-  </node>
-
+  <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
+  </include>
+  
   <!-- Odometry fusion, this launch file is also starting the sensors such as RealSense and Lidar-->
   <include file="$(find odometry_agent)/launch/odometry_agent.launch">
     <arg name="is_four_wd" value="true"/>

@@ -10,8 +10,8 @@ SixWheelSteeringInterface::SixWheelSteeringInterface(ros::NodeHandle &n)
 
     if (!node_handle.getParam("steer_topic_name", steer_topic_name))
     {
-        ROS_WARN("Did not receive steer_topic_name param. Using /commands/servo/position");
-        steer_topic_name = "/serial_communicator/motor_commands";
+        ROS_WARN("Did not receive steer_topic_name param. Using '/motor_controller/motor_commands'");
+        steer_topic_name = "/motor_controller/motor_commands";
     }
 
     steer_data_publisher = node_handle.advertise<sixwd_msgs::SixWheelCommand>(steer_topic_name, 10, false);
