@@ -47,9 +47,7 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * bear_car_launch: Collection of launch files that integrate most of the other packages here.
 
-    * conde (3rd party submodule): **[optional]** Simple lane following Autonomous Driving Simulator for the Portuguese Robotics Open
-
-    * gscam(3rd party submodule): **TODO where is this used?** Broadcasting any GStreamer camera source as ROS image
+    * gscam(3rd party submodule):  Broadcasting any GStreamer camera source as ROS image. It is used to interface the onboad camera of the Jetson TX2 dev-board (rear camera)
 
     * hector_slam(3rd party submodule): 2D Lidar SLAM package that we use
 
@@ -66,10 +64,6 @@ If you would like to run some of the packages on your PC, please refer to the Bu
     * pose_follower: Adjusted local planner implementation also containing many relevant launch files for the initialization of the entire move_base based navigation stack.
 
     * racecar(3rd party submodule): We are mostly reusing the contained achermann_cmd_mux package for interfacing VESC on the 4WD.
-
-    * racecar_gazebo(3rd party submodule): **[optional]**  **TODO**
-
-    * racecar_simulator(3rd party submodule): **[optional]**  **TODO**
 
     * rc_msgs: Remote control ROS message definitions
 
@@ -167,7 +161,7 @@ In our platforms we are using following sensors
 
   Intel D435i cameras have integrated IMU sensors on them. However, this IMU features only accelerometer and gyroscope and is missing a magnetometer.
 
-- Camera: Front camera is the Intel D435i RGBD camera. Backcamera is the onboard MP CSI camera module on the Jetson (Omnivision OV5693)
+- Camera: Front camera is the Intel D435i RGBD camera. Backcamera is the onboard MP CSI camera module on the Jetson TX2 dev-board (Omnivision OV5693)
 
 
 ## Open Issues and improvement Ideas
