@@ -73,3 +73,5 @@ source /home/jetson2/software_integration_new/devel/setup.bash
 
 * Do I have to run `catkin_make` every time before I run something from the project?
     * You only need to run `catkin_make` if you have edited C/C++ code, CMakeList.txt or any service (*.srv), message (*.msg) or action file. If you are editing launch files or python code, you can directly run everything.
+* If I have problems compiling a certain package, which I might even not need (e.g. sensor package on a remote machine), how can I disable it to successfully compile the workspace?
+    * To disable the compilation of a package just create a file with the name `CATKIN_IGNORE` within the package directory.
