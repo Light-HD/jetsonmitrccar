@@ -175,4 +175,5 @@ In our platforms we are using following sensors
 
 #FAQ
 
-**TODO** if you have, please collect solutions for common pitfalls (maybe things you experienced yourself)**
+Please refer to **[FAQ](FAQ.md)** for some tips, tricks, hints, and trouble shooting information, especially for beginners.
+
