@@ -4,21 +4,6 @@ Integration repository for all relevant software pieces/submodules.
 This project normally runs on Nvidia JetsonTX2 Dev-Board on the cars (already installed).
 If you would like to run some of the packages on your PC, please refer to the Build section.
 
-
-## Questions/TODOs in/about submodules/directories
-
-2. How to run simulation? Extend Readme for the simulation environments.
-3. Readme low_level_steering_controller
-4. Readme morse_teleop
-5. Readme rc_msgs
-6. arduino has TODO in Readme(Ege knows it better)
-7. jetsonTX2Power TODOS in Readme
-8. Morse basicspeed.py is missing code docu, currently mostly boilerplate docu.
-9. TODO add the end in all of your code either document why codes are commented or remove commented code.
-10. TODO all of your packages require a README that exlains what it is
-11. low_level_speed_controller fails during compilation.
-
-
 ## Structure
 
 * software_integration
@@ -35,7 +20,7 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * JetsonPower: Module and user-space application for integrating LiPo battery readings into Linux
 
-* morse: Morse simulation environments
+* morse: **[Morse](morse/Readme.md)** simulation environments
     * fourwd: Environment for the 4WD car
     * sixwd: Environment for the 6WD car
 
@@ -163,13 +148,25 @@ In our platforms we are using following sensors
 
 - Camera: Front camera is the Intel D435i RGBD camera. Backcamera is the onboard MP CSI camera module on the Jetson TX2 dev-board (Omnivision OV5693)
 
+# Work in Progress
+
+## Open TODOs
+
+3. Readme low_level_steering_controller
+4. Readme morse_teleop
+5. Readme rc_msgs
+6. arduino has TODO in Readme (@Ege knows it better)
+7. jetsonTX2Power TODOS in Readme
+8. Morse basicspeed.py is missing code docu, currently mostly boilerplate docu.
+9. TODO add the end in all codes either document why codes are commented or remove commented code.
+10. TODO all packages require a README that explains what it is
 
 ## Open Issues and improvement Ideas
 1. For VESC we applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, it should also be implemented for ROS. Note that VESC only reads
  encoder as rotor position. Therefore, two steps are required. First, add position reading to VESC_Driver node. Secondly, Convert it into speed.
 2. Motor controller for six wheeled platform' motor controller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
-3. 6 Wheeled platform's encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data may be improved
-4. 6 Wheeled platform's one motor has damaged. It should be changed. Please check the issue.
+3. 6WD encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data may be improved
+4. 6WD one motor is damaged.
 5. PID performances can be improved to see the interface please look interface section.
 7. Adding additional visual odometry to the cars.
 
