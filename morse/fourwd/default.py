@@ -12,13 +12,14 @@ from fourwd.builder.robots import Hummerscaled
 robot = Hummerscaled()
 robot.add_default_interface('ros')
 robot.properties(scale = 0.2)
+robot.properties(GroundRobot = True)
 robot.name = "Hummer"
 robot.scale = [0.2, 0.2, 0.2]
 
 odom = Odometry()
-odom.add_stream('ros',child_frame_id="/base_link",topic="odom")
+odom.add_stream('ros',child_frame_id="base_link",topic="wheel_odom")
 odom.translate(0.0, 0.0, 0.0)
-odom.rotate(-1.57, 0.0, 1.57)
+odom.rotate(-1.57, -1.57, 1.57)
 # odom.level("differential")
 
 imu = IMU()
@@ -29,34 +30,34 @@ imu.rotate(0.0, -1.57, 0.0)
 
 # Add a pose sensor that exports the current location and orientation
 pose = Pose()
-robot.append(pose)
 pose.add_stream('ros', topic='pose')
 
 # place your component at the correct location
 
 laser_scanner = Hokuyo()
 laser_scanner.name = "laser_scan"
-laser_scanner.add_stream('ros',topic="/base_scan")
-laser_scanner.properties(resolution = 0.5)
-laser_scanner.translate(0.0, 0.0, 0.6)
-laser_scanner.properties(laser_range = 5.0)
+laser_scanner.add_stream('ros',child_frame_id="/base_laser_link",topic="scan")
+laser_scanner.translate(0, 0.2, 1.6)
+laser_scanner.properties(resolution = 1.0) #0.5 before
+laser_scanner.properties(laser_range = 30.0) #5.0 before
 laser_scanner.properties(scan_window = 360)
 laser_scanner.properties(Visible_arc = False)
 laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
 kinect = Kinect()
-kinect.add_stream('ros')
-kinect.translate(0.1, 0.3, 1.5)
+kinect.depth_camera.add_interface('ros', topic='/camera/depth', topic_suffix='/image_raw')
+kinect.video_camera.add_interface('ros', topic='/camera/rgb', topic_suffix='/image_raw')
+kinect.translate(0, 0.6, 1.2)
 kinect.rotate(0.0, 0.0, 1.57)
 
-rgba_camera = VideoCamera()
+rgba_camera = VideoCamera() # Rear camera?
 rgba_camera.add_stream('ros')
-rgba_camera.translate(-0.1, 0.0, 0.5)
-rgba_camera.rotate(1.57, 3.14, 1.57)
+rgba_camera.translate(0, -3.3, 1)
+rgba_camera.rotate(1.57, 3.14, 3.14)
 
 # The list of the main methods to manipulate your components
-# is here: http://www.openrobots.org/morse/doc/stable/user/builder_overview.html
+# is here: http://www.openrobots.org/morse/doc/astable/user/builder_overview.html
 robot.translate(1.0, 0.0, 0.5)
 robot.rotate(0.0, 0.0, 0.0)
 robot.set_mass(0.1)
@@ -79,7 +80,7 @@ robot.append(steerforce)
 robot.append(odom)
 robot.append(rgba_camera)
 robot.append(kinect)
-
+robot.append(pose)
 
 
 # To ease development and debugging, we add a socket interface to our robot.

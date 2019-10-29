@@ -23,7 +23,7 @@ System is compromised of four basic components.
 
 You can run the entire autonomous navigation stack with
 
-`roslaunch bear_car_launch fourwd_autonomous_navigation_fourwd.launch`
+`roslaunch bear_car_launch autonomous_navigation_fourwd.launch`
 
 #### Running Autonomous Navigation Step-by-Step
 
@@ -90,7 +90,7 @@ If you run in the Jetson PC directly (with a monitor), run rviz to control the c
 
 Also With the configuration:
 
-```rosrun rviz rviz -d `rospack find pose_follower`/rviz/rviz_navigation.rviz```
+```rosrun rviz rviz -d `rospack find pose_follower`/cfg/rviz_navigation.rviz```
 
 This is also wrapped within
 
@@ -115,9 +115,9 @@ For the odometry agent, this time we run with the parameter that is stating it i
 
 To start the **RC mode**, there are two options currently implemented.  
 
-First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended. 
+First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended.
 
-Second option is to use the interface created for morse. This is included in rc_driver_morse launch file. Morse accepts twist message for control and that twist output can be fed into low level controllers, which would result in a better control. 
+Second option is to use the interface created for morse. This is included in rc_driver_morse launch file. Morse accepts twist message for control and that twist output can be fed into low level controllers, which would result in a better control.
 
 Third, currently not fully implemented but possible solution is to use rc_driver launch file. This node outputs AckermannDrive msg and linear low speed controller can handle this message. But steering controller lacks a simple listener to this message type.
 

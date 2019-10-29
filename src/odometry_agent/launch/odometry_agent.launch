@@ -38,16 +38,20 @@
 
 
   <group if="$(arg imu_odometry)">
-   <include file="$(find bear_car_launch)/launch/rs_imu.launch"/>
+    <group unless="$(arg is_simulation)">
+      <include file="$(find bear_car_launch)/launch/rs_imu.launch"/>
+    </group>
   </group>
 
 
   <group if="$(arg laser_scanner_odometry)">
-    <include file="$(find bear_car_launch)/launch/rplidar_a3.launch"/>
+    <group unless="$(arg is_simulation)">
+      <include file="$(find bear_car_launch)/launch/rplidar_a3.launch"/>
+    </group>
     <include file="$(find odometry_agent)/launch/hector_configuration.launch">
         <arg name="scan_topic_name" value="scan"/>
     </include>
-  <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
+    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
   <!-- Nodes Started -->
@@ -55,9 +59,9 @@
   <!-- Publish Transforms -->
 
   <group if="$(arg is_four_wd)">
-    <group unless="$(arg is_simulation)">
+    <!--<group unless="$(arg is_simulation)">-->
       <include file="$(find odometry_agent)/launch/four_wheel_transforms.launch"/>
-    </group>
+    <!--</group>-->
   </group>
 
   <group unless="$(arg is_four_wd)">
