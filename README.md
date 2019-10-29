@@ -1,6 +1,6 @@
 # software_integration
 
-Integration repository for all relevant software pieces/submodules.
+Integration repository including the ROS catkin workspace for all relevant software pieces/submodules.
 This project normally runs on Nvidia JetsonTX2 Dev-Board on the cars (already installed).
 If you would like to run some of the packages on your PC, please refer to the Build section.
 
@@ -97,7 +97,7 @@ There are several environments the project consists of.
 
 ### Installation
 
-#### Dependendies
+#### Dependencies
 
 Automatic resolving of ROS dependencies
 
@@ -170,7 +170,7 @@ In our platforms we are using following sensors
 5. PID performances can be improved to see the interface please look interface section.
 7. Adding additional visual odometry to the cars.
 
-#FAQ
+# FAQ
 
 Please refer to **[FAQ](FAQ.md)** for some tips, tricks, hints, and trouble shooting information, especially for beginners.
 
