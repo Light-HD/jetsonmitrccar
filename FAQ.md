@@ -65,6 +65,7 @@ source /home/jetson2/software_integration_new/devel/setup.bash
 * `rosrun [PACKAGENAME] [NODENAME]`: Launches a ROS node.
 * `roslauch [PACKAGENAME] [LAUNCHFILENAME]`: Executes all ROS nodes/scripts/config contained in a launch file. Allows to maintain more complex runtime setups.
 * `rostopic`: List all available topics (param `list`), publish (param `pub`) and subscribe (param `echo`)  to topics
+* `rosservice`: List all available services (param `list`), call a service (param `call`), etc.
 * `roscd [PACKAGENAME]`: Takes as an argument the package name and changes to its directory.
 * `rqt`: Modular UI that can be customized with various plugins from the ROS installation to monitor, inspect, manipulate the ROS runtime system. E.g. Monitoring topic content, visualising nodes and their connection, reading logs and bags, ...
 * `rviz`: Another modular UI that enables to visualize and interact with sensors and actuators in 2D/3D.
