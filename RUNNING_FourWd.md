@@ -12,7 +12,7 @@ password for the jetson2: *jetsongtarc*
 
 ### Running the project
 
-#### Running Autonomous Navigation
+#### Running Autonomous Navigation (Real Car)
 
 System is compromised of four basic components.
 
@@ -25,7 +25,7 @@ You can run the entire autonomous navigation stack with
 
 `roslaunch bear_car_launch autonomous_navigation_fourwd.launch`
 
-#### Running Autonomous Navigation Step-by-Step
+#### Running Autonomous Navigation Step-by-Step (Real Car)
 
 If you only want to follow the process manually, please follow commands below.
 
@@ -59,7 +59,6 @@ If PID controller is started separately (e.g. if you use navigation_stack.launch
 This starts the controller node with parameters in param folder. Controller is responsible for taking cmd_vel and generating necessary commands for VESC driver. This node also handles takeoff behaviour.
 
 
-
 To start the steering controller:
 
 `rosrun low_level_steering_controller low_level_steering_controller`
@@ -67,14 +66,14 @@ To start the steering controller:
 This is only an interface which takes rad/s and translates it into servo commands. Details can be found in the  architecture part.
 
 
-
 To start odometry and sensors together:
 
 `roslaunch odometry_agent odometry_agent.launch is_four_wd:=true`
 
-**TODO: Write the agent names comes with the roslaunch (and their brief descriptions)**
 
-This package launches hector_slam, LIDAR driver rplidar_ros and realsense camera driver. All data from sensors are fused using robot_localization package (an EKF is launched for the operation). IMU data is retrieved from realsense camera. Currently laser odometry and wheel odometry is used. IMU was causing oscillations in the pose which the problem may be solved by changing weights.
+This package launches hector_slam, LIDAR driver rplidar_ros and realsense camera driver. All data from sensors are fused using robot_localization package (an EKF is launched for the operation). IMU data is retrieved from realsense camera. Currently laser odometry and wheel odometry are used. IMU was causing oscillations in the pose; therefore, its weight (effect) is really small in EKF sensor fusion. This may be adjusted under `/src/odometry_agent/param/ekf_templage.yaml`.
+
+Additionally, some of the localization options are left optional to run under `odometry_agent.launch` file. Add the following parameters to the roslaunch command above to activate or deactive them (by default all are active): `wheel_odometry:=true`, `imu_odometry:=false`, `laser_scanner_odometry:=true`.
 
 
 To start all planners and pid controllers for them:
@@ -83,37 +82,50 @@ To start all planners and pid controllers for them:
 
 This will make the car run in autonomous mode.
 
-#### Visualization:
+#### Running 4WD Simulation
+
+A simulation environment is prepared for the 4WD car in MORSE environment. Make sure that you have latest MORSE master installed.
+To run, first we need to import the MORSE project, then simply run the builder script:
+
+```bash
+cd <project_folder>/morse
+morse import fourwd  # replace sixwd for 6WD car
+morse run fourwd fourwd/default.py  # replace sixwd with fourwd
+```
+
+This will initialize the environment. Note that you need relevant ROS nodes or projects running that interfaces the MORSE environment. If you would like to navigate in the environment, at least start a `roscore` so the interface between MORSE and ROS initializes.
+
+In simulation, odometry_agent is tested and successfully integrated to run. The goal is to develop our own motion controller (this will be specific to the simulation as the simulated car models do not reflect the motor behaviors of the real cars), own path planner and own decision-making agents. The latter two are intended to work also on the real cars; therefore, the motion controller interface with the planners should be the same as in the real cars.
+
+To run odometry agent on the simulation, this time we run with the parameter that is stating it is simulation
+
+```bash
+roslaunch odometry_agent odometry_agent.launch is_four_wd:=true is_simulation:=true
+# is_four_wd:=false for 6Wd car simulation
+```
+
+If you launch rviz again as stated below, the localization will be visible.
+
+**TODO**: test the local planner nodes for the simulation
+
+#### Visualization (Real Car and Simulation)
 
 If you run in the Jetson PC directly (with a monitor), run rviz to control the car and its navigation:
 `rosrun rviz rviz`
 
 Also With the configuration:
 
-```rosrun rviz rviz -d `rospack find pose_follower`/cfg/rviz_navigation.rviz```
+```bash
+rosrun rviz rviz -d `rospack find pose_follower`/cfg/rviz_navigation.rviz
+```
 
 This is also wrapped within
 
 `roslaunch pose_follower navigation_stack_rviz.launch`
 
-### Running 4WD Simulation
+#### RC mode for running the project and to control the simulation
 
-A simulation environment is prepared for the 4WD car in MORSE environment. Make sure that you have latest MORSE master installed.
-To run, first we need to import the MORSE project, then simply run the builder script:
-
-`cd <project_folder>/morse`
-`morse import fourwd`
-`morse run fourwd fourwd/default.py`
-
-This will initialize the environment. Note that you need relevant ROS nodes or projects running that interfaces the MORSE environment. If you would like to navigate in the environment, at least start a *roscore* so the interface between MORSE and ROS starts.
-
-For the odometry agent, this time we run with the parameter that is stating it is simulation
-
-`roslaunch odometry_agent odometry_agent.launch is_four_wd:=true is_simulation:=true`
-
-####RC mode for running the project and to control the simulation
-
-To start the **RC mode**, there are two options currently implemented.  
+To start the **RC mode**, there are two options currently implemented.
 
 First option is to use rc_driver_vesc launch file in ackermann_rc package. This launch file launches a node that directly interfaces with vesc_driver. Hence using this launch file with low_level_speed and steer controllers is not recommended.
 

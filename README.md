@@ -75,10 +75,6 @@ After that you will be able to clone the repository
 
 `git clone git@gitlab-edu.aot.tu-berlin.de:small_autonomous_driving/software_integration.git `
 
-Change to our development branch
-
-`git checkout patch-1`
-
 Then also get submodules
 
 `git submodule update --init --recursive`
@@ -105,7 +101,7 @@ Automatic resolving of ROS dependencies
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-To install the ros project, some packages that might be missing (may not come with full desktop installation):
+Here are some package dependencies (they may not come with full desktop installation):
 - Ackermann (`sudo apt install ros-<version>-ackermann*`)
 - gstreamer-1.0
 - teleop_twist_joy (`sudo apt install ros-<version>-teleop-twist-joy`)
@@ -116,11 +112,15 @@ To install the ros project, some packages that might be missing (may not come wi
 - realsense2-camera (`sudo apt install ros-<version>-realsense2-camera`)
 - imu_filter_madgwick (`sudo apt install ros-<version>-imu_filter_madgwick`)
 
-#### Installation
+#### Build
 
 ```bash
 catkin_make
 ```
+
+Note that the build is also tested in Ubuntu 16.04 with ROS Kinetic version. This is majorly to run simulation environments; however, it is recommended to use Ubuntu 18 with ROS Melodic. To build in ROS Kinetic:
+- checkout to kinetic-devel branch in *robot_localization* ros package (a submodule under /src folder)
+- do not build *pose_follower* package. `catkin_make -DCATKIN_BLACKLIST_PACKAGES="pose_follower"`
 
 ## Run
 
@@ -173,4 +173,3 @@ In our platforms we are using following sensors
 # FAQ
 
 Please refer to **[FAQ](FAQ.md)** for some tips, tricks, hints, and trouble shooting information, especially for beginners.
-
