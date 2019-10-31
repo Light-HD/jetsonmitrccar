@@ -25,6 +25,8 @@ You can run the entire autonomous navigation stack with
 
 `roslaunch bear_car_launch autonomous_navigation_fourwd.launch`
 
+For a way to give an autonomous driving goal, please refer to the Visualization title below.
+
 #### Running Autonomous Navigation Step-by-Step (Real Car)
 
 If you only want to follow the process manually, please follow commands below.
@@ -106,6 +108,21 @@ roslaunch odometry_agent odometry_agent.launch is_four_wd:=true is_simulation:=t
 
 If you launch rviz again as stated below, the localization will be visible.
 
+To control the robot, you need to publish to the topic below. *Linear.x* value is for linear speed, *angular.z* for angular speed.
+
+```bash
+rostopic pub /cmd_vel geometry_msgs.Twist:
+```
+Optionally, you can control the car by also running teleop package. It allows you to command the car with keyboard:
+
+```bash
+roslaunch bear_car_launch morse_teleop.launch
+```
+If the terminal teleop is launched does not provide keyboard control interface, you can also rosrun the teleop package:
+```bash
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+```
+
 **TODO**: test the local planner nodes for the simulation
 
 #### Visualization (Real Car and Simulation)
@@ -122,6 +139,8 @@ rosrun rviz rviz -d `rospack find pose_follower`/cfg/rviz_navigation.rviz
 This is also wrapped within
 
 `roslaunch pose_follower navigation_stack_rviz.launch`
+
+In order to give a goal point, you can use 2D nav goal interface on rviz UI. 2D_nav_goal, when clicked, will allow you to put a point on the map. When the point is selected with the mouse, the car should autonomously navigate to the location.
 
 #### RC mode for running the project and to control the simulation
 
@@ -151,15 +170,23 @@ You can also directly run the entire setup with just one launch file for direct 
 
 ### Tuning the control parameters
 
-For the purpose, a YAML file is created to interface the low level control units. This directly loads the parameters to the VESC driver.
-**TODO: where is this YAML file??? ackermann_rc/param/rc_driver_vesc.yaml**
+For the purpose, a YAML file is created to interface the low level control units. This directly loads the parameters to the VESC driver through VESC tool. Some details about the VESC driver in general, how to load the params and interface it is given under this wiki page:
 
+`/wiki/vesc`
+
+The interface in general covers:
+- `low_level_speed_controller` pkg interfacing with VESC package (translation of speed commands to VESC motor control signals)
+- VESC Tool configuration: please refer to `Firmware/FourWheelCarConfigurations(VESC)/README.md`
+- Remote controller interface to VESC: param set under `ackermann_rc/param/rc_driver_vesc.yaml`
+- PID control: PID parameters are set under /pose_follower package. This package decides the speed values to be commanded to the motor drivers (VESC for fourwd). The parameters can be changed from `pid_controller.launch` under *pose_follower* package.
+- **TODO: how to give a goal point for navigation (writing to a rostopic/callign a service)**
 
 **TODO: here write how to add the config file**
 
- - WRITE Data that are available already with the config
- - How to give a goal (mention about the final orientation) -->
- - In cfg folder of pose_follower package also there is a rviz config for visualization. Pid parameters can be changed from pid_controller.launch file in pose_follower package. This launch file basically sets up move_base system with parameters and loads controllers.
+#### Remaining Motor Control Issues:
+Some issues that needs to be resolved regarding fourwd car's VESC and motor drive:
+- Extend VESC firmware to incorporate encoder speed sending. This is referred under wiki page: Wiki-->vesc
+- low_level_speed_controller needs a fine tuning along with VESC driver parameters (to be set under VESC firmware and VESC tool) to satisfy a proper take-off and break behaviors.
 
 ### Emergency Stop
 
