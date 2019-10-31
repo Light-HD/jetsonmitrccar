@@ -66,7 +66,6 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * vesc(custom submodule): VESC interface for ROS and odometry
 
-
 ## Clone and Build
 
 First, create your self a SSH key to access the repository. To do so click to your avatar at the top right then click Settings after that choose SSH keys section at the right of the screen. There you will see a tutorial to generate a SSH key provided by Git-Lab.
@@ -101,7 +100,7 @@ Automatic resolving of ROS dependencies
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-Here are some package dependencies (they may not come with full desktop installation) 
+Here are some package dependencies (they may not come with full desktop installation)
 but you can first try without due to the reason that above command automatically resolved the dependencies:
 
 - Ackermann (`sudo apt install ros-<version>-ackermann*`)
@@ -129,6 +128,9 @@ For executing different software setups please refer to the linked platform spec
 1. **[4WD platform](RUNNING_FourWd.md)**
 1. **[6WD platform](RUNNING_SixWD.md)**  
 
+### Architecture
+
+Once the project is running, a way to better visualize the connection of the topics, nodes, transform frames is through using rqt package. Run `rqt` on the terminal. It provides many options to visualize under *Plugins* tab. Click on *Introspection-->Node Graph* to see how the ros nodes are connected, click on *Visualization-->TF Tree* to see transform frames. Please examine the other plugins to get more insight into the project.
 
 ## Sensors Setup
 
