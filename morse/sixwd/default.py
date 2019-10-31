@@ -67,15 +67,15 @@ robot.set_mass(2.0)
 # actuator.
 basic_actuate = Basicspeed()
 
-basic_actuate.properties(Acceleration = 0.007)
-basic_actuate.properties(AngularAcc = 0.006)
-basic_actuate.properties(MaxAngularSpeed = 0.1)
-basic_actuate.properties(MaxSpeed = 0.2)
-basic_actuate.properties(Mode = "Acceleration")
-basic_actuate.properties(decay = 0.9)
+basic_actuate.properties(Acceleration=0.007)
+basic_actuate.properties(AngularAcc=0.006)
+basic_actuate.properties(MaxAngularSpeed=0.1)
+basic_actuate.properties(MaxSpeed=0.2)
+basic_actuate.properties(Mode="Acceleration")
+basic_actuate.properties(decay=0.9)
 # basic_actuate.properties(frequency = 10.0)
 
-basic_actuate.add_stream('ros','sixwd.middleware.ros.basicspeed_ros.BasicSpeedROS')
+basic_actuate.add_stream('ros', 'sixwd.middleware.ros.basicspeed_ros.BasicSpeedROS')
 
 robot.append(imu)
 robot.append(laser_scanner)
