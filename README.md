@@ -101,16 +101,16 @@ Automatic resolving of ROS dependencies
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-Here are some package dependencies (they may not come with full desktop installation):
+Here are some package dependencies (they may not come with full desktop installation) 
+but you can first try without due to the reason that above command automatically resolved the dependencies:
+
 - Ackermann (`sudo apt install ros-<version>-ackermann*`)
 - gstreamer-1.0
 - teleop_twist_joy (`sudo apt install ros-<version>-teleop-twist-joy`)
 - teleop_twist_keyboard (`sudo apt install ros-<version>-teleop-twist-keyboard`)
 - geographic-msgs (`sudo apt install ros-<version>-geographic-msgs`)
-- serialConfig (`sudo apt install ros-<version>-serial*`)
-- opencv
-- realsense2-camera (`sudo apt install ros-<version>-realsense2-camera`)
-- imu_filter_madgwick (`sudo apt install ros-<version>-imu_filter_madgwick`)
+- serialConfig (`sudo apt install ros-<version>-serial*`) Only needed on the robot.
+- realsense2-camera (`sudo apt install ros-<version>-realsense2-camera`) Only needed on the robot.
 
 #### Build
 
@@ -166,9 +166,8 @@ In our platforms we are using following sensors
  encoder as rotor position. Therefore, two steps are required. First, add position reading to VESC_Driver node. Secondly, Convert it into speed.
 2. Motor controller for six wheeled platform' motor controller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
 3. 6WD encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data may be improved
-4. 6WD one motor is damaged.
-5. PID performances can be improved to see the interface please look interface section.
-7. Adding additional visual odometry to the cars.
+4. PID performances can be improved to see the interface please look interface section.
+5. Adding additional visual odometry to the cars.
 
 # FAQ
 
