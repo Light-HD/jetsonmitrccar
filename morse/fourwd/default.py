@@ -12,23 +12,24 @@ import math
 
 robot = Hummerscaled()
 robot.add_default_interface('ros')
-robot.properties(scale = 0.2)
-robot.properties(GroundRobot = True)
+scale = 0.2
+robot.properties(scale=scale)
+robot.properties(GroundRobot=True)
 robot.name = "Hummer"
-robot.scale = [0.2, 0.2, 0.2]
+robot.scale = [scale, scale, scale]
 
 odom = Odometry()
 # This is the wheel odometry tf
 odom.add_stream('ros', frame_id="odom", topic="wheel_odom", child_frame_id='wheel_odom') #child_frame_id='base_link')
 odom.translate(0.0, 0.0, 0.0)
-odom.rotate(0.0, 0.0, math.pi/2) #TODO: try if the rotation affects the orientation problem
+odom.rotate(0.0, 0.0, 0)
 #odom.rotate(-1.57, -1.57, 1.57)
 
 imu = IMU()
 imu.name = "imu"
 #imu.add_stream('ros', frame_id="camera_imu_optical_frame", topic='imu/data')
 imu.add_stream('ros', frame_id="camera_imu_optical_frame", topic='imu/data')
-imu.translate(0, 0.6, 1.2)
+imu.translate(0.6, 0.0, 1.2)
 imu.rotate(0.0, -math.pi/2, 0.0)
 
 # Add a pose sensor that exports the current location and orientation
@@ -40,24 +41,25 @@ pose.add_stream('ros', frame_id="map", topic='pose')
 laser_scanner = Hokuyo()
 laser_scanner.name = "laser_scan"
 laser_scanner.add_stream('ros', frame_id="laser", topic="scan")
-laser_scanner.translate(0, 0.2, 1.6)
-laser_scanner.properties(resolution = 1.0) #0.5 before
-laser_scanner.properties(laser_range = 30.0) #5.0 before
-laser_scanner.properties(scan_window = 360)
-laser_scanner.properties(Visible_arc = False)
+laser_scanner.translate(0.2, 0.0, 1.6)
+laser_scanner.properties(resolution=1.0) #0.5 before
+laser_scanner.properties(laser_range=25.0)
+laser_scanner.properties(scan_window=360)
+laser_scanner.properties(Visible_arc=False)
 laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
 kinect = Kinect()
 kinect.depth_camera.add_stream('ros', frame_id="camera_depth_frame", topic='/camera/depth', topic_suffix='/image_raw')
 kinect.video_camera.add_stream('ros', frame_id="camera_color_frame", topic='/camera/rgb', topic_suffix='/image_raw')
-kinect.translate(0, 0.6, 1.2)
-kinect.rotate(0.0, 0.0, math.pi/2)
+kinect.translate(0.6, 0, 1.2)
+kinect.rotate(0.0, 0.0, 0)
 
 rgba_camera = VideoCamera() # Rear camera?
 rgba_camera.add_stream('ros', frame_id="camera_rear", topic='/camera_rear/', topic_suffix='/image_raw') #TODO: the frame_id of the cameras need to be linked to /camera_link
-rgba_camera.translate(0, -3.3, 1)
-rgba_camera.rotate(math.pi/2, math.pi, math.pi)
+rgba_camera.rotate(0, math.pi, math.pi)
+rgba_camera.translate(-3.3, 0, 1)
+
 
 # The list of the main methods to manipulate your components
 # is here: http://www.openrobots.org/morse/doc/astable/user/builder_overview.html
@@ -72,7 +74,7 @@ robot.set_mass(0.1)
 # 'morse add actuator <name> test' can help you with the creation of a custom
 # actuator.
 steerforce = SteerForce()
-steerforce.add_stream('ros','fourwd.middleware.ros.ackermann_ros.AckermannROS', topic='cmd_vel')
+steerforce.add_stream('ros', 'fourwd.middleware.ros.ackermann_ros.AckermannROS', topic='cmd_vel')
 # place your component at the correct location
 steerforce.translate(0, 0, 0)
 steerforce.rotate(0, 0, 0)
@@ -84,6 +86,9 @@ robot.append(odom)
 robot.append(rgba_camera)
 robot.append(kinect)
 robot.append(pose)
+
+keyboard = Keyboard()
+robot.append(keyboard)
 
 
 # To ease development and debugging, we add a socket interface to our robot.
