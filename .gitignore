@@ -7,3 +7,5 @@
 *.mk
 *.pyc
 /.catkin_workspace
+
+*.blend1
