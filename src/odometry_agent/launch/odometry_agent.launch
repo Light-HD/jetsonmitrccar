@@ -59,15 +59,18 @@
   <!-- Publish Transforms -->
 
   <group if="$(arg is_four_wd)">
-    <!--<group unless="$(arg is_simulation)">-->
+    <group unless="$(arg is_simulation)">
       <include file="$(find odometry_agent)/launch/four_wheel_transforms.launch"/>
-    <!--</group>-->
+    </group>
   </group>
 
   <group unless="$(arg is_four_wd)">
       <include file="$(find odometry_agent)/launch/six_wheel_transforms.launch"/>
   </group>
 
+  <group if="$(arg is_simulation)">
+    <include file="$(find odometry_agent)/launch/simulation_transforms.launch"/>
+  </group>
 
   <group unless="$(arg is_simulation)">
     <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
