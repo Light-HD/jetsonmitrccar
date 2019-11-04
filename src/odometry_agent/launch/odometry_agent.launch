@@ -36,13 +36,11 @@
     </group>
   </group>
 
-
   <group if="$(arg imu_odometry)">
     <group unless="$(arg is_simulation)">
       <include file="$(find bear_car_launch)/launch/rs_imu.launch"/>
     </group>
   </group>
-
 
   <group if="$(arg laser_scanner_odometry)">
     <group unless="$(arg is_simulation)">
@@ -65,7 +63,9 @@
   </group>
 
   <group unless="$(arg is_four_wd)">
+    <group unless="$(arg is_simulation)">
       <include file="$(find odometry_agent)/launch/six_wheel_transforms.launch"/>
+    </group>
   </group>
 
   <group if="$(arg is_simulation)">
