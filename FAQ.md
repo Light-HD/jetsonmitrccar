@@ -1,5 +1,5 @@
 
-#FAQ
+# FAQ
 
 If you have solutions for common pitfalls (maybe things you experienced yourself) please add those to this file.
 
