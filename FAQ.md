@@ -4,6 +4,19 @@
 If you have solutions for common pitfalls (maybe things you experienced yourself) please add those to this file.
 
 
+## Pulling Upstream improvements
+
+If you want to incorporate commits that have been made available on the main repository of the course, please follow these steps:
+
+`git remote add upstream [GITUPSTREAMREPOURL]`
+replace `[GITUPSTREAMREPOURL]` with the main repository of your class.
+
+`git fetch`
+
+To merge the latest version from master:
+`git pull upstream master`
+
+
 ## Sourcing
 
 After you compiled this repository, respectively ROS workspace with `catkin_make` and want to run something from the terminal, 
