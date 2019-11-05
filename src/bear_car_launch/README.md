@@ -56,3 +56,10 @@ Gamepad control:
 `roslaunch bear_car_launch morse_teleop.launch use_keyboard:=false`
 
 Without the parameter `use_keyboard` default will be keyboard.
+
+## Morse RC teleoperation
+
+You can also plug the RC to your machine and run following launch file for controlling
+either 6WD or 4WD platform
+
+`roslaunch ackermann_rc rc_driver_morse.launch` 

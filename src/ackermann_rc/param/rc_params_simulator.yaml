@@ -19,7 +19,7 @@ middle_steering_output: 1616.0
 
 # Max and min linear speed of the car.
 # Min value is the minimum throttle value that car starts to move
-max_car_linear_speed: 10.0
+max_car_linear_speed: 5.0
 min_car_linear_speed: 0.0
 
 # Angle limits for the car.
@@ -27,6 +27,6 @@ max_car_angle: 0.9
 min_car_angle: 0.0
 
 # This is the topic where morse receives twist commands
-twist_topic: '/Hummer/steerforce'
+twist_topic: '/cmd_vel'
 # This is the topic which Arduino publishes the RC command measurements
 rc_topic: '/rc_command'
