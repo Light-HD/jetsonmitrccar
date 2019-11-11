@@ -8,6 +8,7 @@ Feel free to edit this template as you like!
 from morse.builder import *
 from morse.sensors import *
 from fourwd.builder.robots import Hummerscaled
+from fourwd.builder.sensors.CustomBattery import Custombattery
 import math
 
 robot = Hummerscaled()
@@ -49,6 +50,14 @@ laser_scanner.properties(Visible_arc=False)
 laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
+# add battery
+battery = Custombattery()
+battery.frequency(1)
+battery.add_overlay('ros', 'fourwd.overlays.battery_overlay.RandomInitBatteryOverlay')
+# Properties below might be changed after the experiments or according to the scenarios (how fast the batteries are drained)
+battery.properties(DischargingRate = 0.01, ChargingRate = 2.0, MotorDrainingRate = 0.1)
+battery.add_stream('ros', 'morse.middleware.ros.battery.Float32Publisher')
+
 # RGBD camera
 kinect = Kinect()
 kinect.depth_camera.add_stream('ros', frame_id="camera_depth_frame", topic='/camera/depth', topic_suffix='/image_raw')
@@ -88,6 +97,7 @@ robot.append(odom)
 robot.append(rgba_camera)
 robot.append(kinect)
 robot.append(pose)
+robot.append(battery)
 
 # a basic keyboard controller for testing purposes
 keyboard = Keyboard()
