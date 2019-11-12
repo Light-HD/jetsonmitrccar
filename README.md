@@ -51,6 +51,8 @@ If you would like to run some of the packages on your PC, please refer to the Bu
     * racecar(3rd party submodule): We are mostly reusing the contained achermann_cmd_mux package for interfacing VESC on the 4WD.
 
     * rc_msgs: Remote control ROS message definitions
+    
+    * realsense-ros: ROS interface to the Intel RealSense camera
 
     * rf2o_laser_odometry(3rd party submodule): The package that publishes odometry messages from Hector Slam
 

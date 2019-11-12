@@ -1,8 +1,7 @@
 
-#FAQ
+# FAQ
 
 If you have solutions for common pitfalls (maybe things you experienced yourself) please add those to this file.
-
 
 ## Sourcing
 
@@ -59,6 +58,36 @@ source /home/jetson2/software_integration_new/scripts/remoteHostNetwork.sh
 # Sourcing of the workspace.
 source /home/jetson2/software_integration_new/devel/setup.bash
 ```
+
+## Git
+
+### Pulling Upstream improvements
+
+If you want to incorporate commits that have been made available on the main repository of the course, please follow these steps:
+
+`git remote add upstream [GITUPSTREAMREPOURL]`
+replace `[GITUPSTREAMREPOURL]` with the main repository of your class.
+
+`git fetch`
+
+To merge the latest version from master:
+`git pull upstream master`
+
+### Submodule certificate problems
+
+If you are receiving certificate errors 'server certificate verification failed' while updating the submodules you can workaround this issue by disabling the SSL certificate verification
+
+`git config --global http.sslVerify false`
+
+If you remove the option `--global` it will only affect the current git repository
+
+### Caching credentials 
+
+If you want to avoid to type your git credentials for all submodules repeatedly you can configure git to cache this
+
+`git config --global credential.helper 'cache --timeout=600'`
+
+`600` specifies the time in seconds to cache previously typed credentials.
 
 ## Useful ROS commands
 

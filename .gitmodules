@@ -29,3 +29,6 @@
 	path = src/vesc
 	url = https://gitlab-edu.aot.tu-berlin.de/small_autonomous_driving/vesc.git
 	branch = master
+[submodule "src/realsense-ros"]
+	path = src/realsense-ros
+	url = https://github.com/IntelRealSense/realsense-ros.git

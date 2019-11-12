@@ -9,6 +9,6 @@ class AckermannROS(ROSSubscriber):
     ros_class = Twist
 
     def update(self, message):
-        #logger.info("Message Received: %s" % message.linear.x)
-        self.data["force"] = message.linear.x
-        self.data["steer"] = message.angular.z
+        # logger.info("Message Received: %s" % message.linear.x)
+        self.data["force"] = -message.linear.x
+        self.data["steer"] = -message.angular.z

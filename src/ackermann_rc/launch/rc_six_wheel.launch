@@ -3,9 +3,6 @@
 <launch>
 
   <!-- Load joint controller configurations from YAML file to parameter server -->
-  
-  <!--<include file="$(find racecar_simulator)/launch/simulate.launch"/>-->
-  
 
   <node name="serial_comm" pkg="rosserial_python" type="serial_node.py">
     <param name="port" value="/dev/ttyUSB_remote"/>
