@@ -8,7 +8,7 @@ CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
     //ROS_INFO("Set Point received for speed: %f", input_setpoint);
     
     
-    switch(control_type){
+    switch(){
         case SpeedCommandGeneratorBase::ControlType::Acceleration:
         {
             input_setpoint = (input_setpoint > 0.0) ? 
@@ -43,9 +43,10 @@ CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
                     has_took_off = true;
                 }
             
-            }else{
+            }else{ // zero speed request
                 command.req_type = CommandRequest::RequestType::SPEED;
                 command.value = 0.0;
+                still_executing_takeoff = false; // stop take-off if zero speed is requested
             }
             break;
         }

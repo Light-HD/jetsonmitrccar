@@ -9,6 +9,7 @@ from morse.builder import *
 from morse.sensors import *
 from sixwd.builder.robots import Sixwd
 from sixwd.builder.actuators import Basicspeed
+from sixwd.builder.sensors.CustomBattery import Custombattery
 import math
 
 # Add the MORSE mascott, MORSY.
@@ -55,6 +56,14 @@ laser_scanner.properties(Visible_arc=False)
 laser_scanner.rotate(0.0, 0.0, 0.0)
 laser_scanner.create_laser_arc()
 
+# add battery
+battery = Custombattery()
+battery.frequency(1)
+battery.add_overlay('ros', 'sixwd.overlays.battery_overlay.RandomInitBatteryOverlay')
+# Properties below might be changed after the experiments or according to the scenarios (how fast the batteries are drained)
+battery.properties(DischargingRate = 0.05, ChargingRate = 2.0, MotorDrainingRate = 0.15)
+battery.add_stream('ros', 'morse.middleware.ros.battery.Float32Publisher')
+
 # RGBD camera
 kinect = Kinect()
 kinect.depth_camera.add_stream('ros', frame_id="camera_depth_frame", topic='/camera/depth', topic_suffix='/image_raw')
@@ -100,10 +109,27 @@ robot.append(odom)
 robot.append(rgba_camera)
 robot.append(kinect)
 robot.append(pose)
+robot.append(battery)
 
 # a basic keyboard controller for testing purposes
 keyboard = Keyboard()
 robot.append(keyboard)
+
+# Adding a charging zone
+charging_station = PassiveObject('sixwd/environments/charging_station.blend', 'ChargingStation')
+angle = math.pi
+tray_x = 1.6
+tray_y = -2.5
+charging_station.translate(tray_x, tray_y, 0.0)
+charging_station.rotate(0.0, 0.0, angle)
+# define charging zone
+charging_zone = Zone(type = 'Charging')
+charging_zone.size = [0.5, 0.5, 1.0]
+# compute offset from tray center also taking rotation into account
+xoff = 0.75 * math.cos(angle) - 0.0 * math.sin(angle)
+yoff = 0.0 * math.cos(angle) +  0.75 * math.sin(angle)
+
+charging_zone.translate(tray_x + xoff, tray_y + yoff, 0.0)
 
 
 robot.add_default_interface('ros')
