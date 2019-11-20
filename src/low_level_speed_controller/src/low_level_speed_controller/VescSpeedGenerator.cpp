@@ -8,7 +8,7 @@ CommandRequest VescSpeedGenerator::createSpeedCommand(double input_setpoint){
     //ROS_INFO("Set Point received for speed: %f", input_setpoint);
     
     
-    switch(){
+    switch(control_type){
         case SpeedCommandGeneratorBase::ControlType::Acceleration:
         {
             input_setpoint = (input_setpoint > 0.0) ? 
