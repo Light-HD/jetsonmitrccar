@@ -1,6 +1,9 @@
 /build
 /devel
+/logs
+.catkin_tools/
 /src/CMakeLists.txt
+/src/.rosinstall.bak
 /.vscode
 /.idea/
 *.ko
