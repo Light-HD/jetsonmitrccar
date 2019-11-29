@@ -67,6 +67,9 @@ If you would like to run some of the packages on your PC, please refer to the Bu
     * six_wheel_odom: The package that publishes odometry by six wheeled car's motor controllers
 
     * vesc(custom submodule): VESC interface for ROS and odometry
+    
+    * Cartographer: Alternate SLAM package
+                    To run cartographer: roslaunch cartographer_ros bear_car.launch
 
 ## Clone and Build
 
