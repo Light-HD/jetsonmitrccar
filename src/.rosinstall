@@ -5,7 +5,7 @@
     version: 1.0.0
 - git:
     local-name: cartographer_ros
-    uri: https://github.com/googlecartographer/cartographer_ros.git
+    uri: https://github.com/skp1204/cartographer_ros.git
     version: 1.0.0
 - git:
     local-name: ceres-solver
