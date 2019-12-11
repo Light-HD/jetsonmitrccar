@@ -21,8 +21,8 @@ robot.scale = [scale, scale, scale]
 
 # This is the wheel odometry tf
 odom = Odometry()
-odom.add_stream('ros', frame_id="odom", topic="wheel_odom", child_frame_id='wheel_odom') #child_frame_id='base_link')
-odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
+odom.add_stream('ros', frame_id="wheel_odom", topic="wheel_odom") #child_frame_id='base_link')
+# odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
 odom.translate(0.0, 0.0, 0.0)
 odom.rotate(0.0, 0.0, 0)
 
@@ -30,7 +30,7 @@ odom.rotate(0.0, 0.0, 0)
 imu = IMU()
 imu.name = "imu"
 imu.add_stream('ros', frame_id='camera_imu_optical_frame', topic='imu/data')
-imu.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
+# imu.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
 imu.translate(0.6, 0.0, 1.2)
 imu.rotate(0.0, -math.pi/2, 0.0)
 
