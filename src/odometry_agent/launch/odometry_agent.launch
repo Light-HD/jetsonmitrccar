@@ -52,6 +52,8 @@
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
+  <!-- <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>-->
+
   <!-- Nodes Started -->
 
   <!-- Publish Transforms -->
