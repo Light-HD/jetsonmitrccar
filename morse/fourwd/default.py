@@ -20,11 +20,11 @@ robot.name = "FourWD"
 robot.scale = [scale, scale, scale]
 
 # This is the wheel odometry tf
-odom = Odometry()
-odom.add_stream('ros', frame_id="wheel_odom", topic="wheel_odom") #child_frame_id='base_link')
+wheel_odom = Velocity()
+wheel_odom.add_stream('ros', frame_id="wheel_odom", topic="wheel_odom") #child_frame_id='base_link')
 # odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
-odom.translate(0.0, 0.0, 0.0)
-odom.rotate(0.0, 0.0, 0)
+wheel_odom.translate(0.0, 0.0, 0.0)
+wheel_odom.rotate(0.0, 0.0, 0)
 
 # IMU sensor located inside the camera
 imu = IMU()
@@ -32,7 +32,7 @@ imu.name = "imu"
 imu.add_stream('ros', frame_id='camera_imu_optical_frame', topic='imu/data')
 # imu.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
 imu.translate(0.6, 0.0, 1.2)
-imu.rotate(0.0, -math.pi/2, 0.0)
+imu.rotate(0.0, 0.0, 0.0)
 
 # Add a pose sensor that exports the current location and orientation. Note that this is only for testing purposes
 pose = Pose()
@@ -93,7 +93,7 @@ steerforce.rotate(0, 0, 0)
 robot.append(imu)
 robot.append(laser_scanner)
 robot.append(steerforce)
-robot.append(odom)
+robot.append(wheel_odom)
 robot.append(rgba_camera)
 robot.append(kinect)
 robot.append(pose)
