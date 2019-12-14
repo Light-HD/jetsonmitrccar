@@ -1,0 +1,34 @@
+ 
+<launch>
+  <!-- 
+  NOTE: You'll need to bring up something that publishes sensor data (see
+  rosstage), something that publishes a map (see map_server), and something to
+  visualize a costmap (see nav_view), to see things work.
+  Also, on a real robot, you'd want to set the "use_sim_time" parameter to false, or just not set it.
+  -->
+  <param name="/use_sim_time" value="false"/>
+
+  <!-- Publishes the voxel grid to rviz for display -->
+  <node pkg="costmap_2d" type="costmap_2d_markers" name="voxel_visualizer">
+    <remap from="voxel_grid" to="costmap/voxel_grid"/>
+  </node>
+
+  <!-- Run the costmap node -->
+  <!--<node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
+  	  	<rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="costmap" />
+        <rosparam file="$(find pose_follower)/cfg/carlike/global_costmap_params.yaml" command="load" />
+        <remap from="map" to="/map"/>
+
+  </node>-->
+
+
+    <node pkg="locomove_base" type="move_base" respawn="false" name="locomove_base" output="screen">
+      <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find pose_follower)/cfg/carlike/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find pose_follower)/cfg/carlike/global_costmap_params.yaml" command="load" />
+     <rosparam file="$(find pose_follower)/cfg/carlike/trajectory_planner.yaml" command="load" />
+    </node>
+
+</launch>
+

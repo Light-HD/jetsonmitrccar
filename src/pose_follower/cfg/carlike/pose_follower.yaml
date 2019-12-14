@@ -1,6 +1,6 @@
 PoseFollower:
   holonomic: false
-  min_vel_lin: 0.1
+  min_vel_x: 10.0
   K_linear: 0.3
   K_rotational: 1.9
   tolerance_rot: 2.0
