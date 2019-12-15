@@ -58,7 +58,7 @@
   <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
   </node>
 
- <include file="$(find pose_follower)/launch/costmap.launch"/>
+  <include file="$(find pose_follower)/launch/costmap.launch"/>
 
 <!-- <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>-->
 

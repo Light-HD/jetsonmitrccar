@@ -1,0 +1,3 @@
+base_global_planner: global_planner_adapter
+global_planner_adapter:
+  planner_name: dlux_plugins::AStar

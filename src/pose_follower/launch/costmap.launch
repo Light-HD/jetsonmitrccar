@@ -9,9 +9,9 @@
   <param name="/use_sim_time" value="false"/>
 
   <!-- Publishes the voxel grid to rviz for display -->
-  <node pkg="costmap_2d" type="costmap_2d_markers" name="voxel_visualizer">
+   <!-- <node pkg="costmap_2d" type="costmap_2d_markers" name="voxel_visualizer">
     <remap from="voxel_grid" to="costmap/voxel_grid"/>
-  </node>
+  </node>-->
 
   <!-- Run the costmap node -->
   <!--<node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
@@ -22,12 +22,15 @@
   </node>-->
 
 
-    <node pkg="locomove_base" type="move_base" respawn="false" name="locomove_base" output="screen">
+    <node pkg="locomotor" type="locomotor1" respawn="false" name="locomotor1" output="screen">
       <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="global_costmap" />
       <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="local_costmap" />
       <rosparam file="$(find pose_follower)/cfg/carlike/local_costmap_params.yaml" command="load" />
       <rosparam file="$(find pose_follower)/cfg/carlike/global_costmap_params.yaml" command="load" />
      <rosparam file="$(find pose_follower)/cfg/carlike/trajectory_planner.yaml" command="load" />
+     <!--<rosparam file="$(find pose_follower)/cfg/carlike/global_trajectory.yaml" command="load" />-->
+     <!--<remap from="odom" to="/odometry/filtered"/>-->
+     <remap from="goal" to="/move_base_simple/goal"/>
     </node>
 
 </launch>
