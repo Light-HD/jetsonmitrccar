@@ -52,15 +52,15 @@
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
-
-  <arg name="map_file" value="/home/krishnananda/AAIP/software_integration/mymap.yaml">
+  <!--<arg name="map_file" value="/home/krishnananda/AAIP/software_integration/mymap.yaml">
+  <arg name="map_file" value="/home/anoulis/Documents/Workspace/aaip/locus/software_integration/mymap.yaml">
   </arg> 
   <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
-  </node>
+  </node>-->
 
   <include file="$(find pose_follower)/launch/costmap.launch"/>
 
-<!-- <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>-->
+  <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>
 
   <!-- Nodes Started -->
 

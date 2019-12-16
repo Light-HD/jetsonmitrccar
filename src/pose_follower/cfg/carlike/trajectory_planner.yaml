@@ -1,11 +1,28 @@
-base_local_planner: nav_core_adapter::LocalPlannerAdapter
-LocalPlannerAdapter:
-  planner_name: dwb_local_planner::DWBLocalPlanner
+global_planner_namespaces:
+  - DluxGlobalPlanner
+DluxGlobalPlanner:
+  allow_unknown: true
+  plugin_class: dlux_global_planner::DluxGlobalPlanner
+  #potential_calculator: dlux_plugins::AStar
+  potential_calculator: dlux_plugins::Dijkstra
+
+
+local_planner_namespaces:
+  - DWBLocalPlanner
 DWBLocalPlanner:
+  allow_unknown: true
+  plugin_class: dwb_local_planner::DWBLocalPlanner
+  #trajectory_generator_name: dwb_plugins::LimitedAccelGenerator
+  trajectory_generator_name: dwb_plugins::StandardTrajectoryGenerator
+
+  #goal_checker_name: dwb_plugins::SimpleGoalChecker
+  goal_checker_name: dwb_plugins::StoppedGoalChecker
+
+
   max_vel_x: 0.5
   min_vel_x: 0.1
   max_vel_theta: 0.35
- 
+
 
   acc_lim_theta: 3.2
   acc_lim_x: 2.5
@@ -19,3 +36,5 @@ DWBLocalPlanner:
   yaw_goal_tolerance: 0.25
 
   footprint: [ [-0.1,-0.125], [0.5,-0.125], [0.5,0.125], [-0.1,0.125] ]
+
+
