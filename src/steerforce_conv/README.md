@@ -1,8 +1,7 @@
 SteerForce Converter for Morse Simulation
 ==================
 
-# Steer is a package of nonlinear state estimation nodes.
-## Usage
+# Usage
 1. Install simple_pid python library - `pip install simple_pid`
 2. configure required parameters in params yaml file.
 3. Modify morse default.py to accept commands from /morse_steerforce_cmd
