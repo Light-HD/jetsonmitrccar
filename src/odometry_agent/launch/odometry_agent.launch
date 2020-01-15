@@ -52,7 +52,7 @@
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
-  <arg name="map_file" value="/home/krishnananda/AAIP/software_integration/mymap3.yaml">
+  <arg name="map_file" value="$(find odometry_agent)/maps/mymap3.yaml">
   </arg> 
   <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
   </node>

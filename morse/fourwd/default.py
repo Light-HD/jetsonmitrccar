@@ -85,7 +85,7 @@ robot.set_mass(1.5)
 # 'morse add actuator <name> test' can help you with the creation of a custom
 # actuator.
 steerforce = SteerForce()
-steerforce.add_stream('ros', 'fourwd.middleware.ros.ackermann_ros.AckermannROS', topic='control')
+steerforce.add_stream('ros', 'fourwd.middleware.ros.ackermann_ros.AckermannROS', topic='morse_steerforce_cmd')
 steerforce.translate(0, 0, 0)
 steerforce.rotate(0, 0, 0)
 # motion = MotionXYW()

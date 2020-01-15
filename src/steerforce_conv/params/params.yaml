@@ -1,0 +1,4 @@
+pid_gains: { kp: 3, ki: 0.1, kd: 0}
+wheel_base: 0.28
+max_steer_ang: 1.0472
+
