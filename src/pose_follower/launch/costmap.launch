@@ -22,16 +22,16 @@
   </node>-->
 
 
-    <node pkg="locomotor" type="locomotor1" respawn="false" name="locomotor1" output="screen">
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
       <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="global_costmap" />
       <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="local_costmap" />
       <rosparam file="$(find pose_follower)/cfg/carlike/local_costmap_params.yaml" command="load" />
       <rosparam file="$(find pose_follower)/cfg/carlike/global_costmap_params.yaml" command="load" />
-     <rosparam file="$(find pose_follower)/cfg/carlike/trajectory_planner.yaml" command="load" />
+      <rosparam file="$(find pose_follower)/cfg/carlike/trajectory_planner.yaml" command="load" />
      <!--<rosparam file="$(find pose_follower)/cfg/carlike/global_trajectory.yaml" command="load" />-->
-     <!--<remap from="odom" to="/odometry/filtered"/>-->
+     <remap from="odom" to="/odometry/filtered"/>
      <remap from="goal" to="/move_base_simple/goal"/>
     </node>
-
+    
 </launch>
 

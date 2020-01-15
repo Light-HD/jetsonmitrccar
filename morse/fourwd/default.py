@@ -58,18 +58,18 @@ battery.add_overlay('ros', 'fourwd.overlays.battery_overlay.RandomInitBatteryOve
 battery.properties(DischargingRate = 0.05, ChargingRate = 2.0, MotorDrainingRate = 0.15)
 battery.add_stream('ros', 'morse.middleware.ros.battery.Float32Publisher')
 
-# # RGBD camera
-# kinect = Kinect()
-# kinect.depth_camera.add_stream('ros', frame_id="camera_depth_frame", topic='/camera/depth', topic_suffix='/image_raw')
-# kinect.video_camera.add_stream('ros', frame_id="camera_color_frame", topic='/camera/rgb', topic_suffix='/image_raw')
-# kinect.translate(0.6, 0, 1.2)
-# kinect.rotate(0.0, 0.0, 0)
+# RGBD camera
+kinect = Kinect()
+kinect.depth_camera.add_stream('ros', frame_id="camera_depth_frame", topic='/camera/depth', topic_suffix='/image_raw')
+kinect.video_camera.add_stream('ros', frame_id="camera_color_frame", topic='/camera/rgb', topic_suffix='/image_raw')
+kinect.translate(0.6, 0, 1.2)
+kinect.rotate(0.0, 0.0, 0)
 
-# # Rear camera
-# rgba_camera = VideoCamera() # Rear camera?
-# rgba_camera.add_stream('ros', frame_id="camera_rear", topic='/camera_rear/', topic_suffix='/image_raw') #TODO: the frame_id of the cameras need to be linked to /camera_link
-# rgba_camera.rotate(0, math.pi, math.pi)
-# rgba_camera.translate(-3.3, 0, 1)
+# Rear camera
+rgba_camera = VideoCamera() # Rear camera?
+rgba_camera.add_stream('ros', frame_id="camera_rear", topic='/camera_rear/', topic_suffix='/image_raw') #TODO: the frame_id of the cameras need to be linked to /camera_link
+rgba_camera.rotate(0, math.pi, math.pi)
+rgba_camera.translate(-3.3, 0, 1)
 
 
 # The list of the main methods to manipulate your components
@@ -85,7 +85,7 @@ robot.set_mass(1.5)
 # 'morse add actuator <name> test' can help you with the creation of a custom
 # actuator.
 steerforce = SteerForce()
-steerforce.add_stream('ros', 'fourwd.middleware.ros.ackermann_ros.AckermannROS', topic='cmd_vel')
+steerforce.add_stream('ros', 'fourwd.middleware.ros.ackermann_ros.AckermannROS', topic='control')
 steerforce.translate(0, 0, 0)
 steerforce.rotate(0, 0, 0)
 # motion = MotionXYW()
@@ -98,8 +98,8 @@ robot.append(laser_scanner)
 # robot.append(motion)
 robot.append(steerforce)
 robot.append(wheel_odom)
-# robot.append(rgba_camera)
-# robot.append(kinect)
+robot.append(rgba_camera)
+robot.append(kinect)
 robot.append(pose)
 robot.append(battery)
 

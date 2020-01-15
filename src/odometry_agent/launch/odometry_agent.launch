@@ -46,21 +46,27 @@
     <group unless="$(arg is_simulation)">
       <include file="$(find bear_car_launch)/launch/rplidar_a3.launch"/>
     </group>
-   <!--<include file="$(find odometry_agent)/launch/hector_configuration.launch">
+ <!--   <include file="$(find odometry_agent)/launch/hector_configuration.launch">
         <arg name="scan_topic_name" value="scan"/>
-    </include>-->
+    </include> -->
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
-  <!--<arg name="map_file" value="/home/krishnananda/AAIP/software_integration/mymap.yaml">
-  <arg name="map_file" value="/home/anoulis/Documents/Workspace/aaip/locus/software_integration/mymap.yaml">
+  <arg name="map_file" value="/home/krishnananda/AAIP/software_integration/mymap3.yaml">
   </arg> 
   <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
-  </node>-->
+  </node>
 
   <include file="$(find pose_follower)/launch/costmap.launch"/>
 
-  <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>
+  <group if="$(arg is_four_wd)">
+    <group if="$(arg is_simulation)">
+      <include file="$(find steerforce_conv)/launch/steerforce_converter.launch"/>
+    </group>
+  </group>
+
+
+  <!-- <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/> -->
 
   <!-- Nodes Started -->
 

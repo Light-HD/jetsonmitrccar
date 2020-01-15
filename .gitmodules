@@ -47,3 +47,6 @@
 [submodule "src/robot_navigation"]
 	path = src/robot_navigation
 	url = https://github.com/skp1204/robot_navigation.git
+[submodule "src/navigation"]
+	path = src/navigation
+	url = https://github.com/ros-planning/navigation.git
