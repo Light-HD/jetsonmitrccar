@@ -50,3 +50,12 @@
 [submodule "src/navigation"]
 	path = src/navigation
 	url = https://github.com/ros-planning/navigation.git
+[submodule "src/rsband_local_planner"]
+	path = src/rsband_local_planner
+	url = https://github.com/gkouros/rsband_local_planner.git
+[submodule "src/eband_local_planner"]
+	path = src/eband_local_planner
+	url = https://github.com/utexas-bwi/eband_local_planner.git
+[submodule "src/ompl"]
+	path = src/ompl
+	url = https://github.com/ompl/ompl.git
