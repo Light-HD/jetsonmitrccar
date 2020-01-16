@@ -46,16 +46,10 @@
     <group unless="$(arg is_simulation)">
       <include file="$(find bear_car_launch)/launch/rplidar_a3.launch"/>
     </group>
- <!--   <include file="$(find odometry_agent)/launch/hector_configuration.launch">
-        <arg name="scan_topic_name" value="scan"/>
-    </include> -->
+
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
-  <arg name="map_file" value="$(find odometry_agent)/maps/mymap3.yaml">
-  </arg> 
-  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
-  </node>
 
   <include file="$(find pose_follower)/launch/costmap.launch"/>
 
@@ -65,8 +59,22 @@
     </group>
   </group>
 
+  <!-- Load SLAMs or Static Map -->
+  
+  <!-- Hector SLAM -->
+   <!--   <include file="$(find odometry_agent)/launch/hector_configuration.launch">
+        <arg name="scan_topic_name" value="scan"/>
+    </include> -->
 
-  <!-- <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/> -->
+  <!-- Cartographer SLAM  -->
+  <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>  
+  
+  <!-- Use Static Map -->
+  <!-- <arg name="map_file" value="$(find odometry_agent)/maps/mymap3.yaml">
+  </arg> 
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
+  </node>
+ -->
 
   <!-- Nodes Started -->
 

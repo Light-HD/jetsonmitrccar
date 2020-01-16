@@ -27,7 +27,9 @@
       <rosparam file="$(find pose_follower)/cfg/carlike/costmap_common_params.yaml" command="load" ns="local_costmap" />
       <rosparam file="$(find pose_follower)/cfg/carlike/local_costmap_params.yaml" command="load" />
       <rosparam file="$(find pose_follower)/cfg/carlike/global_costmap_params.yaml" command="load" />
-      <rosparam file="$(find pose_follower)/cfg/carlike/trajectory_planner.yaml" command="load" />
+      <!-- <param name="base_local_planner" value="eband_local_planner/EBandPlannerROS" /> -->
+      <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />      
+      <!-- <rosparam file="$(find pose_follower)/cfg/carlike/trajectory_planner.yaml" command="load" /> -->
      <!--<rosparam file="$(find pose_follower)/cfg/carlike/global_trajectory.yaml" command="load" />-->
      <remap from="odom" to="/odometry/filtered"/>
      <remap from="goal" to="/move_base_simple/goal"/>
