@@ -53,12 +53,12 @@
 [submodule "src/rsband_local_planner"]
 	path = src/rsband_local_planner
 	url = https://github.com/gkouros/rsband_local_planner.git
-[submodule "src/eband_local_planner"]
-	path = src/eband_local_planner
-	url = https://github.com/utexas-bwi/eband_local_planner.git
 [submodule "src/ompl"]
 	path = src/ompl
 	url = https://github.com/ompl/ompl.git
 [submodule "src/teb_local_planner"]
 	path = src/teb_local_planner
 	url = https://github.com/rst-tu-dortmund/teb_local_planner.git
+[submodule "src/eband_local_planner"]
+	path = src/eband_local_planner
+	url = https://github.com/mintar/eband_local_planner.git

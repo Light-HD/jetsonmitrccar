@@ -50,32 +50,6 @@
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
-
-  <include file="$(find pose_follower)/launch/costmap.launch"/>
-
-  <group if="$(arg is_four_wd)">
-    <group if="$(arg is_simulation)">
-      <include file="$(find steerforce_conv)/launch/steerforce_converter.launch"/>
-    </group>
-  </group>
-
-  <!-- Load SLAMs or Static Map -->
-  
-  <!-- Hector SLAM -->
-   <!--   <include file="$(find odometry_agent)/launch/hector_configuration.launch">
-        <arg name="scan_topic_name" value="scan"/>
-    </include> -->
-
-  <!-- Cartographer SLAM  -->
-  <include file="$(find cartographer_ros)/launch/bearcar_fullsensor.launch"/>  
-  
-  <!-- Use Static Map -->
-  <!-- <arg name="map_file" value="$(find odometry_agent)/maps/mymap3.yaml">
-  </arg> 
-  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)"> 
-  </node>
- -->
-
   <!-- Nodes Started -->
 
   <!-- Publish Transforms -->
