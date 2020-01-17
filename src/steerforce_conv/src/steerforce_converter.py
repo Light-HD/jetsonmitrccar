@@ -27,8 +27,11 @@ def wheel_odom_callback(msg):
 def pidloop(ref, fbk):
     
     #Calculate Steering angle 
-    wheel_base = rospy.get_param("/steerforce_converter/wheel_base")  
-    heading = math.atan2(wheel_base * ref.angular.z, ref.linear.x)
+    wheel_base = rospy.get_param("/steerforce_converter/wheel_base") 
+    if(ref.angular.z == 0 or ref.linear.x == 0):
+        heading = 0
+    else: 
+        heading = math.atan2(wheel_base * ref.angular.z, ref.linear.x)
     heading = max(min(heading, rospy.get_param("/steerforce_converter/max_steer_ang")), -rospy.get_param("/steerforce_converter/max_steer_ang"))
     if DEBUG:
         rospy.loginfo("Ref: Theta [%f] Calculated Heading:[%f]"%(ref.angular.z,heading))
@@ -63,6 +66,7 @@ if __name__ == '__main__':
     fbk = TwistStamped()
     pid = PID(pid_gains['kp'], pid_gains['ki'], pid_gains['kd'], setpoint = ref.linear.x)
     pid.sample_time = 0.001
+    pid.output_limits = (-1, 1)
     listener()
 
 
