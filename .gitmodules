@@ -62,3 +62,6 @@
 [submodule "src/eband_local_planner"]
 	path = src/eband_local_planner
 	url = https://github.com/mintar/eband_local_planner.git
+[submodule "src/navigation_experimental"]
+	path = src/navigation_experimental
+	url = git@github.com:jiyojolly/navigation_experimental.git
