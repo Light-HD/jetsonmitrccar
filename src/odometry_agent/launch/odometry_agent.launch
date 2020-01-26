@@ -13,7 +13,7 @@
   <arg name="is_simulation" default="false" />
 
   <!-- Which odometry inputs will you use toggle true if you will use  -->
-  <!-- These flags determines which sensor drivesr to start  -->
+  <!-- These flags determines which sensor drivers to start  -->
   <arg name="wheel_odometry" default="true"  />
   <arg name="imu_odometry" default="true"  />
   <arg name="laser_scanner_odometry" default="true"  />
@@ -26,7 +26,7 @@
 
   <!-- Starting Nodes -->
 
-  <include file="$(find odometry_agent)/launch/ekf_template.launch"/>
+  <!-- <include file="$(find odometry_agent)/launch/ekf_template.launch"/> -->
 
   <group if="$(arg wheel_odometry)">
     <group if="$(arg is_four_wd)">

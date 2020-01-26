@@ -1,0 +1,2 @@
+bash parallel "roslaunch pose_follower movebase_start.launch" "morse run fourwd" "rqt" "rosrun rviz rviz -d `rospack find pose_follower`/cfg/rviz_navigation_cc.rviz"
+

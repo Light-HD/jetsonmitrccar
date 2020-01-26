@@ -66,7 +66,7 @@ if __name__ == '__main__':
     fbk = TwistStamped()
     pid = PID(pid_gains['kp'], pid_gains['ki'], pid_gains['kd'], setpoint = ref.linear.x)
     pid.sample_time = 0.001
-    pid.output_limits = (-1, 1)
+    pid.output_limits = (-3, 3)
     listener()
 
 
