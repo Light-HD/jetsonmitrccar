@@ -1,6 +1,7 @@
+ 
 TebLocalPlannerROS:
 
- odom_topic: odom
+ odom_topic: /odometry/filtered
     
  # Trajectory
   
@@ -9,7 +10,7 @@ TebLocalPlannerROS:
  dt_hysteresis: 0.1
  max_samples: 500
  global_plan_overwrite_orientation: True
- allow_init_with_backwards_motion: False
+ allow_init_with_backwards_motion: True
  max_global_plan_lookahead_dist: 3.0
  global_plan_viapoint_sep: -1
  global_plan_prune_distance: 1
@@ -27,13 +28,13 @@ TebLocalPlannerROS:
  acc_lim_theta: 0.5
 
  # ********************** Carlike robot parameters ********************
- min_turning_radius: 0.17        # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
- wheelbase: 0.64               # Wheelbase of our robot
+ min_turning_radius: 0.5        # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
+ wheelbase: 0.4                 # Wheelbase of our robot
  cmd_angle_instead_rotvel: True # stage simulator takes the angle instead of the rotvel as input (twist message)
  # ********************************************************************
 
  footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
-   type: "polygon"
+   type: "line"
    radius: 0.2 # for type "circular"
    line_start: [0.0, 0.0] # for type "line"
    line_end: [0.4, 0.0] # for type "line"
@@ -41,7 +42,7 @@ TebLocalPlannerROS:
    front_radius: 0.2 # for type "two_circles"
    rear_offset: 0.2 # for type "two_circles"
    rear_radius: 0.2 # for type "two_circles"
-   vertices: [ [0.32, 0.26], [0.32, -0.26], [-0.32, -0.26], [-0.32, 0.26] ] # for type "polygon"
+   vertices: [ [0.25, -0.05], [0.18, -0.05], [0.18, -0.18], [-0.19, -0.18], [-0.25, 0], [-0.19, 0.18], [0.18, 0.18], [0.18, 0.05], [0.25, 0.05] ] # for type "polygon"
 
  # GoalTolerance
     

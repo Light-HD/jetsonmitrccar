@@ -11,6 +11,9 @@ from fourwd.builder.robots import Hummerscaled
 from fourwd.builder.sensors.CustomBattery import Custombattery
 import math
 
+#Set Sensor Frequency
+sense_freq = 100
+
 robot = Hummerscaled()
 robot.add_default_interface('ros')
 scale = 0.2
@@ -21,10 +24,16 @@ robot.scale = [scale, scale, scale]
 
 # This is the wheel odometry tf
 wheel_odom = Velocity()
+# wheel_odom.frequency(sense_freq)
 wheel_odom.add_stream('ros', frame_id="wheel_odom", topic="wheel_odom") #child_frame_id='base_link')
-# odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
 wheel_odom.translate(0.0, 0.0, 0.0)
 wheel_odom.rotate(0.0, 0.0, 0)
+odom = Odometry()
+# odom.frequency(sense_freq)
+odom.add_stream('ros', frame_id="odom", topic="odometry/filtered", child_frame_id='base_link') #child_frame_id='base_link')
+odom.translate(0.0, 0.0, 0.0)
+odom.rotate(0.0, 0.0, 0)
+# odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
 
 # IMU sensor located inside the camera
 imu = IMU()
@@ -40,10 +49,11 @@ pose.add_stream('ros', frame_id="map", topic='pose')
 
 # Laser scanner for 360 degree
 laser_scanner = Hokuyo()
+# laser_scanner.frequency(sense_freq)
 laser_scanner.name = "laser_scan"
 laser_scanner.add_stream('ros', frame_id="laser", topic="scan")
 laser_scanner.translate(0.0, 0.0, 1.6)
-laser_scanner.properties(resolution=1.0) #0.5 before
+laser_scanner.properties(resolution=0.5) #0.5 before
 laser_scanner.properties(laser_range=25.0)
 laser_scanner.properties(scan_window=360)
 laser_scanner.properties(Visible_arc=False)
@@ -98,6 +108,7 @@ robot.append(laser_scanner)
 # robot.append(motion)
 robot.append(steerforce)
 robot.append(wheel_odom)
+robot.append(odom)
 robot.append(rgba_camera)
 robot.append(kinect)
 robot.append(pose)
@@ -129,5 +140,6 @@ env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
 env.properties(latitude=1.53, longitude=45.1, altitude=0.0)
 env.set_viewport(viewport_shade='TEXTURED', clip_end=1000)
+env.use_internal_syncer()
 env.show_framerate(True)
 env.add_stream('ros')

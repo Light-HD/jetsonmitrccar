@@ -30,7 +30,7 @@ This file configures hector slam to be used with Hokuyo UST-20LX (real or simula
     <param name="scan_topic" value="$(arg scan_topic_name)"/>
 
     <param name="laser_min_dist" value="0.75"/>
-    <param name="laser_max_dist" value="20.0"/>
+    <param name="laser_max_dist" value="25.0"/>
     <param name="map_pub_period" value="1.0"/>
 
     <!-- Map size / start point -->
@@ -43,8 +43,8 @@ This file configures hector slam to be used with Hokuyo UST-20LX (real or simula
     <!-- Map update parameters -->
     <param name="update_factor_free" value="0.4"/>
     <param name="update_factor_occupied" value="0.9" />
-    <param name="map_update_distance_thresh" value="0.05"/>
-    <param name="map_update_angle_thresh" value="0.06" />
+    <param name="map_update_distance_thresh" value="0.1"/>
+    <param name="map_update_angle_thresh" value="0.1" />
     <param name="laser_z_min_value" value = "-0.5" />
     <param name="laser_z_max_value" value = "0.5" />
 
