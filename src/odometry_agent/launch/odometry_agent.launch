@@ -52,7 +52,7 @@
   </group>
 
   <!-- Start robot localisation EKF node -->
-  <!-- <include file="$(find odometry_agent)/launch/ekf_template.launch"/> -->
+  <include file="$(find odometry_agent)/launch/ekf_template.launch"/>
 
   <!-- Nodes Started -->
 </launch>
