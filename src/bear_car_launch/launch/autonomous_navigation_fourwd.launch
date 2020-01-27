@@ -4,6 +4,17 @@
   <!-- Launch file for setting up everything for a complete autonomous navigation based on
        odometry (wheel,laser,imu) and move_base navigation stack-->
 
+  <!--False for "six_wheel" or True for "four_wheel"  -->
+  <arg name="is_four_wd" default="true"  />
+
+  <!-- True if running simulation, not the real car -->
+  <arg name="is_simulation" default="false" />
+
+  <!-- Select Odometry to Enable -->
+  <arg name="wheel_odometry" default="false"  />
+  <arg name="imu_odometry" default="false"  />
+  <arg name="laser_scanner_odometry" default="false"  />
+
   <!-- Node for interfacing the VESC controller-->
   <include file="$(find vesc_driver)/launch/vesc_driver_node.launch">
   </include>
@@ -16,13 +27,17 @@
   <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
   </include>
 
-  <!-- Odometry fusion, this launch file is also starting the sensors such as RealSense and Lidar-->
-  <include file="$(find odometry_agent)/launch/odometry_agent.launch">
-    <arg name="is_four_wd" value="true"/>
-  </include>
+  <!-- Servo Initialization  -->
+  <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
+  
 
-  <!--Global and Local Planner-->
-  <include file="$(find pose_follower)/launch/navigation_stack_fourwd.launch">
+  <!-- Odometry Agent & MoveBase/Locomotor-->
+  <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
+    <arg name="is_simulation" value="$(arg is_simulation)" />
+    <arg name="is_four_wd" value="$(arg is_four_wd)" />
+    <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
+    <arg name="imu_odometry" value="$(arg imu_odometry)" />
+    <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
   </include>
 
 </launch>
