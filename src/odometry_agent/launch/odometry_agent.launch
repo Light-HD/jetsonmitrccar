@@ -10,7 +10,7 @@
   <arg name="is_four_wd" default="true"  />
 
   <!-- True if running simulation, not the real car -->
-  <arg name="is_simulation" default="false" />
+  <arg name="is_simulation" default="true" />
 
   <!-- Which odometry inputs will you use toggle true if you will use  -->
   <!-- These flags determines which sensor drivers to start  -->
@@ -24,10 +24,9 @@
   <!-- END OF CONFIGURATIONS -->
   <!-- ///////////////////// -->
 
-  <!-- Starting Nodes -->
+  <!-- Starting Sensor & Odom Nodes -->
 
-  <!-- <include file="$(find odometry_agent)/launch/ekf_template.launch"/> -->
-
+  <!-- Enable Wheel Odometry -->
   <group if="$(arg wheel_odometry)">
     <group if="$(arg is_four_wd)">
       <group unless="$(arg is_simulation)">
@@ -36,43 +35,24 @@
     </group>
   </group>
 
+  <!-- Enable filtered IMU -->
   <group if="$(arg imu_odometry)">
     <group unless="$(arg is_simulation)">
-      <include file="$(find bear_car_launch)/launch/rs_imu.launch"/>
+      <include file="$(find bear_car_launch)/launch/hardware/rs_imu.launch"/>
     </group>
   </group>
 
+  <!-- Enable laser Odometry -->
   <group if="$(arg laser_scanner_odometry)">
     <group unless="$(arg is_simulation)">
-      <include file="$(find bear_car_launch)/launch/rplidar_a3.launch"/>
+      <include file="$(find bear_car_launch)/launch/hardware/rplidar_a3.launch"/>
     </group>
 
     <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
   </group>
 
+  <!-- Start robot localisation EKF node -->
+  <!-- <include file="$(find odometry_agent)/launch/ekf_template.launch"/> -->
+
   <!-- Nodes Started -->
-
-  <!-- Publish Transforms -->
-
-  <group if="$(arg is_four_wd)">
-    <group unless="$(arg is_simulation)">
-      <include file="$(find odometry_agent)/launch/four_wheel_transforms.launch"/>
-    </group>
-  </group>
-
-  <group unless="$(arg is_four_wd)">
-    <group unless="$(arg is_simulation)">
-      <include file="$(find odometry_agent)/launch/six_wheel_transforms.launch"/>
-    </group>
-  </group>
-
-  <group if="$(arg is_simulation)">
-    <include file="$(find odometry_agent)/launch/simulation_transforms.launch"/>
-  </group>
-
-  <group unless="$(arg is_simulation)">
-    <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
-  </group>
-
-  <!-- Transforms Published -->
 </launch>

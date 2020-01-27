@@ -1,8 +1,13 @@
 global_costmap:
   global_frame: map
   robot_base_frame: base_link
+  rolling_window: true
   update_frequency: 2.5
-  publish_frequency: 1
+  publish_frequency: 2
+  width: 1000
+  height: 1000
+  resolution: 0.1
+
  
   transform_tolerance: 0.5
   plugins:

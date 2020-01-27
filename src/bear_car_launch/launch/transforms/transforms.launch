@@ -1,0 +1,20 @@
+<launch>
+<!-- Publish Transforms -->
+  <!--False for "six_wheel" or True for "four_wheel"  -->
+  <arg name="is_four_wd" default="true"  />
+
+  <!-- True if running simulation, not the real car -->
+  <arg name="is_simulation" default="false" />
+
+  <group if="$(arg is_four_wd)">
+    <group unless="$(arg is_simulation)">
+      <include file="$(find bear_car_launch)/launch/transforms/four_wheel_transforms.launch" />
+    </group>
+  </group>
+
+  <group if="$(arg is_simulation)">
+    <include file="$(find bear_car_launch)/launch/transforms/simulation_transforms.launch" />
+  </group>
+
+</launch>
+  <!-- Transforms Published -->

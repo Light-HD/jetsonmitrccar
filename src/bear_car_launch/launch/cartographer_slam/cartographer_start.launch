@@ -1,0 +1,54 @@
+<!--
+  Copyright 2016 The Cartographer Authors
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<launch>
+  <node pkg="nodelet" type="nodelet" name="image_processing_manager"
+        args="manager" />
+  <node pkg="nodelet" type="nodelet" name="metricizer"
+        args="load depth_image_proc/convert_metric image_processing_manager">
+    <remap from="image_raw" to="/camera/depth/image_raw" />
+    <remap from="image" to="/image" />
+  </node>
+  <node pkg="nodelet" type="nodelet" name="rectifier"
+        args="load image_proc/rectify image_processing_manager">
+    <remap from="image_mono" to="/image" />
+    <remap from="camera_info" to="/camera/depth/camera_info" />
+    <remap from="image_rect" to="/image_rect" />
+  </node>
+  <node pkg="nodelet" type="nodelet" name="cloudifier"
+        args="load depth_image_proc/point_cloud_xyz image_processing_manager">
+    <remap from="camera_info" to="/camera/depth/camera_info" />
+    <remap from="image_rect" to="/image_rect" />
+    <remap from="points2" to="/points2" />
+  </node>
+
+
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory $(find bear_car_launch)/cfg/cartographer_slam
+          -configuration_basename bear_car_fullsensor.lua"
+      output="screen">
+
+  <!-- <remap from="imu" to="imu/data" />-->
+    <remap from="odom" to="/odometry/filtered" />
+    <remap from="scan" to="scan" />
+    <remap from="points2" to="points" />
+  </node>
+  
+  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+      type="cartographer_occupancy_grid_node" args="-resolution 0.025" />
+</launch>
