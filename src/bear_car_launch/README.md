@@ -2,14 +2,16 @@
 
 This package collects various system relevant launch files for both platform 6WD and 4WD.
 
+## hardware
+- Launches files for all sensors on the real car
+
+## transforms
+- Switches the static_transform publishers based on whether the setup is simulation or real car
 
 ## cartographer_slam launch
 - Loads "cfg/cartographer_slam/bear_car.lua" configuaration file
 - Launches cartographer_node
 - Launches image_pipeline to process camera depth input to PointCloud2
-
-## hardware
-- Launches files for all sensors on the real car
 
 ## hector_slam
 - Loads the "hector_configuaration" file as an input for hector_slam
@@ -27,9 +29,6 @@ This package collects various system relevant launch files for both platform 6WD
    			- RS_band planner
    			- DWA_Planner
 
-## transforms
-- Switches the static_transform publishers based on whether the setup is simulation or real car
-
 ## odom_navigation_start
 - Launches odometry_agent
 	- If simulation = True,
@@ -45,7 +44,7 @@ This package collects various system relevant launch files for both platform 6WD
 To run full stack in simulation-
 	- `roslaunch bear_car_launch odom_navigation_start.launch`
 
-##Autonomous Navigation (real car)
+## Autonomous Navigation (real car)
 - Launches vesc and lowlevel controllers
 - Launches odom_navigation_start with fourwd configuration
 
