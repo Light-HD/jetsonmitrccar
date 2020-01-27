@@ -68,8 +68,32 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * vesc(custom submodule): VESC interface for ROS and odometry
     
-    * Cartographer: Alternate SLAM package
-                    To run cartographer: roslaunch cartographer_ros bearcar.launch
+    ** New additional Packages
+
+        * cartographer - SLAM package from Google
+
+        * cartographer_ros - SLAM package ros interface
+
+        * ceres-solver - Solver used by cartographer for optimisation
+
+        * eband_local_planner - Local planner plugin for move_base
+
+        * multi_goal - way point generator for race_track
+
+        * navigation - classic navigation stack with move_base
+
+        * navigation_experimental - Contains SBPL local planner as plugin for move_base
+
+        * ompl - Dependency package to run eband and RS_band planners
+
+        * robot_navigation - Navigation stack with Locomotor
+
+        * rsband_local_planner - Local planner plugin for move_base
+
+        * steerforce_conv - custom package for conversion of linear and angular velocity commands to steer_force and steer_angle (only for simulation)
+
+        * teb_local_planner - Local planner plugin for move_base
+
 
 ## Clone and Build
 
@@ -119,7 +143,22 @@ but you can first try without due to the reason that above command automatically
 #### Build
 
 ```bash
-catkin_make
+catkin build
+```
+NOTE: catkin_make does not support cartographer. Please make sure to install catkin tools and remove the devel and build folder before compiling.
+NOTE: steer_force converter uses a simple pid library in python. Make sure you install the library suited for python 2.7.
+
+To install Simple_pid:
+```bash
+pip install simple-pid
+```
+To install catkin_tools:
+```bash
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
+wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+
+sudo apt-get update
+sudo apt-get install python-catkin-tools
 ```
 
 Note that the build is also tested in Ubuntu 16.04 with ROS Kinetic version. This is majorly to run simulation environments; however, it is recommended to use Ubuntu 18 with ROS Melodic. To build in ROS Kinetic:

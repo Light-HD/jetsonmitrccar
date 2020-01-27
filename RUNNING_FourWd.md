@@ -27,6 +27,19 @@ You can run the entire autonomous navigation stack with
 
 For a way to give an autonomous driving goal, please refer to the Visualization title below.
 
+#### Running Autonomous Navigation (simulation)
+
+- To run everything at once use the bash script
+	- source the devel folder and run:
+		`bash run_all`
+- To run manually
+	- `roslaunch bear_car_launch odom_navigation_start.launch`
+- To visualise
+	- `rosrun rviz rviz -d `rospack find bear_car_launch`/rviz_cfg/rviz_navigation_cc.rviz`
+
+To enable diffrent functionalities and further details please refer `bear_car_launch` readme files.
+
+
 #### Running Autonomous Navigation Step-by-Step (Real Car)
 
 If you only want to follow the process manually, please follow commands below.
