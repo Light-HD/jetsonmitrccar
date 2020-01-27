@@ -1,6 +1,6 @@
 # bear_car_launch
 
-This package collects various system relevant launch files for both platform 6WD and 4WD.
+This package collects various system relevant launch files, configuration files and static maps for platfor 4WD.
 
 ## hardware
 - Launches files for all sensors on the real car
