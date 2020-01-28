@@ -65,3 +65,9 @@
 [submodule "src/cartographer_ros"]
 	path = src/cartographer_ros
 	url = https://github.com/googlecartographer/cartographer_ros.git
+[submodule "src/ros_controllers"]
+	path = src/ros_controllers
+	url = https://github.com/ros-controls/ros_controllers.git
+[submodule "src/low_level_controllers"]
+	path = src/low_level_controllers
+	url = https://gitlab-edu.aot.tu-berlin.de/app_ras/low_level_controllers.git
