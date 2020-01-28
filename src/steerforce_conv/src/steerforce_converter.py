@@ -2,6 +2,7 @@
 
 import rospy
 from geometry_msgs.msg import *
+from ackermann_msgs.msg import *
 from simple_pid import PID
 import math
     
@@ -23,6 +24,13 @@ def wheel_odom_callback(msg):
         rospy.loginfo("Received a /odom message! V(x),V(y): [%f, %f] Theta(z):[%f]"%(msg.twist.linear.x, msg.twist.linear.y, msg.twist.angular.z))
     fbk = msg
     
+#Fetch ackerman steerangle    
+def ackermann_callback(msg):
+    global ang
+    if DEBUG:
+        rospy.loginfo("Received a /ros_control angle message! Theta(z):[%f]"%(msg.steering_angle))
+    ang = msg.steering_angle
+
 #Main PID loop to calculate equivalent force and heading from cmd_vel msgs
 def pidloop(ref, fbk):
     
@@ -32,7 +40,12 @@ def pidloop(ref, fbk):
         heading = 0
     else: 
         heading = math.atan2(wheel_base * ref.angular.z, ref.linear.x)
-    heading = max(min(heading, rospy.get_param("/steerforce_converter/max_steer_ang")), -rospy.get_param("/steerforce_converter/max_steer_ang"))
+    if(not ros_control):
+        # rospy.loginfo("Ros_control not running")
+        heading = max(min(heading, rospy.get_param("/steerforce_converter/max_steer_ang")), -rospy.get_param("/steerforce_converter/max_steer_ang"))
+    else:
+        heading = ang
+
     if DEBUG:
         rospy.loginfo("Ref: Theta [%f] Calculated Heading:[%f]"%(ref.angular.z,heading))
     
@@ -50,7 +63,9 @@ def pidloop(ref, fbk):
 def listener():
     rospy.init_node('steerforce_converter')
     rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
-    rospy.Subscriber("/wheel_odom", TwistStamped, wheel_odom_callback)  
+    rospy.Subscriber("/wheel_odom", TwistStamped, wheel_odom_callback)
+    if(ros_control):
+        rospy.Subscriber("/ackermann_cmd", AckermannDrive, ackermann_callback)
     rate = rospy.Rate(2000)
     while not rospy.is_shutdown():
        # rospy.loginfo("PID_Called")
@@ -60,10 +75,12 @@ def listener():
         rate.sleep()
 
 if __name__ == '__main__':
-    global ref, fbk
+    global ref, fbk, ang
     pid_gains = rospy.get_param("/steerforce_converter/pid_gains")
+    ros_control =rospy.get_param("/steerforce_converter/ros_control")
     ref = Twist()
     fbk = TwistStamped()
+    ang = float()
     pid = PID(pid_gains['kp'], pid_gains['ki'], pid_gains['kd'], setpoint = ref.linear.x)
     pid.sample_time = 0.001
     pid.output_limits = (-3, 3)
