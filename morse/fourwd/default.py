@@ -33,7 +33,7 @@ wheel_odom.rotate(0.0, 0.0, 0)
 # odom.add_stream('ros', frame_id="odom", topic="odometry/filtered", child_frame_id='base_link') #child_frame_id='base_link')
 # odom.translate(0.0, 0.0, 0.0)
 # odom.rotate(0.0, 0.0, 0)
-# # odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
+# odom.alter('Noise', pos_std = 0.1, rot_std = math.radians(5))
 
 # IMU sensor located inside the camera
 imu = IMU()

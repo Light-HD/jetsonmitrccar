@@ -26,13 +26,13 @@ def wheel_odom_callback(msg):
     
 #Fetch ackerman steerangle    
 def ackermann_callback(msg):
-    global ang
+    global ackmn
     if DEBUG:
         rospy.loginfo("Received a /ros_control angle message! Theta(z):[%f]"%(msg.steering_angle))
-    ang = msg.steering_angle
+    ackmn = msg
 
 #Main PID loop to calculate equivalent force and heading from cmd_vel msgs
-def pidloop(ref, fbk):
+def pidloop():
     
     #Calculate Steering angle 
     wheel_base = rospy.get_param("/steerforce_converter/wheel_base") 
@@ -42,15 +42,22 @@ def pidloop(ref, fbk):
         heading = math.atan2(wheel_base * ref.angular.z, ref.linear.x)
     if(not ros_control):
         # rospy.loginfo("Ros_control not running")
+        #calculate heading
         heading = max(min(heading, rospy.get_param("/steerforce_converter/max_steer_ang")), -rospy.get_param("/steerforce_converter/max_steer_ang"))
+
+        #calculate linear force
+        lin_force = pid(fbk.twist.linear.x)
+
     else:
-        heading = ang
+        heading = ackmn.steering_angle
+        lin_force = pid(ackmn.speed)
+
 
     if DEBUG:
         rospy.loginfo("Ref: Theta [%f] Calculated Heading:[%f]"%(ref.angular.z,heading))
     
     #Calculate Linear Force
-    lin_force = pid(fbk.twist.linear.x)
+    
     if DEBUG:
         rospy.loginfo("Feedback: Vel [%f] Control Force:[%f]"%(fbk.twist.linear.x,lin_force))
 
@@ -62,25 +69,26 @@ def pidloop(ref, fbk):
     
 def listener():
     rospy.init_node('steerforce_converter')
-    rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
-    rospy.Subscriber("/wheel_odom", TwistStamped, wheel_odom_callback)
     if(ros_control):
         rospy.Subscriber("/ackermann_cmd", AckermannDrive, ackermann_callback)
+    else:
+        rospy.Subscriber("/cmd_vel", Twist, cmd_vel_callback)
+        rospy.Subscriber("/wheel_odom", TwistStamped, wheel_odom_callback)
     rate = rospy.Rate(2000)
     while not rospy.is_shutdown():
        # rospy.loginfo("PID_Called")
         if DEBUG:
             rospy.loginfo("Received a ref message! V(x),V(y): [%f, %f] Theta(z):[%f]"%(ref.linear.x, ref.linear.y, ref.angular.z))
-        pidloop(ref,fbk)
+        pidloop()
         rate.sleep()
 
 if __name__ == '__main__':
-    global ref, fbk, ang
+    global ref, fbk, ackmn
     pid_gains = rospy.get_param("/steerforce_converter/pid_gains")
     ros_control =rospy.get_param("/steerforce_converter/ros_control")
     ref = Twist()
     fbk = TwistStamped()
-    ang = float()
+    ackmn = AckermannDrive()
     pid = PID(pid_gains['kp'], pid_gains['ki'], pid_gains['kd'], setpoint = ref.linear.x)
     pid.sample_time = 0.001
     pid.output_limits = (-3, 3)
