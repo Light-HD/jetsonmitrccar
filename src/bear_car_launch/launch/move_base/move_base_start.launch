@@ -12,19 +12,24 @@
     <rosparam file="$(find bear_car_launch)/cfg/move_base/global_costmap_params.yaml" command="load" />
 
     <!-- Select Global Planner -->
-  <!--   <param name="base_global_planner" value="SBPLLatticePlanner" />
-    <param name="SBPLLatticePlanner/primitive_filename" value="$(find sbpl_lattice_planner)/matlab/mprim/unicycle_noturninplace.mprim" />
- -->  
+   <!--  <param name="base_global_planner" value="SBPLLatticePlanner" />
+    <param name="SBPLLatticePlanner/primitive_filename" value="$(find sbpl_lattice_planner)/matlab/mprim/unicycle_noturninplace.mprim" /> -->
+
+
+    <rosparam file="$(find bear_car_launch)/cfg/move_base/NavFnRos_GlobalPlanner.yaml" command="load" />
+  
     <!-- Select Local Planner -->
     <!-- <param name="base_local_planner" value="eband_local_planner/EBandPlannerROS" /> -->
 
     <!-- <param name="base_local_planner" value="rsband_local_planner/RSBandPlannerROS" /> -->
 
-    <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />     -->
-      
-    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />   
-    <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" />   
-     
+    <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />   -->  
+
+<!--     <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />   
+    <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" /> -->   
+    
+      <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
+      <rosparam file="$(find bear_car_launch)/cfg/move_base/TrajectoryRollout_params.yaml" command="load" />
       <!-- Remap topics -->
     <remap from="odom" to="/odometry/filtered" />
     <remap from="goal" to="/move_base_simple/goal" />

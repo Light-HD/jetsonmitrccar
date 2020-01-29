@@ -1,0 +1,5 @@
+TrajectoryPlannerROS:
+
+# Goal Tolerance Parameters
+ yaw_goal_tolerance: 0.05
+ xy_goal_tolerance: 0.1

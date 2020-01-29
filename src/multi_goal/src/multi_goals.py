@@ -39,7 +39,7 @@ class MultiGoals:
         self.goalMsg.pose.orientation.z = 0.0
         self.goalMsg.pose.orientation.w = 1.0
         # Publish the first goal
-        time.sleep(1)
+        time.sleep(10)
         self.goalMsg.header.stamp = rospy.Time.now()
         self.goalMsg.pose.position.x = self.goalListX[self.goalId]
         self.goalMsg.pose.position.y = self.goalListY[self.goalId]

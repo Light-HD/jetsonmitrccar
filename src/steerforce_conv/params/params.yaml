@@ -1,5 +1,5 @@
-pid_gains: { kp: 30, ki: 0, kd: 0 }
+pid_gains: { kp: 0.45, ki: 0.0, kd: 0.3 }
 wheel_base: 0.64
 max_steer_ang: 1.309
-ros_control: true
+ros_control: True
 
