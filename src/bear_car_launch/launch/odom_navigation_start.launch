@@ -13,6 +13,9 @@
   <!-- True if running simulation, not the real car -->
   <arg name="is_simulation" default="true" />
 
+  <!-- Use ROS_control on simulation -->
+  <arg name="use_ros_control" default="true" />
+
   <!-- Select Odometry to Enable -->
   <arg name="wheel_odometry" default="false"  />
   <arg name="imu_odometry" default="false"  />
@@ -34,6 +37,7 @@
   <group if="$(arg is_four_wd)">
     <group if="$(arg is_simulation)">
       <include file="$(find steerforce_conv)/launch/steerforce_converter.launch"/>
+        <param name="use_ros_control" value="$(arg use_ros_control)"  />
     </group>
   </group>
 
@@ -58,14 +62,11 @@
 
   <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" />  
   <!-- <include file="$(find bear_car_launch)/launch/locomotor/locomotor_start.launch" /> -->
-
-  <!-- Ros_control-->
-  <include file="$(find low_level_controllers)/launch/fourwd_robot.launch">
-  </include>
+ <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
 
 
 <!-- Multi-Goal    -->
-  <include file="$(find multi_goal)/launch/multi_goal.launch" />
+  <!-- <include file="$(find multi_goal)/launch/multi_goal.launch" /> -->
     
 </launch>
 

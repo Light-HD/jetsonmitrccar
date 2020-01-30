@@ -8,16 +8,25 @@
   <arg name="is_four_wd" default="true"  />
 
   <!-- True if running simulation, not the real car -->
-  <arg name="is_simulation" default="false" />
+  <arg name="is_simulation" default="true" />
 
+  <!-- Use ROS_control on simulation -->
+  <arg name="use_ros_control" default="true" />
+  
   <!-- Select Odometry to Enable -->
   <arg name="wheel_odometry" default="false"  />
   <arg name="imu_odometry" default="false"  />
   <arg name="laser_scanner_odometry" default="false"  />
 
   <!-- Node for interfacing the VESC controller-->
-  <include file="$(find vesc_driver)/launch/vesc_driver_node.launch">
-  </include>
+  <group if="$(arg is_four_wd)">
+    <group unless="$(arg is_simulation)">
+        <include file="$(find vesc_driver)/launch/vesc_driver_node.launch" />
+
+        <!-- Servo Initialization  -->
+        <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
+    </group>
+  </group>
 
   <!-- Low level linear speed controller-->
 <!--   <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
@@ -27,13 +36,19 @@
 <!--   <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
   </include> -->
 
-  <!-- Ros_control-->
-  <include file="$(find low_level_controllers)/launch/fourwd_robot.launch">
-  </include>
+  <!-- ROS_control-->
+  <!-- <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" /> -->
 
+  <group if="$(arg is_simulation)">
+    <group if="$(arg use_ros_control)">
+        <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
+    </group>
+  </group>
 
-  <!-- Servo Initialization  -->
-  <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
+  <group unless="$(arg is_simulation)">
+    <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
+  </group>
+  
   
 
   <!-- Odometry Agent & MoveBase/Locomotor-->
@@ -43,6 +58,7 @@
     <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
     <arg name="imu_odometry" value="$(arg imu_odometry)" />
     <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
+    <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
 
 </launch>
