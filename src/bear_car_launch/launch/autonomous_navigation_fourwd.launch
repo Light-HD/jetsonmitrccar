@@ -23,6 +23,11 @@
     <group unless="$(arg is_simulation)">
         <include file="$(find vesc_driver)/launch/vesc_driver_node.launch" />
 
+    <group if="$(arg is_four_wd)">
+    <group unless="$(arg is_simulation)">
+        <include file="$(find vesc_ackermann)/launch/ackermann_to_vesc.launch" />
+          <rosparam file="$(find vesc_ackermann)/param/vesc_params.yaml" command="load" />
+
         <!-- Servo Initialization  -->
         <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
     </group>
