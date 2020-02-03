@@ -47,18 +47,9 @@
 [submodule "src/navigation"]
 	path = src/navigation
 	url = https://github.com/ros-planning/navigation.git
-[submodule "src/rsband_local_planner"]
-	path = src/rsband_local_planner
-	url = https://github.com/gkouros/rsband_local_planner.git
-[submodule "src/ompl"]
-	path = src/ompl
-	url = https://github.com/ompl/ompl.git
 [submodule "src/teb_local_planner"]
 	path = src/teb_local_planner
 	url = https://github.com/rst-tu-dortmund/teb_local_planner.git
-[submodule "src/eband_local_planner"]
-	path = src/eband_local_planner
-	url = https://github.com/mintar/eband_local_planner.git
 [submodule "src/navigation_experimental"]
 	path = src/navigation_experimental
 	url = https://github.com/jiyojolly/navigation_experimental.git
