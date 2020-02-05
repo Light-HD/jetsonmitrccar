@@ -10,5 +10,5 @@ class AckermannROS(ROSSubscriber):
 
     def update(self, message):
         # logger.info("Message Received: %s" % message.angular.z)
-        self.data["force"] =   message.linear.x
+        self.data["force"] =  - message.linear.x
         self.data["steer"] =   message.angular.z

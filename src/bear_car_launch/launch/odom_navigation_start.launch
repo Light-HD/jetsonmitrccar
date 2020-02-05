@@ -62,6 +62,10 @@
 
   <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" />  
   <!-- <include file="$(find bear_car_launch)/launch/locomotor/locomotor_start.launch" /> -->
+
+
+  <!-- multigoal loading -->
+   <include file="$(find multi_goal)/launch/multi_goal.launch" /> 
     
 </launch>
 
