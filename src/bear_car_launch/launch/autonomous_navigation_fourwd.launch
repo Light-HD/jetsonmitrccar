@@ -36,7 +36,7 @@
 
   <!-- use new ros control framework -->
 
-    <group if="$(arg is_simulation)">
+  <group if="$(arg is_simulation)">
     <group if="$(arg use_ros_control)">
         <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
     </group>
