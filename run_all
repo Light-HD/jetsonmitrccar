@@ -1,3 +1,3 @@
 source devel/setup.bash
-bash parallel "roslaunch bear_car_launch odom_navigation_start.launch" "morse run fourwd" "rqt" "rosrun rviz rviz -d `rospack find bear_car_launch`/rviz_cfg/rviz_navigation_cc.rviz"
+bash parallel "roslaunch bear_car_launch autonomous_navigation_fourwd_sim.launch" "morse run fourwd" "rqt" "rosrun rviz rviz -d `rospack find bear_car_launch`/rviz_cfg/rviz_navigation_cc.rviz"
 

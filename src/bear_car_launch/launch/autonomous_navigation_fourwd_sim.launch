@@ -8,7 +8,7 @@
   <arg name="is_four_wd" default="true"  />
 
   <!-- True if running simulation, not the real car -->
-  <arg name="is_simulation" default="false" />
+  <arg name="is_simulation" default="true" />
 
   <!-- Use ROS_control on simulation -->
   <arg name="use_ros_control" default="false" />
@@ -18,25 +18,19 @@
   <arg name="imu_odometry" default="false"  />
   <arg name="laser_scanner_odometry" default="false"  />
 
-  <!-- Node for interfacing the VESC controller-->
 
-  <group if="$(arg is_four_wd)">
-    <group unless="$(arg is_simulation)">
-      <include file="$(find vesc_driver)/launch/vesc_driver_node.launch" />
+  <!-- Low level linear speed controller-->
+<!--   <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
+  </include> -->
 
-        <!-- Servo Initialization  -->
-      <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
+  <!-- Low level steering controller-->
+<!--   <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
+  </include> -->
 
-        <group if="$(arg use_ros_control)">
-          <include file="$(find vesc_ackermann)/launch/ackermann_to_vesc.launch" />
-            <rosparam file="$(find vesc_ackermann)/param/vesc_params.yaml" command="load" />
-        </group>
-    </group>
-  </group>
+  <!-- ROS_control-->
+  <!-- <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" /> -->
 
-  <!-- use new ros control framework -->
-
-    <group if="$(arg is_simulation)">
+  <group if="$(arg is_simulation)">
     <group if="$(arg use_ros_control)">
         <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
     </group>
@@ -45,24 +39,6 @@
   <group unless="$(arg is_simulation)">
     <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
   </group>
-
-<!-- Use legacy low level controllers -->
-
-  <group unless ="$(arg is_simulation)">
-    <group unless ="$(arg use_ros_control)">
-      
-    <!-- Low level linear speed controller-->
-      <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
-      </include>
-
-    <!-- Low level steering controller-->
-      <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
-      </include>
-    </group>
-  </group>
-
-
-
   
   
 
