@@ -135,7 +135,7 @@ yoff = 0.0 * math.cos(angle) +  0.75 * math.sin(angle)
 charging_zone.translate(tray_x + xoff, tray_y + yoff, 0.0)
 
 # set 'fastmode' to True to switch to wireframe mode
-env = Environment('fourwd/environments/test_last_wall_.blend',fastmode = False)
+env = Environment('fourwd/environments/CleanEnv.blend',fastmode = False)
 env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
 env.properties(latitude=1.53, longitude=45.1, altitude=0.0)
