@@ -54,13 +54,13 @@
     <!-- <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" />   -->
   
   <!-- Use Static Map -->
-<!--     <arg name="map_file" value="$(find bear_car_launch)/static_maps/track_no_obs.yaml" /> 
-    <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" /> -->
+    <arg name="map_file" value="$(find bear_car_launch)/static_maps/track_no_obs.yaml" /> 
+    <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" />
 
 <!-- Load move_base or locomotor -->
   <!-- <param name="/use_sim_time" value="false"/> -->
 
-  <!-- <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" />   -->
+  <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" />  
   <!-- <include file="$(find bear_car_launch)/launch/locomotor/locomotor_start.launch" /> -->
 
 

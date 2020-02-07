@@ -11,24 +11,14 @@
   <arg name="is_simulation" default="true" />
 
   <!-- Use ROS_control on simulation -->
-  <arg name="use_ros_control" default="true" />
+  <arg name="use_ros_control" default="false" />
   
   <!-- Select Odometry to Enable -->
   <arg name="wheel_odometry" default="false"  />
   <arg name="imu_odometry" default="false"  />
   <arg name="laser_scanner_odometry" default="false"  />
 
-
-  <!-- Low level linear speed controller-->
-<!--   <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
-  </include> -->
-
-  <!-- Low level steering controller-->
-<!--   <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
-  </include> -->
-
   <!-- ROS_control-->
-  <!-- <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" /> -->
 
   <group if="$(arg is_simulation)">
     <group if="$(arg use_ros_control)">
