@@ -48,7 +48,12 @@
   <!-- Hector SLAM -->
 <!--     <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
         <arg name="scan_topic_name" value="scan"/>
-    </include> -->
+    </include>
+        <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+    args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom 10"/>
+    
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link"
+          args="0.0 0.0 0.0 0 0 0.0 /slam_base_footprint /slam_base_link 10" /> -->
 
   <!-- Cartographer SLAM  -->
     <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" />  
@@ -60,12 +65,16 @@
 <!-- Load move_base or locomotor -->
   <!-- <param name="/use_sim_time" value="false"/> -->
 
-  <!-- <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" />   -->
+  <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" />  
   <!-- <include file="$(find bear_car_launch)/launch/locomotor/locomotor_start.launch" /> -->
 
 
   <!-- multigoal loading -->
-   <include file="$(find multi_goal)/launch/multi_goal.launch" /> 
+   <!-- <include file="$(find multi_goal)/launch/multi_goal.launch" />  -->
+
+   <!--control using remote -->
+   <include file="$(find ackermann_rc)/launch/rc_driver_vesc.launch">
+  </include>
     
 </launch>
 

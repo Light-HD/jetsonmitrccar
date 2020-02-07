@@ -11,7 +11,7 @@
   <include file="$(find ackermann_rc)/launch/rc_driver_vesc.launch">
   </include>
    
-  <include file="$(find cartographer_ros)/cartographer_ros/launch/bearcar_fullsensor.launch"/>
+  <!-- <include file="$(find cartographer_ros)/cartographer_ros/launch/bearcar_fullsensor.launch"/> -->
 
 </launch>
 

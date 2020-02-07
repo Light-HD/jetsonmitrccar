@@ -8,7 +8,7 @@
   <arg name="is_four_wd" default="true"  />
 
   <!-- True if running simulation, not the real car -->
-  <arg name="is_simulation" default="true" />
+  <arg name="is_simulation" default="false" />
 
   <!-- Use ROS_control on simulation -->
   <arg name="use_ros_control" default="false" />
@@ -20,12 +20,12 @@
 
 
   <!-- Low level linear speed controller-->
-<!--   <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
-  </include> -->
+  <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
+  </include>
 
   <!-- Low level steering controller-->
-<!--   <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
-  </include> -->
+  <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
+  </include>
 
   <!-- ROS_control-->
   <!-- <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" /> -->
