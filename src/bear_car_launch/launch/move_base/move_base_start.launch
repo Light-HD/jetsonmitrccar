@@ -25,8 +25,8 @@
 
     <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />     -->
 
-    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />   
-    <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" />   
+    <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />    -->
+    <!-- <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" />    -->
     
 <!--       <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
       <rosparam file="$(find bear_car_launch)/cfg/move_base/TrajectoryRollout_params.yaml" command="load" /> -->

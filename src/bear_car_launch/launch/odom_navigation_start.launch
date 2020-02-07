@@ -71,10 +71,6 @@
 
   <!-- multigoal loading -->
    <!-- <include file="$(find multi_goal)/launch/multi_goal.launch" />  -->
-
-   <!--control using remote -->
-   <include file="$(find ackermann_rc)/launch/rc_driver_vesc.launch">
-  </include>
     
 </launch>
 

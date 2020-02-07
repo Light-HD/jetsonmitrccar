@@ -11,7 +11,7 @@
   <arg name="is_simulation" default="false" />
 
   <!-- Use ROS_control on simulation -->
-  <arg name="use_ros_control" default="false" />
+  <arg name="use_ros_control" default="true" />
   
   <!-- Select Odometry to Enable -->
   <arg name="wheel_odometry" default="false"  />
@@ -28,7 +28,7 @@
       <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
 
         <group if="$(arg use_ros_control)">
-          <include file="$(find vesc_ackermann)/launch/ackermann_to_vesc.launch" />
+          <include file="$(find vesc_ackermann)/launch/ackermann_to_vesc_node.launch" />
             <rosparam file="$(find vesc_ackermann)/param/vesc_params.yaml" command="load" />
         </group>
     </group>
@@ -61,11 +61,6 @@
     </group>
   </group>
 
-
-
-  
-  
-
   <!-- Odometry Agent & MoveBase/Locomotor-->
   <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
@@ -76,5 +71,9 @@
     <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
 
+   <!--control using remote -->
+   <!-- <include file="$(find ackermann_rc)/launch/rc_driver_vesc.launch">
+  </include>
+ -->
 </launch>
 
