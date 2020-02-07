@@ -31,7 +31,7 @@ def ackermann_callback(msg):
     if DEBUG:
         rospy.loginfo("Received a /ros_control angle message! Theta(z):[%f]"%(msg.drive.steering_angle))
     ackmn = msg
-    pid.setpoint = 2 * ackmn.drive.speed
+    pid.setpoint = ackmn.drive.speed
 
 #Main PID loop to calculate equivalent force and heading from cmd_vel msgs
 def pidloop():

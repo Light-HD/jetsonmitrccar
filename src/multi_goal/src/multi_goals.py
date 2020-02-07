@@ -19,15 +19,16 @@ import string
 import math
 import time
 import sys
-
+import numpy as np
 from std_msgs.msg import String
 from move_base_msgs.msg import MoveBaseActionResult
+from move_base_msgs.msg import MoveBaseActionFeedback
 from actionlib_msgs.msg import GoalStatusArray
 from geometry_msgs.msg import PoseStamped
 
 class MultiGoals:
     def __init__(self, goalListX, goalListY, retry, map_frame):
-        self.sub = rospy.Subscriber('move_base/result', MoveBaseActionResult, self.statusCB, queue_size=10)
+        self.sub = rospy.Subscriber('move_base/feedback', MoveBaseActionFeedback, self.statusCB, queue_size=10)
         self.pub = rospy.Publisher('move_base_simple/goal', PoseStamped, queue_size=10)   
         # params & variables
         self.goalListX = goalListX
@@ -48,7 +49,23 @@ class MultiGoals:
         self.goalId = self.goalId + 1 
 
     def statusCB(self, data):
-        if data.status.status == 3: # reached
+        # if data.status.status == 3: # reached
+        #     self.goalMsg.header.stamp = rospy.Time.now()                
+        #     self.goalMsg.pose.position.x = self.goalListX[self.goalId]
+        #     self.goalMsg.pose.position.y = self.goalListY[self.goalId]
+        #     self.pub.publish(self.goalMsg)  
+        #     rospy.loginfo("Initial goal published! Goal ID is: %d", self.goalId)              
+        #     if self.goalId < (len(self.goalListX)-1):
+        #         self.goalId = self.goalId + 1
+        #     else:
+        #         self.goalId = 0 
+
+        current_pos = np.array((data.feedback.base_position.pose.position.x, data.feedback.base_position.pose.position.y))
+        goal_pos = np.array((self.goalListX[self.goalId-1], self.goalListY[self.goalId-1]))
+        #rospy.loginfo("current goal is : [%f, %f]", goal_pos[0], goal_pos[1] )
+        #rospy.loginfo("current position is : [%f, %f]", current_pos[0], current_pos[1] )
+        #rospy.loginfo("current distance is: %f", np.linalg.norm(current_pos - goal_pos))
+        if(np.linalg.norm(current_pos - goal_pos) < tolerance):
             self.goalMsg.header.stamp = rospy.Time.now()                
             self.goalMsg.pose.position.x = self.goalListX[self.goalId]
             self.goalMsg.pose.position.y = self.goalListY[self.goalId]
@@ -58,7 +75,7 @@ class MultiGoals:
                 self.goalId = self.goalId + 1
             else:
                 self.goalId = 0 
-                
+            
 
 
 if __name__ == "__main__":
@@ -69,6 +86,7 @@ if __name__ == "__main__":
         # Get params
         goalListX = rospy.get_param('~goalListX', '[4.0, 3.0]')
         goalListY = rospy.get_param('~goalListY', '[0.0, 7.0]')
+        tolerance = rospy.get_param('~tolerance', '0.4')
         map_frame = rospy.get_param('~map_frame', 'map' )
         retry = rospy.get_param('~retry', '1') 
 
