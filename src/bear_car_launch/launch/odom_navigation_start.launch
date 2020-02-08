@@ -46,22 +46,21 @@
 <!-- Load SLAMs or Static Map -->
   
   <!-- Hector SLAM -->
-<!--     <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
+<!--       <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom"
+    args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom"/>
+ --><!--     <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
         <arg name="scan_topic_name" value="scan"/>
-    </include>
-        <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
-    args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom 10"/>
-    
-    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link"
-          args="0.0 0.0 0.0 0 0 0.0 /slam_base_footprint /slam_base_link 10" /> -->
+    </include> -->
 
   <!-- Cartographer SLAM  -->
     <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" />  
   
   <!-- Use Static Map -->
-<!--     <arg name="map_file" value="$(find bear_car_launch)/static_maps/track_no_obs.yaml" /> 
-    <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" /> -->
-
+<!--       <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom"
+    args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom"/>
+    <arg name="map_file" value="$(find bear_car_launch)/static_maps/track_no_obs.yaml" /> 
+    <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" />
+ -->
 <!-- Load move_base or locomotor -->
   <!-- <param name="/use_sim_time" value="false"/> -->
 
