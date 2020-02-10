@@ -12,7 +12,7 @@
     <rosparam file="$(find bear_car_launch)/cfg/move_base/global_costmap_params.yaml" command="load" />
 
     <!-- Select Global Planner -->
-<!--     <param name="base_global_planner" value="SBPLLatticePlanner" />
+    <!-- <param name="base_global_planner" value="SBPLLatticePlanner" />
     <param name="SBPLLatticePlanner/primitive_filename" value="$(find sbpl_lattice_planner)/matlab/mprim/unicycle_noturninplace.mprim" /> -->
 
 
@@ -25,10 +25,10 @@
 
     <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />     -->
 
-    <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />    -->
-    <!-- <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" />    -->
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />   
+    <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" />   
     
-  <!--     <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
+<!--       <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
       <rosparam file="$(find bear_car_launch)/cfg/move_base/TrajectoryRollout_params.yaml" command="load" /> -->
 
 <!--     <param name="base_local_planner" value="mpc_local_planner_mb/MPCLocalPlannerMBROS" />

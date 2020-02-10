@@ -1,7 +1,7 @@
 # Parameters for control loop
 debug_info: false
-delay_mode: true
-max_speed: 0.7 # unit: m/s
+delay_mode: false
+max_speed: 30 # unit: m/s
 goal_radius: 0.2 # unit: m
 controller_freq: 10
 vehicle_Lf: 0.25 # distance between the front of the vehicle and its center of gravity
@@ -11,7 +11,7 @@ vehicle_Lf: 0.25 # distance between the front of the vehicle and its center of g
 mpc_steps: 20.0
 mpc_ref_cte: 0.0
 mpc_ref_epsi: 0.0
-mpc_ref_vel: 0.5
+mpc_ref_vel: 3.5
 mpc_w_cte: 100.0
 mpc_w_epsi: 100.0
 mpc_w_vel: 100.0
@@ -20,6 +20,6 @@ mpc_w_accel: 50.0
 mpc_w_delta_d: 0.0
 mpc_w_accel_d: 0.0
 # mpc_max_steering: 0.523 # Maximal steering radian (~30 deg)
-mpc_max_steering: 1.5 # Maximal steering radian (~60 deg)
+mpc_max_steering: 1.309 # Maximal steering radian (~60 deg)
 mpc_max_throttle: 1.0 # Maximal throttle accel
 mpc_bound_value: 1.0e3 # Bound value for other variables
