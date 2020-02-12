@@ -1,0 +1,46 @@
+
+<launch>
+
+  <!-- Launch file for setting up everything for a complete autonomous navigation based on
+       odometry (wheel,laser,imu) and move_base navigation stack-->
+
+  <!--False for "six_wheel" or True for "four_wheel"  -->
+  <arg name="is_four_wd" default="true"  />
+
+  <!-- True if running simulation, not the real car -->
+  <arg name="is_simulation" default="true" />
+
+  <!-- Use ROS_control on simulation -->
+  <arg name="use_ros_control" default="true" />
+  
+  <!-- Select Odometry to Enable -->
+  <arg name="wheel_odometry" default="false"  />
+  <arg name="imu_odometry" default="false"  />
+  <arg name="laser_scanner_odometry" default="false"  />
+
+  <!-- ROS_control-->
+
+  <group if="$(arg is_simulation)">
+    <group if="$(arg use_ros_control)">
+        <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
+    </group>
+  </group>
+
+  <group unless="$(arg is_simulation)">
+    <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
+  </group>
+  
+  
+
+  <!-- Odometry Agent & MoveBase/Locomotor-->
+  <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
+    <arg name="is_simulation" value="$(arg is_simulation)" />
+    <arg name="is_four_wd" value="$(arg is_four_wd)" />
+    <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
+    <arg name="imu_odometry" value="$(arg imu_odometry)" />
+    <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
+    <arg name="use_ros_control" value="$(arg use_ros_control)" />
+  </include>
+
+</launch>
+

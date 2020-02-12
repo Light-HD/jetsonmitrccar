@@ -14,9 +14,9 @@
   <arg name="use_ros_control" default="true" />
   
   <!-- Select Odometry to Enable -->
-  <arg name="wheel_odometry" default="false"  />
-  <arg name="imu_odometry" default="false"  />
-  <arg name="laser_scanner_odometry" default="false"  />
+  <arg name="wheel_odometry" default="true"  />
+  <arg name="imu_odometry" default="true"  />
+  <arg name="laser_scanner_odometry" default="true"  />
 
   <!-- Node for interfacing the VESC controller-->
 
