@@ -62,3 +62,6 @@
 [submodule "src/low_level_controllers"]
 	path = src/low_level_controllers
 	url = https://gitlab-edu.aot.tu-berlin.de/app_ras/low_level_controllers.git
+[submodule "src/mpc_local_planner_mb"]
+	path = src/mpc_local_planner_mb
+	url = https://github.com/anoulis/mpc_local_planner_mb
