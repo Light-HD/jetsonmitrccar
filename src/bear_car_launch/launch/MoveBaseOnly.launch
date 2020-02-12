@@ -1,0 +1,25 @@
+ 
+<launch>
+  <!-- 
+  NOTE: You'll need to bring up something that publishes sensor data (see
+  rosstage), something that publishes a map (see map_server), and something to
+  visualize a costmap (see nav_view), to see things work.
+  Also, on a real robot, you'd want to set the "use_sim_time" parameter to false, or just not set it.
+  -->
+  <!-- True if running simulation, not the real car -->
+  <arg name="is_simulation" default="false" />
+
+    <!-- Cartographer SLAM  -->
+    <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" /> 
+      <param name="is_simulation" value="$(arg is_simulation)"  /> 
+
+  <include file="$(find bear_car_launch)/launch/move_base/move_base_start.launch" /> 
+      <param name="controller_frequency" value="100"  /> 
+  <!-- <include file="$(find bear_car_launch)/launch/locomotor/locomotor_start.launch" /> -->
+
+
+  <!-- multigoal loading -->
+   <!-- <include file="$(find multi_goal)/launch/multi_goal.launch" />  -->
+    
+</launch>
+
