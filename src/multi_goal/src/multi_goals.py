@@ -49,17 +49,7 @@ class MultiGoals:
         self.goalId = self.goalId + 1 
 
     def statusCB(self, data):
-        # if data.status.status == 3: # reached
-        #     self.goalMsg.header.stamp = rospy.Time.now()                
-        #     self.goalMsg.pose.position.x = self.goalListX[self.goalId]
-        #     self.goalMsg.pose.position.y = self.goalListY[self.goalId]
-        #     self.pub.publish(self.goalMsg)  
-        #     rospy.loginfo("Initial goal published! Goal ID is: %d", self.goalId)              
-        #     if self.goalId < (len(self.goalListX)-1):
-        #         self.goalId = self.goalId + 1
-        #     else:
-        #         self.goalId = 0 
-
+      
         current_pos = np.array((data.feedback.base_position.pose.position.x, data.feedback.base_position.pose.position.y))
         goal_pos = np.array((self.goalListX[self.goalId-1], self.goalListY[self.goalId-1]))
         #rospy.loginfo("current goal is : [%f, %f]", goal_pos[0], goal_pos[1] )

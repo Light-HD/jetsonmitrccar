@@ -32,7 +32,8 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * bear_car_launch: Collection of launch files that integrate most of the other packages here.
 
-    * gscam(3rd party submodule):  Broadcasting any GStreamer camera source as ROS image. It is used to interface the onboad camera of the Jetson TX2 dev-board (rear camera)
+    * gscam(3rd party submodule):  Broadcasting any GStreamer camera source as ROS image. It is used to interface the onboad camera of the Jetson TX2 
+                                   dev-board (rear camera)
 
     * hector_slam(3rd party submodule): 2D Lidar SLAM package that we use
 
@@ -46,7 +47,8 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
     * pid(3rd party submodule): General use PID package
 
-    * pose_follower: Adjusted local planner implementation also containing many relevant launch files for the initialization of the entire move_base based navigation stack.
+    * pose_follower: Adjusted local planner implementation also containing many relevant launch files for the initialization of the entire move_base based 
+                     navigation stack.
 
     * racecar(3rd party submodule): We are mostly reusing the contained achermann_cmd_mux package for interfacing VESC on the 4WD.
 
@@ -78,6 +80,10 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
         * eband_local_planner - Local planner plugin for move_base
 
+        * image_pipeline - various packages available to process the image inputs into required form.(we use this to convert depth input to PointCloud2)
+
+        * low_level_controllers - used to interface various ros_controllers plugins by writing a robot hardware interface    
+
         * multi_goal - way point generator for race_track
 
         * navigation - classic navigation stack with move_base
@@ -85,6 +91,9 @@ If you would like to run some of the packages on your PC, please refer to the Bu
         * navigation_experimental - Contains SBPL local planner as plugin for move_base
 
         * ompl - Dependency package to run eband and RS_band planners
+
+        * ros_controllers - Diffrent controller plugins to select from depending upon the type of joint or type of control desired. A hardware interface 
+                            should be written to interface these controllers
 
         * robot_navigation - Navigation stack with Locomotor
 
@@ -161,16 +170,11 @@ sudo apt-get update
 sudo apt-get install python-catkin-tools
 ```
 
-Note that the build is also tested in Ubuntu 16.04 with ROS Kinetic version. This is majorly to run simulation environments; however, it is recommended to use Ubuntu 18 with ROS Melodic. To build in ROS Kinetic:
-- checkout to kinetic-devel branch in *robot_localization* ros package (a submodule under /src folder)
-- do not build *pose_follower* package. `catkin_make -DCATKIN_BLACKLIST_PACKAGES="pose_follower"`
-
 ## Run
 
 For executing different software setups please refer to the linked platform specific Readmes.
 
-1. **[4WD platform](RUNNING_FourWd.md)**
-1. **[6WD platform](RUNNING_SixWD.md)**  
+1. **[4WD platform](RUNNING_FourWd.md)**  
 
 ### Architecture
 
@@ -194,26 +198,6 @@ In our platforms we are using following sensors
 
 - Camera: Front camera is the Intel D435i RGBD camera. Backcamera is the onboard MP CSI camera module on the Jetson TX2 dev-board (Omnivision OV5693)
 
-# Work in Progress
-
-## Open TODOs
-
-3. Readme low_level_steering_controller
-4. Readme morse_teleop
-5. Readme rc_msgs
-6. arduino has TODO in Readme (@Ege knows it better)
-7. jetsonTX2Power TODOS in Readme
-8. Morse basicspeed.py is missing code docu, currently mostly boilerplate docu.
-9. TODO add the end in all codes either document why codes are commented or remove commented code.
-10. TODO all packages require a README that explains what it is
-
-## Open Issues and improvement Ideas
-1. For VESC we applied Encoder that we can read it from VESC Firmware. To more accurate speed readings, it should also be implemented for ROS. Note that VESC only reads
- encoder as rotor position. Therefore, two steps are required. First, add position reading to VESC_Driver node. Secondly, Convert it into speed.
-2. Motor controller for six wheeled platform' motor controller node (serial_6w) needs a launch file to easily change parameters especially USB device name.
-3. 6WD encoder readings is not that reliable. For now we are using rf2o node for odometry. Wheel odometry data may be improved
-4. PID performances can be improved to see the interface please look interface section.
-5. Adding additional visual odometry to the cars.
 
 # FAQ
 
