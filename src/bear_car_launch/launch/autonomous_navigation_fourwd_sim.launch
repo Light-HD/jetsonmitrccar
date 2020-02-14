@@ -2,7 +2,7 @@
 <launch>
 
   <!-- Launch file for setting up everything for a complete autonomous navigation based on
-       odometry (wheel,laser,imu) and move_base navigation stack-->
+       odometry (wheel,laser,imu), SLAM & navigation stack-->
 
   <!--False for "six_wheel" or True for "four_wheel"  -->
   <arg name="is_four_wd" default="true"  />
@@ -14,12 +14,36 @@
   <arg name="use_ros_control" default="true" />
   
   <!-- Select Odometry to Enable -->
-  <arg name="wheel_odometry" default="false"  />
-  <arg name="imu_odometry" default="false"  />
-  <arg name="laser_scanner_odometry" default="false"  />
+  <arg name="wheel_odometry" default="true"  />
+  <arg name="imu_odometry" default="true"  />
+  <arg name="laser_scanner_odometry" default="true"  />
 
-  <!-- ROS_control-->
+  <!-- Node for interfacing the VESC controller-->
+  <group if="$(arg is_four_wd)">
+    <group unless="$(arg is_simulation)">
+      <include file="$(find vesc_driver)/launch/vesc_driver_node.launch" />
 
+        <!-- Servo Initialization  -->
+      <node pkg="rostopic" name="servo_init" type="rostopic" args=" pub /commands/servo/position std_msgs/Float64 'data: 0.45' -1 " />
+
+        <group if="$(arg use_ros_control)">
+          <include file="$(find vesc_ackermann)/launch/ackermann_to_vesc_node.launch" />
+            <rosparam file="$(find vesc_ackermann)/param/vesc_params.yaml" command="load" />
+        </group>
+    </group>
+  </group>
+
+  <!--  Sensors & Odometry Agent & -->
+  <include file="$(find bear_car_launch)/launch/odom_sensor_start.launch">
+    <arg name="is_simulation" value="$(arg is_simulation)" />
+    <arg name="is_four_wd" value="$(arg is_four_wd)" />
+    <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
+    <arg name="imu_odometry" value="$(arg imu_odometry)" />
+    <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
+    <arg name="use_ros_control" value="$(arg use_ros_control)" />
+  </include>
+
+  <!-- Use new ROS Control Low Level stack -->
   <group if="$(arg is_simulation)">
     <group if="$(arg use_ros_control)">
         <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
@@ -30,6 +54,23 @@
     <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
   </group>
 
+<!-- Use legacy low level controllers -->
+
+  <group unless ="$(arg is_simulation)">
+    <group unless ="$(arg use_ros_control)">
+      
+    <!-- Low level linear speed controller-->
+      <include file="$(find low_level_speed_controller)/launch/four_wd.launch">
+      </include>
+
+    <!-- Low level steering controller-->
+      <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
+        <arg name="use_ros_control" value="$(arg use_ros_control)" />
+      </include>
+    </group>
+  </group>
+
+  
   <!-- Launch Twist to Steerforce converter -->
   <group if="$(arg is_four_wd)">
     <group if="$(arg is_simulation)">
@@ -37,25 +78,16 @@
         <param name="use_ros_control" value="$(arg use_ros_control)"  />
     </group>
   </group>
-  
-  
 
-  <!--  Sensors & Odometry Agent & -->
-  <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
+
+
+<!-- Launch Navigation & SLAM here or on host PC -->
+  <include file="$(find bear_car_launch)/launch/Navigation_SLAM.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
     <arg name="is_four_wd" value="$(arg is_four_wd)" />
-    <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
-    <arg name="imu_odometry" value="$(arg imu_odometry)" />
-    <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
     <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
 
-
-  <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
-    
-
-    </include>
-
-
 </launch>
+
 

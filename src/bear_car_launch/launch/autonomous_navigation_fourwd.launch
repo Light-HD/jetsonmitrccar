@@ -82,12 +82,12 @@
 
 
 <!-- Launch Navigation & SLAM here or on host PC -->
-  <include file="$(find bear_car_launch)/launch/Navigation_SLAM.launch">
+<!--   <include file="$(find bear_car_launch)/launch/Navigation_SLAM.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
     <arg name="is_four_wd" value="$(arg is_four_wd)" />
     <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
-
+ -->
 </launch>
 
 
