@@ -2,9 +2,9 @@
 <launch>  
         <node pkg="multi_goal" type="multi_goals.py" respawn="false" name="multi_goal" output="screen">
         <!-- params for move_base -->
-        <param name="goalListX" value="[1.0, -5, -0.2]" />
-        <param name="goalListY" value="[7.3, 4, 0]" />
-        <param name="tolerance" value="1.5" />
+        <param name="goalListX" value="[2.77, 2.732, 0.410, 0.00]" />
+        <param name="goalListY" value="[0.102, 1.865, 1.962, 0.00]" />
+        <param name="tolerance" value="2.0" />
         <param name="map_frame" value="map" />
         </node>
 
