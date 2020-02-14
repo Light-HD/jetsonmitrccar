@@ -38,7 +38,7 @@
     <param name="laser_z_max_value" value = "0.5" />
     <param name="laser_min_dist" value="0.2"/>
     <param name="laser_max_dist" value="20.0"/>
-    <param name="map_pub_period" value="1.0"/>
+    <param name="map_pub_period" value="2.0"/>
 
     <!-- Debug parameters -->
     <!--

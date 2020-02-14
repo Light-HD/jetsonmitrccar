@@ -12,10 +12,10 @@
 <!-- Load SLAMs or Static Map -->
   
   <!-- Hector SLAM -->
-   <!--  <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
+<!--     <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
       <arg name="scan_topic_name" value="scan"/>
-    </include>
- -->
+    </include> -->
+
   <!-- Cartographer SLAM  -->
     <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" />  
   

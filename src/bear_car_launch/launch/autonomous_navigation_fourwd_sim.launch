@@ -40,7 +40,6 @@
     <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
     <arg name="imu_odometry" value="$(arg imu_odometry)" />
     <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
-    <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
 
   <!-- Use new ROS Control Low Level stack -->
@@ -84,8 +83,6 @@
 <!-- Launch Navigation & SLAM here or on host PC -->
   <include file="$(find bear_car_launch)/launch/Navigation_SLAM.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
-    <arg name="is_four_wd" value="$(arg is_four_wd)" />
-    <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
 
 </launch>
