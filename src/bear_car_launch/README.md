@@ -22,12 +22,13 @@ This package collects various system relevant launch files, configuration files 
    - Loads the global and local planners. Their assosiated .yaml configuartion is fetched from  `cfg/move_base`
    - choice of multiple global and local planners other than the default move_base planners
    		- Global Planners
-   			- sbpl planner
+   			- sbpl planner / defalut planner (only default planner is properly working)
    		- Local Planner
-   			- Teb Planner
-   			- e_band Planner
-   			- RS_band planner
-   			- DWA_Planner
+   			- Teb Planner (needs further tuning on realcar, working fine in simulation)
+   			- MPC (tested in both real car and simulation)
+   			- e_band Planner (untested)
+   			- RS_band planner (untested)
+   			- DWA_Planner (untested)
 
 ## odom_navigation_start
 - Launches odometry_agent
@@ -42,7 +43,7 @@ This package collects various system relevant launch files, configuration files 
 	- static maps (All static maps .pgm and .yaml files can be found in `static_maps`)
 
 To run full stack in simulation-
-	- `roslaunch bear_car_launch odom_navigation_start.launch`
+	- `source run_all`
 
 ## Autonomous Navigation (real car)
 - Launches vesc and lowlevel controllers
