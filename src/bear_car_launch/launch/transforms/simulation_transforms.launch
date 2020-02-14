@@ -13,7 +13,4 @@
     <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_imu"
     args="0.15 0.0 0.27 0.0 0.0 0.0 /base_link /camera_imu_optical_frame"/>
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_wheel_odom"
-    args="0.0 0.0 0.0 0.0 0.0 0.0 /base_link /wheel_odom"/>
-
 </launch>

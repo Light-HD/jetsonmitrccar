@@ -29,10 +29,18 @@
   <group unless="$(arg is_simulation)">
     <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
   </group>
+
+  <!-- Launch Twist to Steerforce converter -->
+  <group if="$(arg is_four_wd)">
+    <group if="$(arg is_simulation)">
+      <include file="$(find steerforce_conv)/launch/steerforce_converter.launch"/>
+        <param name="use_ros_control" value="$(arg use_ros_control)"  />
+    </group>
+  </group>
   
   
 
-  <!-- Odometry Agent & MoveBase/Locomotor-->
+  <!--  Sensors & Odometry Agent & -->
   <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
     <arg name="is_four_wd" value="$(arg is_four_wd)" />
@@ -41,6 +49,13 @@
     <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
     <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
+
+
+  <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
+    
+
+    </include>
+
 
 </launch>
 

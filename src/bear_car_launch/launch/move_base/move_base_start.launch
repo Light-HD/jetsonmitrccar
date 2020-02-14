@@ -3,7 +3,11 @@
   
   <!-- <param name="/use_sim_time" value="false"/> -->
 
+  <arg name="controller_frequency" default="100" />
+
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+    <param name="controller_frequency" value="$(arg controller_frequency)" />
 
     <!-- Load Costmap parameters -->
     <rosparam file="$(find bear_car_launch)/cfg/move_base/costmap_common_params.yaml" command="load" ns="global_costmap" />
@@ -28,12 +32,13 @@
     <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />   
     <rosparam file="$(find bear_car_launch)/cfg/move_base/teb_local_planner_params.yaml" command="load" />   
     
-<!--       <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
+  <!--  <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" />
       <rosparam file="$(find bear_car_launch)/cfg/move_base/TrajectoryRollout_params.yaml" command="load" /> -->
 
-  <!--   <param name="base_local_planner" value="mpc_local_planner_mb/MPCLocalPlannerMBROS" />
+  <!--  <param name="base_local_planner" value="mpc_local_planner_mb/MPCLocalPlannerMBROS" />
       <rosparam file="$(find mpc_local_planner_mb)/cfg/mpc_params.yaml" command="load" /> -->
-      <!-- Remap topics -->
+      
+  <!-- Remap topics -->
     <remap from="odom" to="/odometry/filtered" />
     <remap from="goal" to="/move_base_simple/goal" />
   </node>

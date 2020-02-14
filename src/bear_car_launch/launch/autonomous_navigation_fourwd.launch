@@ -2,7 +2,7 @@
 <launch>
 
   <!-- Launch file for setting up everything for a complete autonomous navigation based on
-       odometry (wheel,laser,imu) and move_base navigation stack-->
+       odometry (wheel,laser,imu), SLAM & navigation stack-->
 
   <!--False for "six_wheel" or True for "four_wheel"  -->
   <arg name="is_four_wd" default="true"  />
@@ -19,7 +19,6 @@
   <arg name="laser_scanner_odometry" default="true"  />
 
   <!-- Node for interfacing the VESC controller-->
-
   <group if="$(arg is_four_wd)">
     <group unless="$(arg is_simulation)">
       <include file="$(find vesc_driver)/launch/vesc_driver_node.launch" />
@@ -34,8 +33,17 @@
     </group>
   </group>
 
-  <!-- use new ros control framework -->
+  <!--  Sensors & Odometry Agent & -->
+  <include file="$(find bear_car_launch)/launch/odom_sensor_start.launch">
+    <arg name="is_simulation" value="$(arg is_simulation)" />
+    <arg name="is_four_wd" value="$(arg is_four_wd)" />
+    <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
+    <arg name="imu_odometry" value="$(arg imu_odometry)" />
+    <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
+    <arg name="use_ros_control" value="$(arg use_ros_control)" />
+  </include>
 
+  <!-- Use new ROS Control Low Level stack -->
   <group if="$(arg is_simulation)">
     <group if="$(arg use_ros_control)">
         <include file="$(find low_level_controllers)/launch/fourwd_robot.launch" />
@@ -57,23 +65,29 @@
 
     <!-- Low level steering controller-->
       <include file="$(find low_level_steering_controller)/launch/steering_controller_fourwd.launch">
+        <arg name="use_ros_control" value="$(arg use_ros_control)" />
       </include>
     </group>
   </group>
 
-  <!-- Odometry Agent & MoveBase/Locomotor-->
-  <include file="$(find bear_car_launch)/launch/odom_navigation_start.launch">
+  
+  <!-- Launch Twist to Steerforce converter -->
+  <group if="$(arg is_four_wd)">
+    <group if="$(arg is_simulation)">
+      <include file="$(find steerforce_conv)/launch/steerforce_converter.launch"/>
+        <param name="use_ros_control" value="$(arg use_ros_control)"  />
+    </group>
+  </group>
+
+
+
+<!-- Launch Navigation & SLAM here or on host PC -->
+  <include file="$(find bear_car_launch)/launch/Navigation_SLAM.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
     <arg name="is_four_wd" value="$(arg is_four_wd)" />
-    <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
-    <arg name="imu_odometry" value="$(arg imu_odometry)" />
-    <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
     <arg name="use_ros_control" value="$(arg use_ros_control)" />
   </include>
 
-   <!--control using remote -->
-   <!-- <include file="$(find ackermann_rc)/launch/rc_driver_vesc.launch">
-  </include>
- -->
 </launch>
+
 
