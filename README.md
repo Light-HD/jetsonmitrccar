@@ -102,6 +102,8 @@ If you would like to run some of the packages on your PC, please refer to the Bu
         * steerforce_conv - custom package for conversion of linear and angular velocity commands to steer_force and steer_angle (only for simulation)
 
         * teb_local_planner - Local planner plugin for move_base
+        
+        * mpc_local_planner_mb - MPC Local planner custom plugin for move_base
 
 
 ## Clone and Build
@@ -169,6 +171,13 @@ wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install python-catkin-tools
 ```
+
+To install Ipopt solver for MPC:
+* Open the instruction file under the folder document/ipopt_install of the github repo.
+* Execute all the steps, one by one, according to the system's architecture (arm for bear_car, x86 for pc)
+
+
+
 
 ## Run
 
