@@ -18,6 +18,8 @@
   <arg name="imu_odometry" default="true"  />
   <arg name="laser_scanner_odometry" default="true"  />
 
+  <arg name="enable_staticmap" default="true"  />
+
   <!-- Node for interfacing the VESC controller-->
   <group if="$(arg is_four_wd)">
     <group unless="$(arg is_simulation)">
@@ -40,6 +42,7 @@
     <arg name="wheel_odometry" value="$(arg wheel_odometry)" />
     <arg name="imu_odometry" value="$(arg imu_odometry)" />
     <arg name="laser_scanner_odometry" value="$(arg laser_scanner_odometry)" />
+    <arg name="enable_staticmap" value="$(arg enable_staticmap)" />
   </include>
 
   <!-- Use new ROS Control Low Level stack -->
@@ -83,6 +86,7 @@
 <!-- Launch Navigation & SLAM here or on host PC -->
   <include file="$(find bear_car_launch)/launch/Navigation_SLAM.launch">
     <arg name="is_simulation" value="$(arg is_simulation)" />
+    <arg name="enable_staticmap" value="$(arg enable_staticmap)" />
   </include>
 
 </launch>

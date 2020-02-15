@@ -11,9 +11,6 @@ from fourwd.builder.robots import Hummerscaled
 from fourwd.builder.sensors.CustomBattery import Custombattery
 import math
 
-#Set Sensor Frequency
-sense_freq = 100
-
 robot = Hummerscaled()
 robot.add_default_interface('ros')
 scale = 0.2
@@ -23,9 +20,9 @@ robot.name = "FourWD"
 robot.scale = [scale, scale, scale]
 
 # This is the wheel odometry tf
-wheel_odom = Velocity()
+wheel_odom = Odometry()
 # wheel_odom.frequency(sense_freq)
-wheel_odom.add_stream('ros', frame_id="odom", topic="wheel_odom") #child_frame_id='base_link')
+wheel_odom.add_stream('ros', frame_id="odom", topic="wheel_odom", child_frame_id='wheel_odom') #child_frame_id='base_link')
 wheel_odom.translate(0.0, 0.0, 0.0)
 wheel_odom.rotate(0.0, 0.0, 0)
 # odom = Odometry()
@@ -140,7 +137,6 @@ env.set_camera_location([-18.0, -6.7, 10.8])
 env.set_camera_rotation([1.09, 0, -1.14])
 env.properties(latitude=1.53, longitude=45.1, altitude=0.0)
 env.set_viewport(viewport_shade='TEXTURED', clip_end=1000)
-env.use_internal_syncer()
 env.show_framerate(True)
 env.add_stream('ros')
 	

@@ -16,6 +16,8 @@
 
   <!-- True if running simulation, not the real car -->
   <arg name="is_simulation" default="true" />
+    <!-- Use Static Map & disable Static map -->
+  <arg name="enable_staticmap" default="true" />
 
   <!-- Which odometry inputs will you use toggle true if you will use  -->
   <!-- These flags determines which sensor drivers to start  -->
@@ -57,7 +59,9 @@
   </group>
 
   <!-- Start robot localisation EKF node -->
-  <include file="$(find bear_car_launch)/launch/EKF_robot_localization/ekf_template.launch"/>
+  <include file="$(find bear_car_launch)/launch/EKF_robot_localization/ekf_template.launch">
+    <arg name="enable_staticmap" value="$(arg enable_staticmap)" />
+  </include>
 
 
   <!-- Nodes Started -->

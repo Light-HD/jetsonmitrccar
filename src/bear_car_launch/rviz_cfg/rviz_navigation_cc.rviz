@@ -241,8 +241,8 @@ Visualization Manager:
                     {}
                   laser:
                     {}
-                  wheel_odom:
-                    {}
+                wheel_odom:
+                  {}
           Update Interval: 0
           Value: true
         - Angle Tolerance: 0.10000000149011612
@@ -284,12 +284,12 @@ Visualization Manager:
     - Alpha: 0.10000000149011612
       Class: rviz_plugin_tutorials/Imu
       Color: 204; 51; 204
-      Enabled: true
+      Enabled: false
       History Length: 1
       Name: Imu
       Topic: /imu/data
       Unreliable: false
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/Polygon
       Color: 32; 74; 135
@@ -394,7 +394,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 22.136381149291992
+      Distance: 15.571819305419922
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

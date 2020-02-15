@@ -8,22 +8,34 @@
   -->
   <!-- True if running simulation, not the real car -->
   <arg name="is_simulation" default="false" />
+  <!-- Use Static Map & disable Static map -->
+  <arg name="enable_staticmap" default="true" />
 
 <!-- Load SLAMs or Static Map -->
   
   <!-- Hector SLAM -->
-<!--     <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
+  <!-- <group unless="$(arg enable_staticmap)">
+    <include file="$(find bear_car_launch)/launch/hector_slam/hector_configuration.launch">
       <arg name="scan_topic_name" value="scan"/>
-    </include> -->
+    </include>
+  </group>
+ -->
 
   <!-- Cartographer SLAM  -->
-    <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" />  
+    <group unless="$(arg enable_staticmap)">
+      <include file="$(find bear_car_launch)/launch/cartographer_slam/cartographer_start.launch" />  
+    </group>
+    
   
   <!-- Use Static Map -->
-  
-    <!-- <arg name="map_file" value="$(find bear_car_launch)/static_maps/track_no_obs.yaml" /> 
-    <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" />
- -->
+  <group if="$(arg enable_staticmap)">
+      <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom"
+        args="0.0 0 0.0 0 0 0 /map /odom"/>
+      <arg name="map_file" value="$(find bear_car_launch)/static_maps/track_no_obs.yaml" /> 
+      <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)" />
+    </group>
+    
+
 
 <!-- Load move_base or locomotor -->
   <!-- Select MoveBase for Navigation stack   -->
@@ -35,7 +47,7 @@
 
 
   <!-- multigoal loading -->
-    <!-- <include file="$(find multi_goal)/launch/multi_goal.launch" />  -->
+    <include file="$(find multi_goal)/launch/multi_goal.launch" /> 
     
 </launch>
 

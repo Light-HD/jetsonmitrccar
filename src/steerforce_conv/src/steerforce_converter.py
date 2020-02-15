@@ -91,7 +91,7 @@ def listener():
 if __name__ == '__main__':
     global ref, fbk, ackmn
     pid_gains = rospy.get_param("/steerforce_converter/pid_gains")
-    ros_control =rospy.get_param("/steerforce_converter/ros_control")
+    ros_control =rospy.get_param("/use_ros_control")
     ref = Twist()
     #fbk = TwistStamped()
     fbk = Odometry()

@@ -1,11 +1,22 @@
 <launch>
-  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
-    <rosparam command="load" file="$(find bear_car_launch)/cfg/EKF_robot_localization/ekf_params.yaml" />
+  <!-- Use Static Map & disable Static map -->
+  <arg name="enable_staticmap" default="true" />
+
+	<group if="$(arg enable_staticmap)">
+     	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    	 <rosparam command="load" file="$(find bear_car_launch)/cfg/EKF_robot_localization/ekf_params.yaml" />
+      </node>
+  </group>
+    
+    <group unless="$(arg enable_staticmap)">
+    	<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+    	 <rosparam command="load" file="$(find bear_car_launch)/cfg/EKF_robot_localization/ekf_params_noTF.yaml" />
+      </node>
+    </group>
+  
 
    <!--  Placeholder for output topic remapping
     <remap from="odometry/filtered" to=""/>
     <remap from="accel/filtered" to=""/>
     -->
-
-  </node>
 </launch>
