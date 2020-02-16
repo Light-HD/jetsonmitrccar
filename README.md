@@ -78,8 +78,6 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
         * ceres-solver - Solver used by cartographer for optimisation
 
-        * eband_local_planner - Local planner plugin for move_base
-
         * image_pipeline - various packages available to process the image inputs into required form.(we use this to convert depth input to PointCloud2)
 
         * low_level_controllers - used to interface various ros_controllers plugins by writing a robot hardware interface    
@@ -90,14 +88,10 @@ If you would like to run some of the packages on your PC, please refer to the Bu
 
         * navigation_experimental - Contains SBPL local planner as plugin for move_base
 
-        * ompl - Dependency package to run eband and RS_band planners
-
         * ros_controllers - Diffrent controller plugins to select from depending upon the type of joint or type of control desired. A hardware interface 
                             should be written to interface these controllers
 
         * robot_navigation - Navigation stack with Locomotor
-
-        * rsband_local_planner - Local planner plugin for move_base
 
         * steerforce_conv - custom package for conversion of linear and angular velocity commands to steer_force and steer_angle (only for simulation)
 
