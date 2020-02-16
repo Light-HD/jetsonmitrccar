@@ -16,7 +16,7 @@ Choice between
 * autonomous_navigation_fourwd 
 	- For real car
 * autonomous_navigation_fourwd_sim
-	- For real car
+	- For simulation
 * odom_sensor_start
 	- Launches odometry_agent
 	- If simulation = True,
