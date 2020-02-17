@@ -106,22 +106,15 @@ First, create your self a SSH key to access the repository. To do so click to yo
 
 After that you will be able to clone the repository
 
-`git clone git@gitlab-edu.aot.tu-berlin.de:small_autonomous_driving/software_integration.git `
+`git clone git@gitlab-edu.aot.tu-berlin.de:aaip_ws19_20/group4/software_integration.git`
 
 Then also get submodules
 
 `git submodule update --init --recursive`
 
+Installing ROS & Catkin
 
-**TODO Ege:  This should also reflect the different environments such as Arduino, ROS, Linux Kernel modules, AVR for 6WD motorcontoller ...**
-
-There are several environments the project consists of.
-
-1. ROS/catkin: Under 'src' folder we have many integrations for ROS. To properly install ROS please check https://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment link. Please choose your version properly Jetson uses Ubuntu 18.04 and therefore the Melodic version.
-2. Arduino: **TODO**
-3. Linux Kernel: **TODO**
-4. AVR: Note that to code the MCU's on Motor Controller of six wheeled platform we needed to change the codes on the motor controller. To do so I strongly recommend Atmel Studio. There you can write your code and at the build menu you can compile them to .hex format. You can also upload these codes to the MCU's by using the Device Programming Menu. Check Firmwares/SixWheelCar_Firmware folder for additional information.
-5. VESC Tool: VESC tool is the GUI of the VESC. There you can change motor controlling parameters easily. Check Firmwares/FourWheeledCarConfigurations(Vesc) Folder for additional information.
+ROS/catkin: Under 'src' folder we have many integrations for ROS. To properly install ROS please check https://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment link. Please choose your version properly Jetson uses Ubuntu 18.04 and therefore the Melodic version.
 
 
 ### Installation
@@ -135,7 +128,7 @@ rosdep install --from-paths src --ignore-src -r -y
 ```
 
 Here are some package dependencies (they may not come with full desktop installation)
-but you can first try without due to the reason that above command automatically resolved the dependencies:
+but you can first try without, but if you face any error please manually install and resolve dependencies:
 
 - Ackermann (`sudo apt install ros-<version>-ackermann*`)
 - gstreamer-1.0
@@ -169,8 +162,6 @@ sudo apt-get install python-catkin-tools
 To install Ipopt solver for MPC:
 * Open the instruction file under the folder document/ipopt_install of the github repo.
 * Execute all the steps, one by one, according to the system's architecture (arm for bear_car, x86 for pc)
-
-
 
 
 ## Run
