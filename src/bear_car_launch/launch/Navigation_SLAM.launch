@@ -47,7 +47,7 @@
 
 
   <!-- multigoal loading -->
-    <include file="$(find multi_goal)/launch/multi_goal.launch" /> 
+    <!-- <include file="$(find multi_goal)/launch/multi_goal.launch" />  -->
     
 </launch>
 

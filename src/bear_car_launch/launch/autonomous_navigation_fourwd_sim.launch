@@ -18,7 +18,7 @@
   <arg name="imu_odometry" default="true"  />
   <arg name="laser_scanner_odometry" default="true"  />
 
-  <arg name="enable_staticmap" default="true"  />
+  <arg name="enable_staticmap" default="false"  />
 
   <!-- Node for interfacing the VESC controller-->
   <group if="$(arg is_four_wd)">
