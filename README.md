@@ -139,10 +139,6 @@ but you can first try without, but if you face any error please manually install
 - realsense2-camera (`sudo apt install ros-<version>-realsense2-camera`) Only needed on the robot.
 
 #### Build
-
-```bash
-catkin build
-```
 NOTE: catkin_make does not support cartographer. Please make sure to install catkin tools and remove the devel and build folder before compiling.
 NOTE: steer_force converter uses a simple pid library in python. Make sure you install the library suited for python 2.7.
 
@@ -150,8 +146,14 @@ To install Simple_pid:
 ```bash
 pip install simple-pid
 ```
+
+To install Ipopt solver for MPC:
+* Detailed instructions in the `document` folder in the package
+* To be followed as per the system architecture 
+
 To install catkin_tools:
 ```bash
+
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
 
@@ -159,9 +161,9 @@ sudo apt-get update
 sudo apt-get install python-catkin-tools
 ```
 
-To install Ipopt solver for MPC:
-* Open the instruction file under the folder document/ipopt_install of the github repo.
-* Execute all the steps, one by one, according to the system's architecture (arm for bear_car, x86 for pc)
+```bash
+catkin build
+```
 
 
 ## Run
