@@ -1,8 +1,43 @@
-# software_integration
+# Autonomous Racing using MIT RaceCar and Nvidia Jetson platform
 
-Integration repository including the ROS catkin workspace for all relevant software pieces/submodules.
-This project normally runs on Nvidia JetsonTX2 Dev-Board on the cars (already installed).
-If you would like to run some of the packages on your PC, please refer to the Build section.
+## Abstract
+The aim was to develop an autonomous race car based on the MIT racecar platform. The initial
+task was to identify all the required components to achieve autonomous racing such as perception, planning and achieving 
+loop closure. A preliminary design was made and iterated to include updated knowledge about the platform and changes in the
+approach. 
+Google Cartographer was selected as the primary SLAM algorithm because of its added benefits of integrating other sensor 
+information for building the map. The navigation stack was based on the already available ROS move\textunderscore base. Various planners 
+for global and local path planning were tried out. The final selecting ones were a simple A* as the main global planner 
+and TEB with our own MPC package, as the two local planners, which have been used for performance comparison reasons. Many optimisation and parameterization was done for VESC BLDC motor controller. Finally, ROS controllers was integrated for low level control as it was an expandable and easily configurable for controling different actuators.
+
+## Software Architecture 
+![Alt text](Images/Software_arch.png?raw=true "Software Architecture")
+
+## Results 
+![Alt text](Images/sim_env.png?raw=true "Testing Simulation using Morse Simulator / Blender ")
+
+<div class="center">
+
+<div id="tab1">
+
+|                         |                  |                     |
+|:-----------------------:|:----------------:|:-------------------:|
+|     **Comparison**      |   **Planners**   |                     |
+|       **Metrics**       |    ***MPC***     |      ***TEB***      |
+|        Lap time         |      39.81s      |       45.91s        |
+| Maximum speed attained  |     1.3 m/s      |       1.3 m/s       |
+| Maximum possible speed  |     2.0 m/s      |       1.3 m/s       |
+| Cross Track Error (CTE) |       Low        |        High         |
+|    Dynamic obstacles    | Unable to handle | Replans accordingly |
+|     Reverse Driving     |      Unable      |        Able         |
+
+Short Comparison Overview for Planners
+
+</div>
+
+<span id="tab1" label=" ">\[tab1\]</span>
+
+</div>
 
 ## Structure
 
@@ -195,6 +230,3 @@ In our platforms we are using following sensors
 - Camera: Front camera is the Intel D435i RGBD camera. Backcamera is the onboard MP CSI camera module on the Jetson TX2 dev-board (Omnivision OV5693)
 
 
-# FAQ
-
-Please refer to **[FAQ](FAQ.md)** for some tips, tricks, hints, and trouble shooting information, especially for beginners.
